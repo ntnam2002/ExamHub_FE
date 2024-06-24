@@ -75,6 +75,7 @@ export const getList = createAsyncThunk(
             GetProjectListResponse,
             GetProjectListRequest
         >(data)
+
         return response.data
     }
 )
@@ -84,11 +85,13 @@ export const getMembers = createAsyncThunk(
     async () => {
         const response =
             await apiGetScrumBoardtMembers<GetScrumBoardtMembersResponse>()
-        const data = response.data.allMembers.map((item) => ({
-            value: item.id,
-            label: item.name,
-            img: item.img,
-        }))
+        const data = response.data.allMembers.map(
+            (item: { id: any; name: any; img: any }) => ({
+                value: item.id,
+                label: item.name,
+                img: item.img,
+            })
+        )
         return data
     }
 )

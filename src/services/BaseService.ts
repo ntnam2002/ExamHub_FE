@@ -19,10 +19,11 @@ BaseService.interceptors.request.use(
 
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         let accessToken = (persistData as any).auth.session.token
+        //let refreshToken = (persistData as any).auth.session.refreshToken
 
         if (!accessToken) {
             const { auth } = store.getState()
-            accessToken = auth.session.token
+            accessToken = auth.session.accessToken
         }
 
         if (accessToken) {

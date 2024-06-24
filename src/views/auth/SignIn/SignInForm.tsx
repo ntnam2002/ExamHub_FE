@@ -18,15 +18,17 @@ interface SignInFormProps extends CommonProps {
 }
 
 type SignInFormSchema = {
-    userName: string
+    username: string
     password: string
     rememberMe: boolean
+    isAdmin: boolean
 }
 
 const validationSchema = Yup.object().shape({
-    userName: Yup.string().required('Please enter your user name'),
+    username: Yup.string().required('Please enter your user name'),
     password: Yup.string().required('Please enter your password'),
     rememberMe: Yup.bool(),
+    isAdmin: Yup.bool(),
 })
 
 const SignInForm = (props: SignInFormProps) => {
@@ -38,17 +40,16 @@ const SignInForm = (props: SignInFormProps) => {
     } = props
 
     const [message, setMessage] = useTimeOutMessage()
-
     const { signIn } = useAuth()
 
     const onSignIn = async (
         values: SignInFormSchema,
         setSubmitting: (isSubmitting: boolean) => void
     ) => {
-        const { userName, password } = values
-        setSubmitting(true)
+        const { username, password, isAdmin } = values
 
-        const result = await signIn({ userName, password })
+        setSubmitting(true)
+        const result = await signIn({ username, password }, isAdmin)
 
         if (result?.status === 'failed') {
             setMessage(result.message)
@@ -61,14 +62,15 @@ const SignInForm = (props: SignInFormProps) => {
         <div className={className}>
             {message && (
                 <Alert showIcon className="mb-4" type="danger">
-                    <>{message}</>
+                    {message}
                 </Alert>
             )}
             <Formik
                 initialValues={{
-                    userName: 'admin',
+                    username: 'admin',
                     password: '123Qwe',
                     rememberMe: true,
+                    isAdmin: false, // Default value for the checkbox
                 }}
                 validationSchema={validationSchema}
                 onSubmit={(values, { setSubmitting }) => {
@@ -85,15 +87,14 @@ const SignInForm = (props: SignInFormProps) => {
                             <FormItem
                                 label="User Name"
                                 invalid={
-                                    (errors.userName &&
-                                        touched.userName) as boolean
+                                    !!errors.username && !!touched.username
                                 }
-                                errorMessage={errors.userName}
+                                errorMessage={errors.username}
                             >
                                 <Field
                                     type="text"
                                     autoComplete="off"
-                                    name="userName"
+                                    name="username"
                                     placeholder="User Name"
                                     component={Input}
                                 />
@@ -101,8 +102,7 @@ const SignInForm = (props: SignInFormProps) => {
                             <FormItem
                                 label="Password"
                                 invalid={
-                                    (errors.password &&
-                                        touched.password) as boolean
+                                    !!errors.password && !!touched.password
                                 }
                                 errorMessage={errors.password}
                             >
@@ -113,14 +113,20 @@ const SignInForm = (props: SignInFormProps) => {
                                     component={PasswordInput}
                                 />
                             </FormItem>
-                            <div className="flex justify-between mb-6">
-                                {/* <Field
-                                    className="mb-0"
-                                    name="rememberMe"
+                            <FormItem
+                                label="Admin"
+                                invalid={!!errors.isAdmin && !!touched.isAdmin}
+                                errorMessage={errors.isAdmin}
+                            >
+                                <Field
+                                    name="isAdmin"
+                                    type="checkbox"
                                     component={Checkbox}
                                 >
-                                    Remember Me
-                                </Field> */}
+                                    Admin
+                                </Field>
+                            </FormItem>
+                            <div className="flex justify-between mb-6">
                                 <ActionLink to={forgotPasswordUrl}>
                                     Quên mật khẩu
                                 </ActionLink>

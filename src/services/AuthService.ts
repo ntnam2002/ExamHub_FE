@@ -8,9 +8,18 @@ import type {
     SignUpResponse,
 } from '@/@types/auth'
 
-export async function apiSignIn(data: SignInCredential) {
+export async function apiSignInAdmin(data: SignInCredential) {
+    const adminResponse = await ApiService.fetchData<SignInResponse>({
+        url: '/admin/login',
+        method: 'post',
+        data,
+    })
+
+    return adminResponse
+}
+export async function apiSignInUser(data: SignInCredential) {
     return ApiService.fetchData<SignInResponse>({
-        url: '/sign-in',
+        url: '/login',
         method: 'post',
         data,
     })

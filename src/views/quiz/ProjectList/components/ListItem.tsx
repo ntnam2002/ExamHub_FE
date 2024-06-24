@@ -53,12 +53,10 @@ const ListItem = ({ data, cardBorder }: ListItemProps) => {
                             </span>
                         </div>
                     </div>
-                    <div className="my-1 sm:my-0 col-span-12 md:col-span-2 lg:col-span-3 md:flex md:items-center">
+                    {/* <div className="my-1 sm:my-0 col-span-12 md:col-span-2 lg:col-span-3 md:flex md:items-center">
                         <ProgressionBar progression={progression} />
-                    </div>
-                    <div className="my-1 sm:my-0 col-span-12 md:col-span-3 lg:col-span-3 md:flex md:items-center">
-                        <Members members={member} />
-                    </div>
+                    </div> */}
+
                     <div className="my-1 sm:my-0 col-span-12 sm:col-span-1 flex md:items-center justify-end">
                         <ItemDropdown />
                     </div>

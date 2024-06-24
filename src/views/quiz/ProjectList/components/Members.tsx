@@ -8,7 +8,7 @@ type MembersProps = {
 }
 
 const Members = ({ members }: MembersProps) => {
-    return <UsersAvatarGroup users={members} />
+    // return <UsersAvatarGroup users={members} />
 }
 
 export default Members
