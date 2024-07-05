@@ -13,18 +13,16 @@ const ApiService = {
     fetchData<Response = unknown, Request = Record<string, unknown> | FormData>(
         param: AxiosRequestConfig<Request>
     ) {
-        return new Promise<AxiosResponse<IResponse<Response>>>(
-            (resolve, reject) => {
-                // return new Promise<AxiosResponse<Response>>((resolve, reject) => {
-                BaseService(param)
-                    .then((response: AxiosResponse<IResponse<Response>>) => {
-                        resolve(response)
-                    })
-                    .catch((error: AxiosError) => {
-                        reject(error)
-                    })
-            }
-        )
+        return new Promise<IResponse<Response>>((resolve, reject) => {
+            // return new Promise<AxiosResponse<Response>>((resolve, reject) => {
+            BaseService(param)
+                .then((response: AxiosResponse<IResponse<Response>>) => {
+                    resolve(response.data)
+                })
+                .catch((error: AxiosError) => {
+                    reject(error)
+                })
+        })
     },
 }
 

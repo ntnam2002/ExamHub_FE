@@ -114,7 +114,7 @@ const SignInForm = (props: SignInFormProps) => {
                                 />
                             </FormItem>
                             <FormItem
-                                label="Admin"
+                                label=""
                                 invalid={!!errors.isAdmin && !!touched.isAdmin}
                                 errorMessage={errors.isAdmin}
                             >
@@ -126,18 +126,20 @@ const SignInForm = (props: SignInFormProps) => {
                                     Admin
                                 </Field>
                             </FormItem>
-                            <div className="flex justify-between mb-6">
+                            {/* <div className="flex justify-between mb-6">
                                 <ActionLink to={forgotPasswordUrl}>
                                     Quên mật khẩu
                                 </ActionLink>
-                            </div>
+                            </div> */}
                             <Button
                                 block
                                 loading={isSubmitting}
                                 variant="solid"
                                 type="submit"
                             >
-                                {isSubmitting ? 'Signing in...' : 'Sign In'}
+                                {isSubmitting
+                                    ? 'Đang đăng nhập...'
+                                    : 'Đăng nhập'}
                             </Button>
                             <div className="mt-4 text-center">
                                 <span>{`Chưa có tài khoản?`} </span>

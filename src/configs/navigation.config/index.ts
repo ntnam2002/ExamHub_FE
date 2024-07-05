@@ -4,10 +4,13 @@ import {
     NAV_ITEM_TYPE_COLLAPSE,
 } from '@/constants/navigation.constant'
 import type { NavigationTree } from '@/@types/navigation'
-import { STUDENT } from '@/constants/roles.constant'
+import { ADMIN } from '@/constants/roles.constant'
+import adminNavigationConfig from './admins.navigation.config'
+import studentNavigationConfig from './students.navigation.config'
 
-import appsNavigationConfig from './apps.navigation.config'
-
-const navigationConfig: NavigationTree[] = [...appsNavigationConfig]
+const navigationConfig: NavigationTree[] = [
+    ...adminNavigationConfig,
+    ...studentNavigationConfig,
+]
 
 export default navigationConfig

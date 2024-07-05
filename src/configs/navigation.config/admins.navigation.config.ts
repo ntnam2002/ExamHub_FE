@@ -1,4 +1,4 @@
-import { APP_PREFIX_PATH } from '@/constants/route.constant'
+import { ADMIN_PREFIX_PATH, APP_PREFIX_PATH } from '@/constants/route.constant'
 import {
     NAV_ITEM_TYPE_TITLE,
     NAV_ITEM_TYPE_COLLAPSE,
@@ -7,7 +7,7 @@ import {
 import { ADMIN, STUDENT, TEACHER } from '@/constants/roles.constant'
 import type { NavigationTree } from '@/@types/navigation'
 
-const appsNavigationConfig: NavigationTree[] = [
+const adminNavigationConfig: NavigationTree[] = [
     {
         key: 'apps',
         path: '',
@@ -18,21 +18,21 @@ const appsNavigationConfig: NavigationTree[] = [
         authority: [ADMIN],
         subMenu: [
             {
-                key: 'appsProject.home',
-                path: '/home',
+                key: 'ExamHub.admin.home',
+                path: `${ADMIN_PREFIX_PATH}/home`,
                 title: 'Home',
-                translateKey: 'nav.appsProject.home',
+                translateKey: 'nav.ExamHub.admin.home',
                 icon: 'home',
                 type: NAV_ITEM_TYPE_ITEM,
                 authority: [ADMIN],
                 subMenu: [],
             },
             {
-                key: 'appsProject.exam',
-                path: `${APP_PREFIX_PATH}/project/project-list`,
-                title: 'Exam',
-                translateKey: 'nav.appsProject.projectList',
-                icon: 'book',
+                key: 'ExamHub.admin.student',
+                path: `${ADMIN_PREFIX_PATH}/student`,
+                title: 'Sinh viên',
+                translateKey: 'nav.ExamHub.admin.student',
+                icon: 'student',
                 type: NAV_ITEM_TYPE_ITEM,
                 authority: [ADMIN],
                 subMenu: [],
@@ -41,4 +41,4 @@ const appsNavigationConfig: NavigationTree[] = [
     },
 ]
 
-export default appsNavigationConfig
+export default adminNavigationConfig

@@ -2,7 +2,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { SLICE_BASE_NAME } from './constants'
 
 export interface SessionState {
-    signedIn: boolean
+    signedIn?: boolean
     accessToken: string | null
     refreshToken: string | null
 }
@@ -19,6 +19,7 @@ const sessionSlice = createSlice({
     reducers: {
         signInSuccess(state, action: PayloadAction<SessionState>) {
             state.signedIn = true
+
             state.accessToken = action.payload.accessToken
             state.refreshToken = action.payload.refreshToken
         },

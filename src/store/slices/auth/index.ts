@@ -10,7 +10,7 @@ const reducer = combineReducers({
 
 export type AuthState = {
     session: SessionState
-    data: UserState
+    user: UserState
 }
 
 export * from './sessionSlice'

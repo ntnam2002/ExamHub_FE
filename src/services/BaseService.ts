@@ -23,6 +23,7 @@ BaseService.interceptors.request.use(
 
         if (!accessToken) {
             const { auth } = store.getState()
+
             accessToken = auth.session.accessToken
         }
 

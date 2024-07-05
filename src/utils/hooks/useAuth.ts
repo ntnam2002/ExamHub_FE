@@ -41,8 +41,8 @@ function useAuth() {
             const resp = await (isAdmin
                 ? apiSignInAdmin(values)
                 : apiSignInUser(values))
-            if (resp.data && resp.data.status === 'success') {
-                const { accessToken, refreshToken } = resp.data.data
+            if (resp.data && resp.status === 'success') {
+                const { accessToken, refreshToken } = resp.data
 
                 dispatch(
                     signInSuccess({
@@ -52,7 +52,7 @@ function useAuth() {
                     })
                 )
 
-                const userData = resp.data.data || {
+                const userData = resp.data || {
                     username: 'Anonymous',
                     authority: 'user',
                     accessToken: '',
@@ -83,50 +83,47 @@ function useAuth() {
         }
     }
 
-    // const signUp = async (values: SignUpCredential) => {
-    //     try {
-    //         const resp = await apiSignUp(values)
-    //         if (resp.data) {
-    //             const accessToken = resp.data.data.accessToken
-    //             dispatch(signInSuccess(accessToken))
-    //             dispatch(
-    //                 setUser(
-    //                     resp.data || {
-    //                         avatar: '',
-    //                         username: 'Anonymous',
-    //                         authority: ['USER'],
-    //                         email: '',
-    //                     }
-    //                 )
-    //             )
-    //             const redirectUrl = query.get(REDIRECT_URL_KEY)
-    //             navigate(
-    //                 redirectUrl ? redirectUrl : appConfig.authenticatedEntryPath
-    //             )
-    //             return {
-    //                 status: 'success',
-    //                 message: '',
-    //             }
-    //         }
-    //     } catch (errors: any) {
-    //         return {
-    //             status: 'failed',
-    //             message: errors?.response?.data?.message || errors.toString(),
-    //         }
-    //     }
-    // }
+    const signUp = async (values: SignUpCredential) => {
+        try {
+            const resp = await apiSignUp(values)
+            if (resp.data) {
+                // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                const accessToken = resp.data
+
+                dispatch(signInSuccess(accessToken))
+                const userData = resp.data || {
+                    username: 'Anonymous',
+                    authority: 'user',
+                    accessToken: '',
+                    refreshToken: '',
+                }
+
+                dispatch(setUser(userData))
+                const redirectUrl = query.get(REDIRECT_URL_KEY)
+                navigate(
+                    redirectUrl ? redirectUrl : appConfig.authenticatedEntryPath
+                )
+                return {
+                    status: 'success',
+                    message: '',
+                }
+            }
+        } catch (errors: any) {
+            return {
+                status: 'failed',
+                message: errors?.response?.data?.message || errors.toString(),
+            }
+        }
+    }
 
     const handleSignOut = () => {
         dispatch(signOutSuccess())
         dispatch(
             setUser({
-                status: 'success',
-                data: {
-                    accessToken: '',
-                    refreshToken: '',
-                    username: 'Anonymous',
-                    authority: 'user',
-                },
+                accessToken: '',
+                refreshToken: '',
+                username: 'Anonymous',
+                authority: 'user',
             })
         )
         navigate(appConfig.unAuthenticatedEntryPath)
@@ -140,7 +137,7 @@ function useAuth() {
     return {
         authenticated: !!accessToken && refreshToken && signedIn,
         signIn,
-        //signUp,
+        signUp,
         signOut,
     }
 }

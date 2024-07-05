@@ -19,7 +19,7 @@ export async function apiSignInAdmin(data: SignInCredential) {
 }
 export async function apiSignInUser(data: SignInCredential) {
     return ApiService.fetchData<SignInResponse>({
-        url: '/login',
+        url: '/users/login',
         method: 'post',
         data,
     })
@@ -35,7 +35,7 @@ export async function apiSignUp(data: SignUpCredential) {
 
 export async function apiSignOut() {
     return ApiService.fetchData({
-        url: '/sign-out',
+        url: '/admin/logout',
         method: 'post',
     })
 }

@@ -18,14 +18,11 @@ interface SignUpFormProps extends CommonProps {
 type SignUpFormSchema = {
     username: string
     password: string
-    email: string
 }
 
 const validationSchema = Yup.object().shape({
     username: Yup.string().required('Please enter your user name'),
-    email: Yup.string()
-        .email('Invalid email')
-        .required('Please enter your email'),
+
     password: Yup.string().required('Please enter your password'),
     confirmPassword: Yup.string().oneOf(
         [Yup.ref('password')],
@@ -44,9 +41,9 @@ const SignUpForm = (props: SignUpFormProps) => {
         values: SignUpFormSchema,
         setSubmitting: (isSubmitting: boolean) => void
     ) => {
-        const { username, password, email } = values
+        const { username, password } = values
         setSubmitting(true)
-        const result = await signUp({ username, password, email })
+        const result = await signUp({ username, password })
 
         if (result?.status === 'failed') {
             setMessage(result.message)
@@ -64,10 +61,9 @@ const SignUpForm = (props: SignUpFormProps) => {
             )}
             <Formik
                 initialValues={{
-                    username: 'admin1',
-                    password: '123Qwe1',
-                    confirmPassword: '123Qwe1',
-                    email: 'test@testmail.com',
+                    username: 'admin',
+                    password: '',
+                    confirmPassword: '',
                 }}
                 validationSchema={validationSchema}
                 onSubmit={(values, { setSubmitting }) => {
@@ -82,19 +78,19 @@ const SignUpForm = (props: SignUpFormProps) => {
                     <Form>
                         <FormContainer>
                             <FormItem
-                                label="User Name"
+                                label="Tên Đăng Nhập"
                                 invalid={errors.username && touched.username}
                                 errorMessage={errors.username}
                             >
                                 <Field
                                     type="text"
                                     autoComplete="off"
-                                    name="username"
-                                    placeholder="User Name"
+                                    name="Tên tài khoản"
+                                    placeholder="VD: admin"
                                     component={Input}
                                 />
                             </FormItem>
-                            <FormItem
+                            {/* <FormItem
                                 label="Email"
                                 invalid={errors.email && touched.email}
                                 errorMessage={errors.email}
@@ -106,21 +102,21 @@ const SignUpForm = (props: SignUpFormProps) => {
                                     placeholder="Email"
                                     component={Input}
                                 />
-                            </FormItem>
+                            </FormItem> */}
                             <FormItem
-                                label="Password"
+                                label="Mật khẩu"
                                 invalid={errors.password && touched.password}
                                 errorMessage={errors.password}
                             >
                                 <Field
                                     autoComplete="off"
                                     name="password"
-                                    placeholder="Password"
+                                    placeholder="VD: 123Qwe"
                                     component={PasswordInput}
                                 />
                             </FormItem>
                             <FormItem
-                                label="Confirm Password"
+                                label="Xác nhận mật khẩu"
                                 invalid={
                                     errors.confirmPassword &&
                                     touched.confirmPassword
@@ -129,8 +125,8 @@ const SignUpForm = (props: SignUpFormProps) => {
                             >
                                 <Field
                                     autoComplete="off"
-                                    name="confirmPassword"
-                                    placeholder="Confirm Password"
+                                    name="confirmpassword"
+                                    placeholder="Xác nhận mật khẩu"
                                     component={PasswordInput}
                                 />
                             </FormItem>
@@ -145,8 +141,10 @@ const SignUpForm = (props: SignUpFormProps) => {
                                     : 'Sign Up'}
                             </Button>
                             <div className="mt-4 text-center">
-                                <span>Already have an account? </span>
-                                <ActionLink to={signInUrl}>Sign in</ActionLink>
+                                <span>Đã có tài khoản? </span>
+                                <ActionLink to={signInUrl}>
+                                    Đăng nhập
+                                </ActionLink>
                             </div>
                         </FormContainer>
                     </Form>
