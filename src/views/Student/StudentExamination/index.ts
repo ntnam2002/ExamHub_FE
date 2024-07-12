@@ -1,3 +1,3 @@
-import Exam from './exam'
+import ExamInterface from './exam'
 
-export default Exam
+export default ExamInterface

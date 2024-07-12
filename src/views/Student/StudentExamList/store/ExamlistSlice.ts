@@ -115,7 +115,7 @@ const initialState: ProjectListState = {
     query: {
         sort: 'asc',
         search: '',
-    },
+    },  
     newProjectDialog: false,
 }
 

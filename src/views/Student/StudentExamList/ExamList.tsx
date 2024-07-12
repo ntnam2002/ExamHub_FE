@@ -1,6 +1,6 @@
 import ActionBar from './components/ActionBar'
 
-import NewProjectDialog from './components/NewProjectDialog'
+//import NewProjectDialog from './components/NewProjectDialog'
 import Container from '@/components/shared/Container'
 import reducer from './store'
 import { injectReducer } from '@/store'
@@ -11,9 +11,9 @@ injectReducer('examlist', reducer)
 const ExamList = () => {
     return (
         <Container className="h-full">
-            <ActionBar />
+            {/* <ActionBar /> */}
             <ExamListContent />
-            <NewProjectDialog />
+            {/* <NewProjectDialog /> */}
         </Container>
     )
 }

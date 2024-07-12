@@ -4,12 +4,11 @@ import {
     HiOutlineFlag,
     HiOutlineCog,
 } from 'react-icons/hi'
+import { MdDeleteForever } from 'react-icons/md'
 import EllipsisButton from '@/components/shared/EllipsisButton'
 
 const dropdownList = [
-    { label: 'Add Flag', value: 'addFlag', icon: <HiOutlineFlag /> },
-    { label: 'Move', value: 'move', icon: <HiOutlineSwitchHorizontal /> },
-    { label: 'Setting', value: 'projectSetting', icon: <HiOutlineCog /> },
+    { label: 'Xóa kỳ thi', value: 'addFlag', icon: <MdDeleteForever /> },
 ]
 
 const ItemDropdown = () => {
