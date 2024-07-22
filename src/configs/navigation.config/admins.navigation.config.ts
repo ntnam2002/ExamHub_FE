@@ -9,7 +9,7 @@ import type { NavigationTree } from '@/@types/navigation'
 
 const adminNavigationConfig: NavigationTree[] = [
     {
-        key: 'apps',
+        key: 'Adminapps',
         path: '',
         title: 'ExamHub',
         translateKey: 'ExamHub',
@@ -33,6 +33,16 @@ const adminNavigationConfig: NavigationTree[] = [
                 title: 'Sinh viên',
                 translateKey: 'nav.ExamHub.admin.student',
                 icon: 'student',
+                type: NAV_ITEM_TYPE_ITEM,
+                authority: [ADMIN],
+                subMenu: [],
+            },
+            {
+                key: 'ExamHub.admin.question',
+                path: `${ADMIN_PREFIX_PATH}/question`,
+                title: 'Câu hỏi',
+                translateKey: 'nav.ExamHub.admin.question',
+                icon: 'question',
                 type: NAV_ITEM_TYPE_ITEM,
                 authority: [ADMIN],
                 subMenu: [],

@@ -6,7 +6,7 @@ import reducer from './store'
 import { injectReducer } from '@/store'
 import ExamListContent from './components/ExamListContent'
 
-injectReducer('examlist', reducer)
+injectReducer('examinationList', reducer)
 
 const ExamList = () => {
     return (

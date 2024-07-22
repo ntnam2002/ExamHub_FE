@@ -15,7 +15,7 @@ export async function apiGetAllTeacher<T, U extends Record<string, unknown>>() {
 
 export async function apiDeleteUser<T, U extends { id: string }>(data: U) {
     const { id } = data
-    console.log('id', id)
+
     return ApiService.fetchData<T>({
         url: `/users/deleteUser/${id}`,
         method: 'delete',

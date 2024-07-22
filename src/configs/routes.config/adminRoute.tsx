@@ -30,6 +30,12 @@ const adminRoutes: Routes = [
         component: lazy(() => import('@/views/admin/Student/StudentEdit')),
         authority: [ADMIN],
     },
+    {
+        key: 'ExamHub.admin.question',
+        path: `${ADMIN_PREFIX_PATH}/question`,
+        component: lazy(() => import('@/views/admin/Examination/QuestionList')),
+        authority: [ADMIN],
+    },
 ]
 
 export default adminRoutes
