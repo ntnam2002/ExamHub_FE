@@ -88,7 +88,7 @@ export const getExaminations = createAsyncThunk(
             >({
                 student_id: studentId,
             })
-            console.log('Fetched examinations:', response.data)
+
             return response.data // Return the fetched examination data
         } catch (error) {
             console.error('Error fetching examinations:', error)
@@ -115,13 +115,13 @@ export const sendAnswer = createAsyncThunk(
     }
 )
 
-export const getScore = createAsyncThunk(
-    'examinationList/getScore',
-    async ({ examId, studentId }: { examId: string; studentId: string }) => {
-        const response = await apiGetScore({ examId, studentId })
-        return response.data
-    }
-)
+// export const getScore = createAsyncThunk(
+//     'examinationList/getScore',
+//     async ({ examId, studentId }: { examId: string; studentId: string }) => {
+//         const response = await apiGetScore({ examId, studentId })
+//         return response.data
+//     }
+// )
 // Create the examination list slice
 const examinationListSlice = createSlice({
     name: 'examinationList',
@@ -134,7 +134,7 @@ const examinationListSlice = createSlice({
             })
             .addCase(getExaminations.fulfilled, (state, action) => {
                 state.loading = false
-                state.examinationList = action.payload // Update examination list with fetched data
+                state.examinationList = action.payload
             })
             .addCase(getExaminations.rejected, (state) => {
                 state.loading = false

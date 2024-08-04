@@ -27,11 +27,18 @@ const GridItem: React.FC<GridItemProps> = ({
 
     const { exam_name, description } = exam_id
 
+    const handleClick = () => {
+        localStorage.setItem('examinationId', _id)
+    }
+
     return (
         <Card bodyClass="h-full">
             <div className="flex flex-col justify-between h-full">
                 <div className="flex justify-between">
-                    <Link to={`/student/exam/do`}>
+                    <Link
+                        to={`/student/exam/examination`}
+                        onClick={handleClick}
+                    >
                         <h6>{exam_name}</h6>
                     </Link>
                 </div>

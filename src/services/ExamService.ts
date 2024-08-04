@@ -1,9 +1,7 @@
-import ApiService from './ApiService'
+import { xcode } from 'react-syntax-highlighter/dist/esm/styles/hljs'
+import ApiService, { IResponse } from './ApiService'
 
-export async function apiGetAllQuestions<
-    T,
-    U extends Record<string, unknown>
->() {
+export async function apiGetAllQuestions<T>() {
     return ApiService.fetchData<T>({
         url: '/exams/allquestions',
         method: 'get',
@@ -60,6 +58,32 @@ export async function apiGetExaminationForStudent<
         console.error('Error fetching examinations:', error)
         throw error
     }
+}
+// Adjust the import path as necessary
+
+export async function apiGetExaminationQuestion<T>(
+    examinationId: string
+): Promise<IResponse<T>> {
+    try {
+        const response = await ApiService.fetchData<T>({
+            url: `/exams/examinations/questions/${examinationId}`,
+            method: 'get',
+        })
+        return response
+    } catch (error) {
+        console.error('Error fetching questions:', error)
+        throw error
+    }
+}
+
+export async function apiGetExaminationById<T, U extends { id: string }>(
+    data: U
+) {
+    const { id } = data
+    return ApiService.fetchData<T>({
+        url: `/exams/examinations/${id}`,
+        method: 'get',
+    })
 }
 
 export async function apiSendAnswers<T, U extends Record<string, unknown>>(
