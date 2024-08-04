@@ -153,11 +153,11 @@ const ProductTable = () => {
                 accessorKey: 'email',
             },
             {
-                header: 'Role',
+                header: 'Chức vụ',
                 accessorKey: 'role',
             },
             {
-                header: 'Class IDs',
+                header: 'Mã lớp',
                 accessorKey: 'class_ids',
                 cell: (props) => {
                     const row = props.row.original
@@ -165,11 +165,11 @@ const ProductTable = () => {
                 },
             },
             {
-                header: 'Department ID',
+                header: 'mã Khoa',
                 accessorKey: 'department_id',
             },
             {
-                header: 'Created At',
+                header: 'Thời gian tạo',
                 accessorKey: 'created_at',
                 cell: (props) => {
                     const row = props.row.original
@@ -181,7 +181,7 @@ const ProductTable = () => {
                 },
             },
             {
-                header: '',
+                header: 'Hành động',
                 id: 'action',
                 cell: (props) => <ActionColumn row={props.row.original} />,
             },

@@ -113,11 +113,11 @@ const QuestionTable = () => {
                 },
             },
             {
-                header: 'Question Text',
+                header: 'Câu hỏi',
                 accessorKey: 'text',
             },
             {
-                header: 'Options',
+                header: 'Lựa chọn',
                 accessorKey: 'options',
                 cell: (props) => {
                     const row = props.row.original
@@ -134,11 +134,11 @@ const QuestionTable = () => {
                 },
             },
             {
-                header: 'Points',
+                header: 'Điểm',
                 accessorKey: 'points',
             },
             {
-                header: 'Created At',
+                header: 'Tạo lúc',
                 accessorKey: 'created_at',
                 cell: (props) => {
                     return (
@@ -151,7 +151,7 @@ const QuestionTable = () => {
                 },
             },
             {
-                header: 'Actions',
+                header: 'Hành động',
                 id: 'action',
                 cell: (props) => <ActionColumn row={props.row.original} />,
             },

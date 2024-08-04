@@ -1,3 +1,3 @@
-import StudentList from './StudentList'
+import ExaminationList from './ExaminationList'
 
-export default StudentList
+export default ExaminationList

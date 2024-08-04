@@ -13,6 +13,7 @@ const ExamListContent = () => {
     const examinationList = useAppSelector(
         (state) => state.examinationList.data.examinationList
     )
+    console.log('Examination list:', examinationList)
 
     const view = 'grid'
 

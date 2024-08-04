@@ -21,16 +21,16 @@ const studentNavigationConfig: NavigationTree[] = [
         type: NAV_ITEM_TYPE_TITLE,
         authority: [STUDENT],
         subMenu: [
-            {
-                key: 'ExamHub.student.home',
-                path: `${STUDENT_PREFIX_PATH}/home`,
-                title: 'Home',
-                translateKey: 'nav.ExamHub.student.home',
-                icon: 'home',
-                type: NAV_ITEM_TYPE_ITEM,
-                authority: [STUDENT],
-                subMenu: [],
-            },
+            // {
+            //     key: 'ExamHub.student.home',
+            //     path: `${STUDENT_PREFIX_PATH}/home`,
+            //     title: 'Home',
+            //     translateKey: 'nav.ExamHub.student.home',
+            //     icon: 'home',
+            //     type: NAV_ITEM_TYPE_ITEM,
+            //     authority: [STUDENT],
+            //     subMenu: [],
+            // },
             {
                 key: 'ExamHub.student.exam',
                 path: `${STUDENT_PREFIX_PATH}/exam`,

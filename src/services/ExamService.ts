@@ -1,7 +1,45 @@
 import { xcode } from 'react-syntax-highlighter/dist/esm/styles/hljs'
 import ApiService, { IResponse } from './ApiService'
+import { Examination } from '@/views/admin/Examination/ExaminationList/components/types'
+import { Exam } from '@/views/admin/Examination/ExamList/components/types'
 
-export async function apiGetAllQuestions<T>() {
+export function apiGetExams() {
+    return ApiService.fetchData<Exam[]>({
+        url: '/exams',
+        method: 'get',
+    })
+}
+export function apiGetExaminations() {
+    return ApiService.fetchData<Examination[]>({
+        url: '/exams/examinations/getAll',
+        method: 'get',
+    })
+}
+
+export function apiCreateExamination(data: Examination) {
+    return ApiService.fetchData({
+        url: '/exams/examinations',
+        method: 'post',
+        data,
+    })
+}
+
+export function apiUpdateExamination(id: string, data: Examination) {
+    return ApiService.fetchData({
+        url: `/exams/examinations/${id}`,
+        method: 'put',
+        data,
+    })
+}
+
+export function apiDeleteExamination(id: string) {
+    return ApiService.fetchData<void>({
+        url: `/exams/examinations/${id}`,
+        method: 'delete',
+    })
+}
+
+export async function apiGetAllQuestions<T, U>() {
     return ApiService.fetchData<T>({
         url: '/exams/allquestions',
         method: 'get',
@@ -49,6 +87,7 @@ export async function apiGetExaminationForStudent<
 >(data: U) {
     try {
         const { student_id } = data
+
         const response = await ApiService.fetchData<T>({
             url: `/exams/examinations/student/${student_id}`,
             method: 'get',

@@ -88,7 +88,7 @@ export const getExaminations = createAsyncThunk(
             >({
                 student_id: studentId,
             })
-
+            console.log('Examinations fetched:', response.data)
             return response.data // Return the fetched examination data
         } catch (error) {
             console.error('Error fetching examinations:', error)

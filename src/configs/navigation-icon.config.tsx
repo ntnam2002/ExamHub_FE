@@ -25,9 +25,10 @@ import {
     HiOutlineCode,
 } from 'react-icons/hi'
 import { TiHomeOutline } from 'react-icons/ti'
-import { PiStudent } from 'react-icons/pi'
+import { PiStudent, PiExam } from 'react-icons/pi'
 import { FaBook } from 'react-icons/fa'
-import { AiOutlineQuestionCircle } from "react-icons/ai";
+import { AiOutlineQuestionCircle } from 'react-icons/ai'
+
 export type NavigationIcons = Record<string, JSX.Element>
 
 const navigationIcon: NavigationIcons = {
@@ -61,7 +62,8 @@ const navigationIcon: NavigationIcons = {
     home: <TiHomeOutline />,
     student: <PiStudent />,
     book: <FaBook />,
-    question:<AiOutlineQuestionCircle />
+    question: <AiOutlineQuestionCircle />,
+    examination: <PiExam />,
 }
 
 export default navigationIcon

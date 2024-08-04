@@ -1,7 +1,7 @@
-import { Routes } from '@/@types/routes'
+import { Meta, Routes } from '@/@types/routes'
 import { ADMIN } from '@/constants/roles.constant'
 import { ADMIN_PREFIX_PATH } from '@/constants/route.constant'
-import { lazy } from 'react'
+import { lazy, LazyExoticComponent } from 'react'
 
 const adminRoutes: Routes = [
     {
@@ -34,6 +34,22 @@ const adminRoutes: Routes = [
         key: 'ExamHub.admin.question',
         path: `${ADMIN_PREFIX_PATH}/question`,
         component: lazy(() => import('@/views/admin/Examination/QuestionList')),
+        authority: [ADMIN],
+    },
+    {
+        key: 'ExamHub.admin.exam',
+        path: `${ADMIN_PREFIX_PATH}/exam`,
+        component: lazy(
+            () => import('@/views/admin/Examination/ExamList')
+        ) as LazyExoticComponent<<T extends Meta>(props: T) => JSX.Element>,
+        authority: [ADMIN],
+    },
+    {
+        key: 'ExamHub.admin.examination',
+        path: `${ADMIN_PREFIX_PATH}/examination`,
+        component: lazy(
+            () => import('@/views/admin/Examination/ExaminationList')
+        ),
         authority: [ADMIN],
     },
 ]
