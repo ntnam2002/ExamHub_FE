@@ -31,7 +31,12 @@ const ExamCamera: React.FC<ExamCameraProps> = forwardRef((props, ref) => {
     const currentFrame = useRef(0)
 
     const [cheatingStatus, setCheatingStatus] = useState('')
-    const [warning, setWarning] = useState(false)
+    const [caution, setCaution] = useState('')
+    const [alert, setAlert] = useState(false)
+    const [cheatCount, setCheatCount] = useState(0)
+    const [previousCheatingStatus, setPreviousCheatingStatus] = useState('')
+    const [previousWarning, setPreviousWarning] = useState(false)
+
     useEffect(() => {
         const faceDetection: FaceDetection = new FaceDetection({
             locateFile: (file) => {
@@ -40,34 +45,52 @@ const ExamCamera: React.FC<ExamCameraProps> = forwardRef((props, ref) => {
         })
 
         faceDetection.setOptions({
-            minDetectionConfidence: 0.5,
+            minDetectionConfidence: 1,
             model: 'short',
         })
 
         function onResult(result: Results) {
+            let warning = false
+            let cautionMessage = ''
+
             if (result.detections.length < 1) {
-                setWarning(true)
-                setCheatingStatus(
+                warning = true
+                cautionMessage =
                     'Không phát hiện được khuôn mặt, có thể bị coi là gian lận!'
-                )
-                return
             } else if (result.detections.length > 1) {
-                setWarning(true)
-                setCheatingStatus(
-                    'Phát hhện nhiều khuôn mặt, có thể bị coi là gian lận!'
-                )
-                return
+                warning = true
+                cautionMessage =
+                    'Phát hiện nhiều khuôn mặt, có thể bị coi là gian lận!'
             }
 
-            const faceCoordinates = extractFaceCoordinates(result)
+            if (warning !== previousWarning) {
+                setPreviousWarning(warning)
+                setAlert(warning)
+                setCaution(cautionMessage)
+            }
 
-            const [lookingLeft, lookingRight] = detectCheating(
-                faceCoordinates,
-                false
-            )
+            if (!warning) {
+                const faceCoordinates = extractFaceCoordinates(result)
+                const [lookingLeft, lookingRight] = detectCheating(
+                    faceCoordinates,
+                    false
+                )
 
-            const cheatingStatus = getCheatingStatus(lookingLeft, lookingRight)
-            setCheatingStatus(cheatingStatus)
+                const currentCheatingStatus = getCheatingStatus(
+                    lookingLeft,
+                    lookingRight
+                )
+                console.log('cheating status', currentCheatingStatus)
+
+                if (currentCheatingStatus !== previousCheatingStatus) {
+                    if (currentCheatingStatus !== 'Bình thường!') {
+                        setAlert(true)
+                        setCaution(currentCheatingStatus)
+                    }
+                    setPreviousCheatingStatus(currentCheatingStatus)
+                    setCheatingStatus(currentCheatingStatus)
+                }
+            }
         }
 
         faceDetection.onResults(onResult)
@@ -101,13 +124,20 @@ const ExamCamera: React.FC<ExamCameraProps> = forwardRef((props, ref) => {
             faceDetection.close()
             cameraRef.current?.stop()
         }
-    }, [webcamRef, realtimeDetection])
+    }, [webcamRef, realtimeDetection, previousCheatingStatus, previousWarning])
 
     useImperativeHandle(ref, () => ({
         stopCamera: () => {
             cameraRef.current?.stop()
         },
     }))
+
+    const handleCloseWarning = () => {
+        if (alert) {
+            setCheatCount((prevCount) => prevCount + 1)
+        }
+        setAlert(false)
+    }
 
     return (
         <div className={classes.cameraContainer}>
@@ -120,12 +150,15 @@ const ExamCamera: React.FC<ExamCameraProps> = forwardRef((props, ref) => {
             />
 
             <br />
-            {warning && (
+            {alert && (
                 <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50 z-50">
                     <div className="bg-white p-8 rounded-lg shadow-lg text-center">
                         <p className="text-red-600 font-bold mb-4">Cảnh báo!</p>
-                        <p className="text-gray-700 mb-4">{cheatingStatus}</p>
-                        <button className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded">
+                        <p className="text-gray-700 mb-4">{caution}</p>
+                        <button
+                            className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded"
+                            onClick={handleCloseWarning}
+                        >
                             Tôi đã hiểu!
                         </button>
                     </div>

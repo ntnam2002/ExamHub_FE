@@ -53,7 +53,7 @@ const ExamInterface = () => {
     }, [])
 
     useEffect(() => {
-        if (cheatAttempts > 100) {
+        if (cheatAttempts > 15) {
             alert(
                 'You have been detected cheating multiple times. You will be redirected out of the exam page.'
             )
