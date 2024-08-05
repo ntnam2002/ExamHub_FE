@@ -51,15 +51,17 @@ const ExamInterface = () => {
             )
         }
     }, [])
-
+    const handleCameraDetection = useCallback(() => {
+        setCheatAttempts((prevAttempts) => prevAttempts + 1)
+    }, [])
     useEffect(() => {
         if (cheatAttempts > 15) {
             alert(
                 'You have been detected cheating multiple times. You will be redirected out of the exam page.'
             )
-            navigate('/student/exams')
+            submitAnswers()
         }
-    }, [cheatAttempts, navigate])
+    }, [cheatAttempts])
 
     useEffect(() => {
         const intervalId = setInterval(() => {

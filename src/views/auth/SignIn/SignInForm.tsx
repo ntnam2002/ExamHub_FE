@@ -68,7 +68,7 @@ const SignInForm = (props: SignInFormProps) => {
             <Formik
                 initialValues={{
                     username: 'admin',
-                    password: '123Qwe',
+                    password: '123',
                     rememberMe: true,
                     isAdmin: false, // Default value for the checkbox
                 }}

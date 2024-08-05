@@ -52,6 +52,17 @@ const adminRoutes: Routes = [
         ),
         authority: [ADMIN],
     },
+    {
+        key: 'ExamHub.admin.examination-new',
+        path: `${ADMIN_PREFIX_PATH}/examination/new`,
+        component: lazy(
+            () =>
+                import(
+                    '@/views/admin/Examination/ExaminationList/components/ExaminationForm'
+                )
+        ) as LazyExoticComponent<<T extends Meta>(props: T) => JSX.Element>,
+        authority: [ADMIN],
+    },
 ]
 
 export default adminRoutes

@@ -1,6 +1,9 @@
 import { xcode } from 'react-syntax-highlighter/dist/esm/styles/hljs'
 import ApiService, { IResponse } from './ApiService'
-import { Examination } from '@/views/admin/Examination/ExaminationList/components/types'
+import {
+    Examination,
+    IExamination,
+} from '@/views/admin/Examination/ExaminationList/components/types'
 import { Exam } from '@/views/admin/Examination/ExamList/components/types'
 
 export function apiGetExams() {
@@ -16,7 +19,7 @@ export function apiGetExaminations() {
     })
 }
 
-export function apiCreateExamination(data: Examination) {
+export function apiCreateExamination(data: IExamination) {
     return ApiService.fetchData({
         url: '/exams/examinations',
         method: 'post',
@@ -24,7 +27,7 @@ export function apiCreateExamination(data: Examination) {
     })
 }
 
-export function apiUpdateExamination(id: string, data: Examination) {
+export function apiUpdateExamination(id: string, data: IExamination) {
     return ApiService.fetchData({
         url: `/exams/examinations/${id}`,
         method: 'put',
