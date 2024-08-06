@@ -5,8 +5,9 @@ import {
     apiUpdateExamination,
     apiGetExaminations,
     apiDeleteExamination,
+    apiGetAllQuestions,
 } from '@/services/ExamService'
-import { Form, Input, Button, DatePicker, Modal } from 'antd'
+import { Form, Input, Button, DatePicker, Modal, Select } from 'antd'
 import moment from 'moment'
 import DataTable from '@/components/shared/DataTable'
 import {
@@ -17,6 +18,7 @@ import {
 } from 'react-icons/hi'
 import { Link } from 'react-router-dom'
 
+const { Option } = Select
 // ExaminationForm Component
 interface ExaminationFormProps {
     examinationToEdit?: Examination
@@ -39,7 +41,24 @@ const ExaminationForm: React.FC<ExaminationFormProps> = ({
         created_by: '',
         total_score: 0,
     })
+    const [exams, setExams] = useState<{ _id: string; exam_id: string }[]>([])
+    const [classes, setClasses] = useState<{ _id: string; class_id: string }[]>(
+        []
+    )
+    const [questions, setQuestions] = useState<any[]>([])
+    useEffect(() => {
+        apiGetExaminations()
+            .then((response) => {
+                setExams(response.data)
+            })
+            .catch((error) => console.error(error))
 
+        apiGetAllQuestions()
+            .then((response) => {
+                setQuestions(response.data)
+            })
+            .catch((error) => console.error(error))
+    }, [])
     useEffect(() => {
         if (examinationToEdit) {
             setExamination(examinationToEdit)
@@ -86,27 +105,39 @@ const ExaminationForm: React.FC<ExaminationFormProps> = ({
                 onFinish={handleSubmit}
             >
                 <Form.Item label="Exam ID" name="exam_id">
-                    <Input
-                        type="text"
-                        name="exam_id"
+                    <Select
                         value={examination.exam_id}
-                        onChange={handleChange}
-                    />
-                </Form.Item>
-                <Form.Item label="Class IDs" name="class_id">
-                    <Input
-                        type="text"
-                        name="class_id"
-                        value={examination.class_id.join(', ')}
-                        onChange={(e) =>
-                            setExamination((prevExam) => ({
-                                ...prevExam,
-                                class_id: e.target.value
-                                    .split(',')
-                                    .map((id) => id.trim()),
+                        onChange={(value) =>
+                            setExamination((prev) => ({
+                                ...prev,
+                                exam_id: value,
                             }))
                         }
-                    />
+                    >
+                        {exams.map((exam) => (
+                            <Option key={exam._id} value={exam.exam_id}>
+                                {exam.exam_id}
+                            </Option>
+                        ))}
+                    </Select>
+                </Form.Item>
+                <Form.Item label="Class IDs" name="class_id">
+                    <Select
+                        mode="multiple"
+                        value={examination.class_id}
+                        onChange={(values) =>
+                            setExamination((prev) => ({
+                                ...prev,
+                                class_id: values,
+                            }))
+                        }
+                    >
+                        {classes.map((cls) => (
+                            <Option key={cls._id} value={cls.class_id}>
+                                {cls.class_id}
+                            </Option>
+                        ))}
+                    </Select>
                 </Form.Item>
                 <Form.Item label="Student IDs" name="student_id">
                     <Input
@@ -154,18 +185,6 @@ const ExaminationForm: React.FC<ExaminationFormProps> = ({
                         onChange={handleChange}
                     />
                 </Form.Item>
-                <Form.Item>
-                    <Button type="primary" htmlType="submit">
-                        Save
-                    </Button>
-                    <Button
-                        type="default"
-                        style={{ marginLeft: '8px' }}
-                        onClick={onCancel}
-                    >
-                        Cancel
-                    </Button>
-                </Form.Item>
             </Form>
         </div>
     )
@@ -208,26 +227,30 @@ const ExaminationTableTools: React.FC<ExaminationTableToolsProps> = ({
     }
 
     return (
-        <div className="flex flex-col lg:flex-row lg:items-center">
-            <Link
-                download
-                className="block lg:inline-block md:mx-2 md:mb-0 mb-4"
-                to="/data/question-list.csv"
-                target="_blank"
-            >
-                <Button block size="sm" icon={<HiDownload />}>
-                    Xuất file
+        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-end">
+            <div style={{ display: 'flex' }}>
+                <Link
+                    download
+                    className="block lg:inline-block md:mx-2 md:mb-0 mb-4"
+                    to="/data/question-list.csv"
+                    target="_blank"
+                >
+                    <Button block size="large" icon={<HiDownload />}>
+                        Xuất file
+                    </Button>
+                </Link>
+                <Button
+                    block
+                    //variant="solid"
+                    color="primary"
+                    size="large"
+                    icon={<HiPlusCircle />}
+                    onClick={handleAddExamination}
+                >
+                    Tạo kỳ thi
                 </Button>
-            </Link>
-            <Button
-                block
-                variant="solid"
-                size="sm"
-                icon={<HiPlusCircle />}
-                onClick={handleAddExamination}
-            >
-                Tạo kỳ thi
-            </Button>
+            </div>
+
             <Modal
                 title={selectedExamination ? 'Cập nhật kỳ thi' : 'Tạo kỳ thi'}
                 open={isModalVisible}
@@ -250,7 +273,10 @@ const ExaminationTable: React.FC = () => {
     const [loading, setLoading] = useState<boolean>(true)
     const [selectedExamination, setSelectedExamination] =
         useState<Examination | null>(null)
-
+    const [exams, setExams] = useState<{ _id: string; exam_id: string }[]>([])
+    const [classes, setClasses] = useState<{ _id: string; class_id: string }[]>(
+        []
+    )
     useEffect(() => {
         apiGetExaminations()
             .then((response) => {
@@ -334,6 +360,7 @@ const ExaminationTable: React.FC = () => {
     return (
         <div>
             <ExaminationTableTools onEdit={handleEdit} />
+            <div>&nbsp;</div>
             <DataTable columns={columns} data={data} loading={loading} />
             <Modal
                 title={selectedExamination ? 'Cập nhật kỳ thi' : 'Tạo kỳ thi'}

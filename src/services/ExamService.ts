@@ -12,6 +12,12 @@ export function apiGetExams() {
         method: 'get',
     })
 }
+export function apiGetAllClasses() {
+    return ApiService.fetchData<Exam[]>({
+        url: '/admin/getAllClass',
+        method: 'get',
+    })
+}
 export function apiGetExaminations() {
     return ApiService.fetchData<Examination[]>({
         url: '/exams/examinations/getAll',
