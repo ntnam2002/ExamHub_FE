@@ -88,7 +88,7 @@ export const getExaminations = createAsyncThunk(
             >({
                 student_id: studentId,
             })
-            console.log('Examinations fetched:', response.data)
+
             return response.data // Return the fetched examination data
         } catch (error) {
             console.error('Error fetching examinations:', error)
@@ -106,7 +106,7 @@ export const sendAnswer = createAsyncThunk(
     }) => {
         try {
             const response = await apiSendAnswers(data)
-            console.log('Answer sent:', response.data)
+
             return response.data
         } catch (error) {
             console.error('Error sending answer:', error)
@@ -144,7 +144,6 @@ const examinationListSlice = createSlice({
             })
             .addCase(sendAnswer.fulfilled, (state, action) => {
                 state.loading = false
-                console.log('Answer submission response:', action.payload)
             })
             .addCase(sendAnswer.rejected, (state) => {
                 state.loading = false

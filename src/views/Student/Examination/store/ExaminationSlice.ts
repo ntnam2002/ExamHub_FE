@@ -69,7 +69,6 @@ export const getQuestionsByExamId = createAsyncThunk(
                 await apiGetExaminationQuestion<ExaminationQuestionListResponse>(
                     examinationId
                 )
-            console.log('Questions fetched:', response.data)
             return response.data
         } catch (error) {
             console.error('Error fetching questions:', error)
@@ -87,7 +86,6 @@ export const sendAnswer = createAsyncThunk(
     }) => {
         try {
             const response = await apiSendAnswers(data)
-            console.log('Answer sent:', response.data)
             return response.data
         } catch (error) {
             console.error('Error sending answer:', error)
@@ -104,16 +102,16 @@ const examinationQuesionListSlice = createSlice({
     extraReducers: (builder) => {
         builder
             .addCase(getQuestionsByExamId.pending, (state) => {
-                console.log('Fetching questions...')
+             
                 state.loading = true
             })
             .addCase(getQuestionsByExamId.fulfilled, (state, action) => {
-                console.log('Thunk fulfilled with payload:', action.payload)
+                
                 state.loading = false
                 state.examinationQuestionList = action.payload
             })
             .addCase(getQuestionsByExamId.rejected, (state, action) => {
-                console.log('Thunk rejected with error:', action.error)
+               
                 state.loading = false
             })
             .addCase(sendAnswer.pending, (state) => {
@@ -121,7 +119,7 @@ const examinationQuesionListSlice = createSlice({
             })
             .addCase(sendAnswer.fulfilled, (state, action) => {
                 state.loading = false
-                console.log('Answer submission response:', action.payload)
+               
             })
             .addCase(sendAnswer.rejected, (state) => {
                 state.loading = false

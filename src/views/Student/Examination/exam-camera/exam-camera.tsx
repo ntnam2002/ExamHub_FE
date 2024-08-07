@@ -39,91 +39,97 @@ const ExamCamera: React.FC<ExamCameraProps> = forwardRef((props, ref) => {
     const [previousWarning, setPreviousWarning] = useState(false)
 
     useEffect(() => {
-        const faceDetection: FaceDetection = new FaceDetection({
-            locateFile: (file) => {
-                return `https://cdn.jsdelivr.net/npm/@mediapipe/face_detection/${file}`
-            },
-        })
-
-        faceDetection.setOptions({
-            minDetectionConfidence: 1,
-            model: 'short',
-        })
-
-        function onResult(result: Results) {
-            let warning = false
-            let cautionMessage = ''
-
-            if (result.detections.length < 1) {
-                warning = true
-                cautionMessage =
-                    'Không phát hiện được khuôn mặt, có thể bị coi là gian lận!'
-            } else if (result.detections.length > 1) {
-                warning = true
-                cautionMessage =
-                    'Phát hiện nhiều khuôn mặt, có thể bị coi là gian lận!'
-            }
-
-            if (warning !== previousWarning) {
-                setPreviousWarning(warning)
-                setAlert(warning)
-                setCaution(cautionMessage)
-            }
-
-            if (!warning) {
-                const faceCoordinates = extractFaceCoordinates(result)
-                const [lookingLeft, lookingRight] = detectCheating(
-                    faceCoordinates,
-                    false
-                )
-
-                const currentCheatingStatus = getCheatingStatus(
-                    lookingLeft,
-                    lookingRight
-                )
-                console.log('cheating status', currentCheatingStatus)
-
-                if (currentCheatingStatus !== previousCheatingStatus) {
-                    if (currentCheatingStatus !== 'Bình thường!') {
-                        setAlert(true)
-                        setCaution(currentCheatingStatus)
-                    }
-                    setPreviousCheatingStatus(currentCheatingStatus)
-                    setCheatingStatus(currentCheatingStatus)
-                }
-            }
-        }
-
-        faceDetection.onResults(onResult)
-        faceDetectionRef.current = faceDetection
-
-        if (webcamRef.current && webcamRef.current.video) {
-            const camera = new Camera(webcamRef.current.video, {
-                onFrame: async () => {
-                    if (!realtimeDetection) {
-                        return
-                    }
-
-                    currentFrame.current += 1
-
-                    if (currentFrame.current >= frameRefresh) {
-                        currentFrame.current = 0
-                        await faceDetection.send({
-                            image: webcamRef.current?.video as HTMLVideoElement,
-                        })
-                    }
+       
+        
+        if (typeof window.FaceDetection !== 'undefined') {
+            const faceDetection: FaceDetection = new FaceDetection({
+                locateFile: (file) => {
+                    return `https://cdn.jsdelivr.net/npm/@mediapipe/face_detection/${file}`
                 },
-                width: 1280,
-                height: 720,
             })
 
-            camera.start()
-            cameraRef.current = camera
-        }
+            faceDetection.setOptions({
+                minDetectionConfidence: 1,
+                model: 'short',
+            })
 
-        return () => {
-            faceDetection.close()
-            cameraRef.current?.stop()
+            // eslint-disable-next-line no-inner-declarations
+            function onResult(result: Results) {
+                let warning = false
+                let cautionMessage = ''
+
+                if (result.detections.length < 1) {
+                    warning = true
+                    cautionMessage =
+                        'Không phát hiện được khuôn mặt, có thể bị coi là gian lận!'
+                } else if (result.detections.length > 1) {
+                    warning = true
+                    cautionMessage =
+                        'Phát hiện nhiều khuôn mặt, có thể bị coi là gian lận!'
+                }
+
+                if (warning !== previousWarning) {
+                    setPreviousWarning(warning)
+                    setAlert(warning)
+                    setCaution(cautionMessage)
+                }
+
+                if (!warning) {
+                    const faceCoordinates = extractFaceCoordinates(result)
+                    const [lookingLeft, lookingRight] = detectCheating(
+                        faceCoordinates,
+                        false
+                    )
+
+                    const currentCheatingStatus = getCheatingStatus(
+                        lookingLeft,
+                        lookingRight
+                    )
+                   
+
+                    if (currentCheatingStatus !== previousCheatingStatus) {
+                        if (currentCheatingStatus !== 'Bình thường!') {
+                            setAlert(true)
+                            setCaution(currentCheatingStatus)
+                        }
+                        setPreviousCheatingStatus(currentCheatingStatus)
+                        setCheatingStatus(currentCheatingStatus)
+                    }
+                }
+            }
+
+            faceDetection.onResults(onResult)
+            faceDetectionRef.current = faceDetection
+
+            if (webcamRef.current && webcamRef.current.video) {
+                const camera = new Camera(webcamRef.current.video, {
+                    onFrame: async () => {
+                        if (!realtimeDetection) {
+                            return
+                        }
+
+                        currentFrame.current += 1
+
+                        if (currentFrame.current >= frameRefresh) {
+                            currentFrame.current = 0
+                            await faceDetection.send({
+                                image: webcamRef.current
+                                    ?.video as HTMLVideoElement,
+                            })
+                        }
+                    },
+                    width: 1280,
+                    height: 720,
+                })
+
+                camera.start()
+                cameraRef.current = camera
+            }
+
+            return () => {
+                faceDetection.close()
+                cameraRef.current?.stop()
+            }
         }
     }, [webcamRef, realtimeDetection, previousCheatingStatus, previousWarning])
 
@@ -141,12 +147,15 @@ const ExamCamera: React.FC<ExamCameraProps> = forwardRef((props, ref) => {
     }
     useEffect(() => {
         if (cheatCount >= 10) {
-            toast.error('Bạn đã gian lận quá số lần, hệ thống sẽ kết thúc bài thi!')
+            toast.error(
+                'Bạn đã gian lận quá số lần, hệ thống sẽ kết thúc bài thi!'
+            )
             setTimeout(() => {
                 window.location.reload()
             }, 5000)
         }
     }, [cheatCount])
+
     return (
         <div className={classes.cameraContainer}>
             <p className={classes.cheatingStatus}>{cheatingStatus}</p>

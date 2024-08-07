@@ -26,8 +26,6 @@ const ExamInterface = () => {
     const examinationList = useAppSelector(
         (state) => state.examinationQuestionList.data.examinationQuestionList
     )
-    console.log('Examination list:', examinationList)
-
     const examCameraRef = useRef<{ stopCamera: () => void } | null>(null)
     useEffect(() => {
         dispatch(getQuestionsByExamId())
@@ -121,7 +119,6 @@ const ExamInterface = () => {
         dispatch(sendAnswer({ examId, studentId, answers }))
             .unwrap()
             .then((response) => {
-                console.log('Submitted:', response)
                 alert('Answers submitted successfully.')
                 localStorage.removeItem('answers')
                 // Turn off the camera

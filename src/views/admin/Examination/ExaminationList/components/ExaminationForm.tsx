@@ -33,7 +33,7 @@ const ExaminationForm: React.FC<ExaminationFormProps> = ({
         //created_by: '',
         //total_score: 0,
     })
-    console.log('examination', examination)
+    
     const [exams, setExams] = useState<{ _id: string; exam_name: string }[]>([])
     const [classes, setClasses] = useState<
         { _id: string; class_name: string }[]
@@ -67,7 +67,7 @@ const ExaminationForm: React.FC<ExaminationFormProps> = ({
         }))
     }
     const handleSave = () => {
-        console.log('examination', examination)
+       
         apiCreateExamination(examination)
             .then((response) => {
                 onSave(response.data)

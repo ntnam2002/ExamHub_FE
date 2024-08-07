@@ -28,7 +28,7 @@ const ProductDeleteConfirmation = () => {
     const onDelete = async () => {
         dispatch(toggleDeleteConfirmation(false))
         const success = await deleteProduct({ id: selectedProduct })
-        console.log('success', success)
+
         if (success.status === 'success') {
             dispatch(getStudents())
             toast.push(
