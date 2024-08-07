@@ -1,6 +1,6 @@
 // components/ExaminationTable.tsx
 import React, { useState, useEffect, useMemo } from 'react'
-import { Examination } from '@/types'
+import { Examination } from './types'
 import {
     apiGetExaminations,
     apiDeleteExamination,
@@ -16,6 +16,9 @@ const ExaminationTable: React.FC = () => {
     const [loading, setLoading] = useState<boolean>(true)
     const [selectedExamination, setSelectedExamination] =
         useState<Examination | null>(null)
+    const [pageIndex, setPageIndex] = useState<number>(1)
+    const [pageSize, setPageSize] = useState<number>(10)
+    const [sort, setSort] = useState<any>(null)
 
     useEffect(() => {
         apiGetExaminations()
@@ -27,7 +30,20 @@ const ExaminationTable: React.FC = () => {
                 console.error(error)
                 setLoading(false)
             })
-    }, [])
+    }, [pageIndex, pageSize, sort])
+
+    const onPaginationChange = (page: number) => {
+        setPageIndex(page)
+    }
+
+    const onSelectChange = (value: number) => {
+        setPageSize(Number(value))
+        setPageIndex(1)
+    }
+
+    const onSort = (sort: any) => {
+        setSort(sort)
+    }
 
     const columns = useMemo(
         () => [
@@ -103,7 +119,19 @@ const ExaminationTable: React.FC = () => {
         <div>
             <ExaminationTableTools onEdit={handleEdit} />
             <div>&nbsp;</div>
-            <DataTable columns={columns} data={data} loading={loading} />
+            <DataTable
+                columns={columns}
+                data={data}
+                loading={loading}
+                pagingData={{
+                    total: data?.total,
+                    pageIndex: pageIndex,
+                    pageSize: pageSize,
+                }}
+                onPaginationChange={onPaginationChange}
+                onSelectChange={onSelectChange}
+                onSort={onSort}
+            />
             <Modal
                 title={selectedExamination ? 'Cập nhật kỳ thi' : 'Tạo kỳ thi'}
                 open={!!selectedExamination}

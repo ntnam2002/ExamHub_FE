@@ -2,6 +2,7 @@ import classNames from 'classnames'
 import { APP_NAME } from '@/constants/app.constant'
 import type { CommonProps } from '@/@types/common'
 import examhubLogo from '@/assets/svg/examhub-logo.png'
+import logobig from '@/assets/svg/logobig.png'
 
 interface LogoProps extends CommonProps {
     type?: 'full' | 'streamline'
@@ -10,7 +11,7 @@ interface LogoProps extends CommonProps {
     logoWidth?: number | string
 }
 
-const LOGO_SRC_PATH = '/img/logo/'
+//const LOGO_SRC_PATH = '/img/logo/'
 
 const Logo = (props: LogoProps) => {
     const {
@@ -19,7 +20,7 @@ const Logo = (props: LogoProps) => {
         className,
         imgClass,
         style,
-        logoWidth = '100px',
+        logoWidth = '140px',
     } = props
 
     return (

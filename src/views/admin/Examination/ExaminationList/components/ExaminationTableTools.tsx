@@ -1,14 +1,15 @@
 // components/ExaminationTableTools.tsx
 import React, { useState } from 'react'
-import { Button, Modal } from 'antd'
+import { Modal } from 'antd'
 import { HiDownload, HiPlusCircle } from 'react-icons/hi'
 import { Link } from 'react-router-dom'
 import ExaminationForm from './ExaminationForm'
-import { Examination } from '@/types'
+import { Examination } from './types'
 import {
     apiCreateExamination,
     apiUpdateExamination,
 } from '@/services/ExamService'
+import Button from '@/components/ui/Button'
 
 interface ExaminationTableToolsProps {
     onEdit: (examination: Examination) => void
@@ -47,21 +48,23 @@ const ExaminationTableTools: React.FC<ExaminationTableToolsProps> = ({
     return (
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-end">
             <div style={{ display: 'flex' }}>
-                <Link
+                {/* <Link
                     download
                     className="block lg:inline-block md:mx-2 md:mb-0 mb-4"
                     to="/data/question-list.csv"
                     target="_blank"
                 >
-                    <Button block size="large" icon={<HiDownload />}>
+                    <Button block size="sm" icon={<HiDownload />}>
                         Xuất file
                     </Button>
-                </Link>
+                </Link> */}
+
                 <Button
                     block
-                    color="primary"
-                    size="large"
+                    variant="solid"
+                    size="sm"
                     icon={<HiPlusCircle />}
+                    style={{ backgroundColor: '#4f47e6', color: 'white' }}
                     onClick={handleAddExamination}
                 >
                     Tạo kỳ thi

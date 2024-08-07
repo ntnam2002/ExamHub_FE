@@ -7,8 +7,8 @@ export interface Examination {
     student_id: string[]
     access_keys: string
     started_at: Date
-    created_by: string
-    total_score: number
+    //created_by: string
+    //total_score: number
 }
 export interface IExamination {
     exam_id: string
@@ -16,6 +16,4 @@ export interface IExamination {
     student_id: string[]
     access_keys: string
     started_at: Date
-    created_by: string
-    total_score: number
 }

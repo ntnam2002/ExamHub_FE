@@ -1,4 +1,4 @@
-import { ADMIN_PREFIX_PATH} from '@/constants/route.constant'
+import { ADMIN_PREFIX_PATH } from '@/constants/route.constant'
 import {
     NAV_ITEM_TYPE_TITLE,
     NAV_ITEM_TYPE_ITEM,
@@ -10,8 +10,8 @@ const adminNavigationConfig: NavigationTree[] = [
     {
         key: 'Adminapps',
         path: '',
-        title: 'ExamHub',
-        translateKey: 'ExamHub',
+        title: '',
+        translateKey: '',
         icon: '',
         type: NAV_ITEM_TYPE_TITLE,
         authority: [ADMIN],
@@ -30,7 +30,7 @@ const adminNavigationConfig: NavigationTree[] = [
                 key: 'ExamHub.admin.student',
                 path: `${ADMIN_PREFIX_PATH}/student`,
                 title: 'Sinh viên',
-                translateKey: 'nav.ExamHub.admin.student',
+                translateKey: 'Sinh viên',
                 icon: 'student',
                 type: NAV_ITEM_TYPE_ITEM,
                 authority: [ADMIN],
@@ -40,7 +40,7 @@ const adminNavigationConfig: NavigationTree[] = [
                 key: 'ExamHub.admin.question',
                 path: `${ADMIN_PREFIX_PATH}/question`,
                 title: 'Câu hỏi',
-                translateKey: 'nav.ExamHub.admin.question',
+                translateKey: 'Câu hỏi',
                 icon: 'question',
                 type: NAV_ITEM_TYPE_ITEM,
                 authority: [ADMIN],
@@ -50,7 +50,7 @@ const adminNavigationConfig: NavigationTree[] = [
                 key: 'ExamHub.admin.exam',
                 path: `${ADMIN_PREFIX_PATH}/exam`,
                 title: 'Bài thi',
-                translateKey: 'nav.ExamHub.admin.exam',
+                translateKey: 'Bài thi',
                 icon: 'book',
                 type: NAV_ITEM_TYPE_ITEM,
                 authority: [ADMIN],
@@ -60,7 +60,7 @@ const adminNavigationConfig: NavigationTree[] = [
                 key: 'ExamHub.admin.examination',
                 path: `${ADMIN_PREFIX_PATH}/examination`,
                 title: 'Kỳ thi',
-                translateKey: 'nav.ExamHub.admin.examination',
+                translateKey: 'Kỳ thi',
                 icon: 'examination',
                 type: NAV_ITEM_TYPE_ITEM,
                 authority: [ADMIN],

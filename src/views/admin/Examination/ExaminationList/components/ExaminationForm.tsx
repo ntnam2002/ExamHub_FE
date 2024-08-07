@@ -1,9 +1,14 @@
 // components/ExaminationForm.tsx
 import React, { useState, useEffect, ChangeEvent } from 'react'
 import { Examination } from './types'
-import { Form, Input, Button, DatePicker, Select } from 'antd'
+import { Form, Input, Button, DatePicker, Select, Space } from 'antd'
 import moment from 'moment'
-import { apiGetExams, apiGetAllClasses } from '@/services/ExamService'
+import {
+    apiGetExams,
+    apiGetAllClasses,
+    apiCreateExamination,
+    apiGetExaminations,
+} from '@/services/ExamService'
 
 const { Option } = Select
 
@@ -18,16 +23,17 @@ const ExaminationForm: React.FC<ExaminationFormProps> = ({
     onSave,
     onCancel,
 }) => {
-    const [examination, setExamination] = useState<Examination>({
-        _id: '',
+    const [examination, setExamination] = useState<any>({
+        //_id: '',
         exam_id: '',
         class_id: [],
         student_id: [],
         access_keys: '',
         started_at: new Date(),
-        created_by: '',
-        total_score: 0,
+        //created_by: '',
+        //total_score: 0,
     })
+    console.log('examination', examination)
     const [exams, setExams] = useState<{ _id: string; exam_name: string }[]>([])
     const [classes, setClasses] = useState<
         { _id: string; class_name: string }[]
@@ -60,27 +66,37 @@ const ExaminationForm: React.FC<ExaminationFormProps> = ({
             started_at: date ? date.toDate() : new Date(),
         }))
     }
-
+    const handleSave = () => {
+        console.log('examination', examination)
+        apiCreateExamination(examination)
+            .then((response) => {
+                onSave(response.data)
+            })
+            .catch((error) => console.error(error))
+        apiGetExaminations()
+    }
     const handleSubmit = () => {
         onSave(examination)
     }
+    const formItemLayout = { labelCol: { span: 4 }, wrapperCol: { span: 20 } }
 
     return (
-        <div style={{ maxWidth: '600px', margin: '0 auto' }}>
+        <div style={{ maxWidth: '700px', margin: '0 auto' }}>
             <Form
+                {...formItemLayout}
                 layout="horizontal"
                 initialValues={{
-                    exam_id: examination.exam_id,
+                    exam_id: examination._id,
                     class_id: examination.class_id,
                     student_id: examination.student_id.join(', '),
                     access_keys: examination.access_keys,
                     started_at: moment(examination.started_at),
-                    created_by: examination.created_by,
-                    total_score: examination.total_score,
+                    //created_by: examination.created_by,
+                    //total_score: examination.total_score,
                 }}
                 onFinish={handleSubmit}
             >
-                <Form.Item label="Exam ID" name="exam_id">
+                <Form.Item label="Exam ID" name="exam_id" {...formItemLayout}>
                     <Select
                         value={examination.exam_id}
                         onChange={(value) =>
@@ -91,13 +107,17 @@ const ExaminationForm: React.FC<ExaminationFormProps> = ({
                         }
                     >
                         {exams.map((exam) => (
-                            <Option key={exam._id} value={exam.exam_name}>
+                            <Option key={exam._id} value={exam._id}>
                                 {exam.exam_name}
                             </Option>
                         ))}
                     </Select>
                 </Form.Item>
-                <Form.Item label="Class IDs" name="class_id">
+                <Form.Item
+                    label="Class IDs"
+                    name="class_id"
+                    {...formItemLayout}
+                >
                     <Select
                         mode="multiple"
                         value={examination.class_id}
@@ -109,13 +129,17 @@ const ExaminationForm: React.FC<ExaminationFormProps> = ({
                         }
                     >
                         {classes.map((cls) => (
-                            <Option key={cls._id} value={cls.class_name}>
+                            <Option key={cls._id} value={cls._id}>
                                 {cls.class_name}
                             </Option>
                         ))}
                     </Select>
                 </Form.Item>
-                <Form.Item label="Student IDs" name="student_id">
+                <Form.Item
+                    label="Student IDs"
+                    name="student_id"
+                    {...formItemLayout}
+                >
                     <Input
                         type="text"
                         name="student_id"
@@ -130,7 +154,11 @@ const ExaminationForm: React.FC<ExaminationFormProps> = ({
                         }
                     />
                 </Form.Item>
-                <Form.Item label="Access Keys" name="access_keys">
+                <Form.Item
+                    label="Access Keys"
+                    name="access_keys"
+                    {...formItemLayout}
+                >
                     <Input
                         type="text"
                         name="access_keys"
@@ -138,14 +166,23 @@ const ExaminationForm: React.FC<ExaminationFormProps> = ({
                         onChange={handleChange}
                     />
                 </Form.Item>
-                <Form.Item label="Started At" name="started_at">
+                <Form.Item
+                    label="Started At"
+                    name="started_at"
+                    {...formItemLayout}
+                >
                     <DatePicker
-                        format="YYYY-MM-DD"
+                        showTime
+                        format="YYYY-MM-DD HH:mm:ss"
                         value={moment(examination.started_at)}
                         onChange={handleDateChange}
                     />
                 </Form.Item>
-                <Form.Item label="Created By" name="created_by">
+                {/* <Form.Item
+                    label="Created By"
+                    name="created_by"
+                    {...formItemLayout}
+                >
                     <Input
                         type="text"
                         name="created_by"
@@ -153,13 +190,32 @@ const ExaminationForm: React.FC<ExaminationFormProps> = ({
                         onChange={handleChange}
                     />
                 </Form.Item>
-                <Form.Item label="Total Score" name="total_score">
+                <Form.Item
+                    label="Total Score"
+                    name="total_score"
+                    {...formItemLayout}
+                >
                     <Input
                         type="number"
                         name="total_score"
                         value={examination.total_score}
                         onChange={handleChange}
                     />
+                </Form.Item> */}
+                <Form.Item
+                    wrapperCol={{ span: 24 }}
+                    style={{ textAlign: 'right' }}
+                >
+                    <Space>
+                        <Button
+                            type="primary"
+                            htmlType="submit"
+                            onClick={handleSave}
+                        >
+                            Save
+                        </Button>
+                        <Button onClick={onCancel}>Cancel</Button>
+                    </Space>
                 </Form.Item>
             </Form>
         </div>
