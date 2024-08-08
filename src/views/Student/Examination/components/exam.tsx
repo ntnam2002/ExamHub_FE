@@ -167,7 +167,7 @@ const ExamInterface = () => {
     }, [])
 
     return (
-        <div className="absolute min-h-screen bg-gray-100 flex">
+        <div className="h-screen w-screen bg-gray-100 flex">
             <div className="fixed container mx-auto p-4 flex flex-grow">
                 <div className="bg-white rounded-lg shadow-md p-8 w-full md:w-2/3">
                     <div className="flex justify-between items-center mb-6">
