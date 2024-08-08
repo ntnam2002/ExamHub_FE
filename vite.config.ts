@@ -10,7 +10,7 @@ function mediapipe_workaround() {
         load(id: string) {
             if (basename(id) === 'face_detection.js') {
                 let code = fs.readFileSync(id, 'utf-8')
-                code += 'exports.face_detection = face_detection;'
+                code += 'exports.FaceDetection = FaceDetection;'
                 return { code }
             } else {
                 return null
