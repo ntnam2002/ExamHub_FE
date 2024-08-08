@@ -8,9 +8,17 @@ function mediapipe_workaround() {
     return {
         name: 'mediapipe_workaround',
         load(id: string) {
-            if (basename(id) === 'face_detection.js') {
+            const fileName = basename(id)
+            if (
+                fileName === 'face_detection.js' ||
+                fileName === 'camera_utils.js'
+            ) {
                 let code = fs.readFileSync(id, 'utf-8')
-                code += 'exports.FaceDetection = FaceDetection;'
+                if (fileName === 'face_detection.js') {
+                    code += 'exports.FaceDetection = FaceDetection;'
+                } else if (fileName === 'camera_utils.js') {
+                    code += 'exports.Camera = Camera;'
+                }
                 return { code }
             } else {
                 return null
