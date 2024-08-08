@@ -11,7 +11,7 @@ const adminNavigationConfig: NavigationTree[] = [
         key: 'Adminapps',
         path: '',
         title: '',
-        translateKey: '',
+        translateKey: 'ExamHub',
         icon: '',
         type: NAV_ITEM_TYPE_TITLE,
         authority: [ADMIN],

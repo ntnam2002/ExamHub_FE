@@ -15,7 +15,6 @@ import {
     getCheatingStatus,
 } from '../face-detection/face-detection-helper'
 import classes from './exam-camera.module.scss'
-import { use } from 'i18next'
 
 interface ExamCameraProps {
     ref: any
@@ -46,7 +45,7 @@ const ExamCamera: React.FC<ExamCameraProps> = forwardRef((props, ref) => {
         })
 
         faceDetection.setOptions({
-            minDetectionConfidence: 0.5,
+            minDetectionConfidence: 1,
             model: 'short',
         })
 
@@ -149,7 +148,6 @@ const ExamCamera: React.FC<ExamCameraProps> = forwardRef((props, ref) => {
             }, 5000)
         }
     }, [cheatCount])
-
     return (
         <div className={classes.cameraContainer}>
             <p className={classes.cheatingStatus}>{cheatingStatus}</p>

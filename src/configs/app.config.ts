@@ -8,6 +8,7 @@ export type AppConfig = {
 }
 
 const appConfig: AppConfig = {
+    //apiPrefix: 'http://localhost:3120/',
     apiPrefix: 'https://examhub-be.onrender.com/',
     authenticatedEntryPath: '/',
     unAuthenticatedEntryPath: '/sign-in',
