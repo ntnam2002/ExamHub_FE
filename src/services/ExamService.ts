@@ -137,6 +137,7 @@ export async function apiGetExaminationById<T, U extends { id: string }>(
 export async function apiSendAnswers<T, U extends Record<string, unknown>>(
     data: U
 ) {
+    console.log('send answer data', data)
     return ApiService.fetchData<T>({
         url: `/exams/${data.examId}/score/${data.studentId}`,
         method: 'post',

@@ -1,3 +1,4 @@
+/* eslint-disable prefer-const */
 import { Camera } from '@mediapipe/camera_utils'
 import { FaceDetection, Results } from '@mediapipe/face_detection'
 import React, {
@@ -16,7 +17,9 @@ import {
 } from '../face-detection/face-detection-helper'
 import classes from './exam-camera.module.scss'
 
-interface ExamCameraProps {}
+interface ExamCameraProps {
+    ref: any
+}
 
 const ExamCamera: React.FC<ExamCameraProps> = forwardRef((props, ref) => {
     const [img_, setImg_] = useState<string>()
@@ -36,7 +39,7 @@ const ExamCamera: React.FC<ExamCameraProps> = forwardRef((props, ref) => {
     const [previousWarning, setPreviousWarning] = useState(false)
 
     useEffect(() => {
-        const faceDetection: FaceDetection = new FaceDetection({
+        let faceDetection = new FaceDetection({
             locateFile: (file) => {
                 return `https://cdn.jsdelivr.net/npm/@mediapipe/face_detection/${file}`
             },

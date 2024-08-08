@@ -11,9 +11,12 @@ import ProductForm, {
     FormModel,
     SetSubmitting,
     OnDeleteCallback,
+    // eslint-disable-next-line import/no-duplicates
 } from '@/views/admin/Student/StudentForm'
 import isEmpty from 'lodash/isEmpty'
+// eslint-disable-next-line import/no-duplicates
 import StudentForm from '@/views/admin/Student/StudentForm'
+import { deleteProduct } from '../ExaminationList/store'
 
 injectReducer('salesProductEdit', reducer)
 
@@ -111,3 +114,6 @@ const ProductEdit = () => {
 }
 
 export default ProductEdit
+function updateProduct(values: FormModel) {
+    throw new Error('Function not implemented.')
+}

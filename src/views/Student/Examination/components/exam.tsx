@@ -26,7 +26,6 @@ const ExamInterface = () => {
     const examinationList = useAppSelector(
         (state) => state.examinationQuestionList.data.examinationQuestionList
     )
-  
 
     const examCameraRef = useRef<{ stopCamera: () => void } | null>(null)
     useEffect(() => {
@@ -109,7 +108,7 @@ const ExamInterface = () => {
 
     const submitAnswers = useCallback(() => {
         const answers = JSON.parse(localStorage.getItem('answers') || '[]')
-
+        console.log('answers', answers)
         if (answers.length === 0) {
             alert('No answers to submit.')
             return
@@ -121,7 +120,6 @@ const ExamInterface = () => {
         dispatch(sendAnswer({ examId, studentId, answers }))
             .unwrap()
             .then((response) => {
-               
                 alert('Answers submitted successfully.')
                 localStorage.removeItem('answers')
                 // Turn off the camera
