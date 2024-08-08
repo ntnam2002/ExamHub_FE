@@ -3,7 +3,7 @@ import {
     NAV_ITEM_TYPE_TITLE,
     NAV_ITEM_TYPE_ITEM,
 } from '@/constants/navigation.constant'
-import { ADMIN } from '@/constants/roles.constant'
+import { ADMIN, TEACHER } from '@/constants/roles.constant'
 import type { NavigationTree } from '@/@types/navigation'
 
 const adminNavigationConfig: NavigationTree[] = [
@@ -11,21 +11,21 @@ const adminNavigationConfig: NavigationTree[] = [
         key: 'Adminapps',
         path: '',
         title: '',
-        translateKey: 'ExamHub',
+        translateKey: '',
         icon: '',
         type: NAV_ITEM_TYPE_TITLE,
         authority: [ADMIN],
         subMenu: [
-            // {
-            //     key: 'ExamHub.admin.home',
-            //     path: `${ADMIN_PREFIX_PATH}/home`,
-            //     title: 'Home',
-            //     translateKey: 'nav.ExamHub.admin.home',
-            //     icon: 'home',
-            //     type: NAV_ITEM_TYPE_ITEM,
-            //     authority: [ADMIN],
-            //     subMenu: [],
-            // },
+            {
+                key: 'ExamHub.admin.statistics',
+                path: `${ADMIN_PREFIX_PATH}/statistics`,
+                title: 'Thống kê',
+                translateKey: 'statistics',
+                icon: 'report',
+                type: NAV_ITEM_TYPE_ITEM,
+                authority: [ADMIN],
+                subMenu: [],
+            },
             {
                 key: 'ExamHub.admin.student',
                 path: `${ADMIN_PREFIX_PATH}/student`,
@@ -37,13 +37,23 @@ const adminNavigationConfig: NavigationTree[] = [
                 subMenu: [],
             },
             {
+                key: 'ExamHub.admin.teacher',
+                path: `${ADMIN_PREFIX_PATH}/teacher`,
+                title: 'Giáo viên',
+                translateKey: 'Giáo viên',
+                icon: 'teacher',
+                type: NAV_ITEM_TYPE_ITEM,
+                authority: [ADMIN],
+                subMenu: [],
+            },
+            {
                 key: 'ExamHub.admin.question',
                 path: `${ADMIN_PREFIX_PATH}/question`,
                 title: 'Câu hỏi',
                 translateKey: 'Câu hỏi',
                 icon: 'question',
                 type: NAV_ITEM_TYPE_ITEM,
-                authority: [ADMIN],
+                authority: [ADMIN, TEACHER],
                 subMenu: [],
             },
             {
@@ -53,7 +63,7 @@ const adminNavigationConfig: NavigationTree[] = [
                 translateKey: 'Bài thi',
                 icon: 'book',
                 type: NAV_ITEM_TYPE_ITEM,
-                authority: [ADMIN],
+                authority: [ADMIN, TEACHER],
                 subMenu: [],
             },
             {
@@ -63,7 +73,7 @@ const adminNavigationConfig: NavigationTree[] = [
                 translateKey: 'Kỳ thi',
                 icon: 'examination',
                 type: NAV_ITEM_TYPE_ITEM,
-                authority: [ADMIN],
+                authority: [ADMIN, TEACHER],
                 subMenu: [],
             },
         ],

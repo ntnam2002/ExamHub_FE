@@ -16,15 +16,39 @@ type DropdownList = {
 const dropdownItemList: DropdownList[] = []
 
 const _UserDropdown = ({ className }: CommonProps) => {
-
     const { signOut } = useAuth()
+
+    function decodeJWT(getNameFromLocalStorage: string | null) {
+        if (getNameFromLocalStorage) {
+            const base64Url = getNameFromLocalStorage.split('.')[1]
+            const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/')
+            const jsonPayload = decodeURIComponent(
+                atob(base64)
+                    .split('')
+                    .map(function (c) {
+                        return (
+                            '%' +
+                            ('00' + c.charCodeAt(0).toString(16)).slice(-2)
+                        )
+                    })
+                    .join('')
+            )
+
+            return JSON.parse(jsonPayload)
+        }
+        return null
+    }
+
+    const getNameFromLocalStorage = localStorage.getItem('admin')
+    const decodedJWT = decodeJWT(getNameFromLocalStorage)
+    const name = decodedJWT ? decodedJWT.name : 'User'
 
     const UserAvatar = (
         <div className={classNames(className, 'flex items-center gap-2')}>
             <Avatar size={32} shape="circle" icon={<HiOutlineUser />} />
             <div className="hidden md:block">
                 <div className="text-xs capitalize">admin</div>
-                <div className="font-bold">User01</div>
+                <div className="font-bold">{name}</div>
             </div>
         </div>
     )
@@ -41,9 +65,9 @@ const _UserDropdown = ({ className }: CommonProps) => {
                         <Avatar shape="circle" icon={<HiOutlineUser />} />
                         <div>
                             <div className="font-bold text-gray-900 dark:text-gray-100">
-                                User01
+                                {name}
                             </div>
-                            <div className="text-xs">user01@mail.com</div>
+                            <div className="text-xs">{name}</div>
                         </div>
                     </div>
                 </Dropdown.Item>
@@ -54,8 +78,8 @@ const _UserDropdown = ({ className }: CommonProps) => {
                         eventKey={item.label}
                         className="mb-1 px-0"
                     >
-                        <Link 
-                            className="flex h-full w-full px-2" 
+                        <Link
+                            className="flex h-full w-full px-2"
                             to={item.path}
                         >
                             <span className="flex gap-2 items-center w-full">
@@ -67,7 +91,6 @@ const _UserDropdown = ({ className }: CommonProps) => {
                         </Link>
                     </Dropdown.Item>
                 ))}
-                {/* <Dropdown.Item variant="divider" /> */}
                 <Dropdown.Item
                     eventKey="Sign Out"
                     className="gap-2"
