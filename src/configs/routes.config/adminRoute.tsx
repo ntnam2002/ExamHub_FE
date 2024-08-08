@@ -5,9 +5,11 @@ import { lazy, LazyExoticComponent } from 'react'
 
 const adminRoutes: Routes = [
     {
-        key: 'ExamHub.admin.home',
-        path: `${ADMIN_PREFIX_PATH}/home`,
-        component: lazy(() => import('@/views/Home')),
+        key: 'ExamHub.admin.statistics',
+        path: `${ADMIN_PREFIX_PATH}/statistics`,
+        component: lazy(
+            () => import('@/views/admin/Statistic')
+        ) as LazyExoticComponent<<T extends Meta>(props: T) => JSX.Element>,
         authority: [ADMIN],
     },
     {

@@ -10,6 +10,8 @@ import PublicRoute from '@/components/route/PublicRoute'
 import AuthorityGuard from '@/components/route/AuthorityGuard'
 import AppRoute from '@/components/route/AppRoute'
 import type { LayoutType } from '@/@types/theme'
+import { Exam } from './admin/Examination/ExamList/components/types'
+import ExamInterface from './Student/Examination/components/exam'
 
 interface ViewsProps {
     pageContainerType?: 'default' | 'gutterless' | 'contained'
@@ -67,6 +69,10 @@ const AllRoutes = (props: AllRoutesProps) => {
                     />
                 ))}
             </Route>
+            <Route
+                path="/examination/components/exam"
+                Component={ExamInterface}
+            />
         </Routes>
     )
 }

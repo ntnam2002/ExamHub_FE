@@ -36,7 +36,7 @@ const GridItem: React.FC<GridItemProps> = ({
             <div className="flex flex-col justify-between h-full">
                 <div className="flex justify-between">
                     <Link
-                        to={`/student/exam/examination`}
+                        to={`/examination/components/exam`}
                         onClick={handleClick}
                     >
                         <h6>{exam_name}</h6>

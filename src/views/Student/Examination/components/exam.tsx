@@ -50,6 +50,33 @@ const ExamInterface = () => {
             )
         }
     }, [])
+    useEffect(() => {
+        const beforeUnloadEventHandler = (event: BeforeUnloadEvent) => {
+            event.preventDefault()
+
+            const warningMessage = 'Are you sure you want to leave the exam?'
+
+            if (event) {
+                event.returnValue = warningMessage // Legacy method for cross browser support
+            }
+
+            return warningMessage
+        }
+
+        window.addEventListener('beforeunload', beforeUnloadEventHandler, {
+            capture: true,
+        })
+
+        return () => {
+            window.removeEventListener(
+                'beforeunload',
+                beforeUnloadEventHandler,
+                {
+                    capture: true,
+                }
+            )
+        }
+    }, [])
     const handleCameraDetection = useCallback(() => {
         setCheatAttempts((prevAttempts) => prevAttempts + 1)
     }, [])
@@ -140,7 +167,7 @@ const ExamInterface = () => {
     }, [])
 
     return (
-        <div className="absolute min-h-screen bg-gray-100 flex">
+        <div className="h-screen w-screen bg-gray-100 flex">
             <div className="fixed container mx-auto p-4 flex flex-grow">
                 <div className="bg-white rounded-lg shadow-md p-8 w-full md:w-2/3">
                     <div className="flex justify-between items-center mb-6">

@@ -4,6 +4,7 @@ import base, { BaseState } from './slices/base'
 import locale, { LocaleState } from './slices/locale/localeSlice'
 import theme, { ThemeState } from './slices/theme/themeSlice'
 import RtkQueryService from '@/services/RtkQueryService'
+import persistedExaminationListReducer from '@/views/Student/Examination/store/ExaminationSlice'
 
 export type RootState = CombinedState<{
     auth: CombinedState<AuthState>
@@ -32,6 +33,8 @@ const rootReducer =
         const combinedReducer = combineReducers({
             ...staticReducers,
             ...asyncReducers,
+            ...persistedExaminationListReducer,
+            //examinationQuestionList: persistedExaminationListReducer,
         })
         return combinedReducer(state, action)
     }

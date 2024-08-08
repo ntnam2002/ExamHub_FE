@@ -1,8 +1,8 @@
 import classNames from 'classnames'
 import { APP_NAME } from '@/constants/app.constant'
 import type { CommonProps } from '@/@types/common'
-import examhubLogo from '@/assets/svg/examhub-logo.png'
-import logobig from '@/assets/svg/logobig.png'
+import examhubLogo from '@/assets/svg/logo.png'
+import logobig from '@/assets/svg/examhub-logo-big.png'
 
 interface LogoProps extends CommonProps {
     type?: 'full' | 'streamline'
@@ -11,8 +11,6 @@ interface LogoProps extends CommonProps {
     logoWidth?: number | string
 }
 
-//const LOGO_SRC_PATH = '/img/logo/'
-
 const Logo = (props: LogoProps) => {
     const {
         type = 'full',
@@ -20,22 +18,35 @@ const Logo = (props: LogoProps) => {
         className,
         imgClass,
         style,
-        logoWidth = '140px',
+        logoWidth = '1000px',
     } = props
+
+    const logoSrc = type === 'streamline' ? examhubLogo : logobig
+    const logoClass = type === 'streamline' ? 'logo-streamline' : 'logo-full'
 
     return (
         <div
-            className={classNames('logo', className)}
+            className={classNames('logo', className, logoClass)}
             style={{
                 ...style,
-                ...{ width: logoWidth },
+                ...{ width: logoWidth, marginTop: '10px' },
             }}
         >
-            <img
-                className={imgClass}
-                src={examhubLogo}
-                alt={`${APP_NAME} logo`}
-            />
+            {type === 'streamline' && (
+                <img
+                    className={imgClass}
+                    src={logoSrc}
+                    alt={`${APP_NAME} logo`}
+                    style={{ width: '100px' }}
+                />
+            )}
+            {type === 'full' && (
+                <img
+                    className={imgClass}
+                    src={logoSrc}
+                    alt={`${APP_NAME} logo`}
+                />
+            )}
         </div>
     )
 }

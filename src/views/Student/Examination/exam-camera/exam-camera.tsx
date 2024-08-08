@@ -44,12 +44,13 @@ const ExamCamera: React.FC<ExamCameraProps> = forwardRef((props, ref) => {
                 return `https://cdn.jsdelivr.net/npm/@mediapipe/face_detection/${file}`
             },
         })
-        console.log('faceDetection', faceDetection)
+
         faceDetection.setOptions({
-            minDetectionConfidence: 0.5,
+            minDetectionConfidence: 1,
             model: 'short',
         })
 
+        // eslint-disable-next-line no-inner-declarations
         function onResult(result: Results) {
             let warning = false
             let cautionMessage = ''
@@ -81,7 +82,6 @@ const ExamCamera: React.FC<ExamCameraProps> = forwardRef((props, ref) => {
                     lookingLeft,
                     lookingRight
                 )
-                console.log('cheating status', currentCheatingStatus)
 
                 if (currentCheatingStatus !== previousCheatingStatus) {
                     if (currentCheatingStatus !== 'Bình thường!') {

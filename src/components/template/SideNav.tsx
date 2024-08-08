@@ -68,7 +68,7 @@ const SideNav = () => {
             collapsed={sideNavCollapse}
             navigationTree={navigationConfig}
             routeKey={currentRouteKey}
-            userAuthority={userAuthority as string[]}
+            userAuthority={userAuthority as unknown as string[]}
             direction={direction}
         />
     )
@@ -97,7 +97,7 @@ const SideNav = () => {
                             }
                         />
                     </div>
-                    &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;
+                    <div style={{ margin: '20px' }}></div>
                     {sideNavCollapse ? (
                         menuContent
                     ) : (

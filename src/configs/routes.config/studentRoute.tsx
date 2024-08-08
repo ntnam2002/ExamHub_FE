@@ -19,14 +19,14 @@ const studentRoutes: Routes = [
         component: lazy(() => import('@/views/Student/StudentExamList')),
         authority: [STUDENT],
     },
-    {
-        key: 'ExamHub.student.exam.detail',
-        path: `${STUDENT_PREFIX_PATH}/exam/examination`,
-        component: lazy(
-            () => import('@/views/Student/Examination/components/exam')
-        ),
-        authority: [STUDENT],
-    },
+    // {
+    //     key: 'ExamHub.student.exam.detail',
+    //     path: `${STUDENT_PREFIX_PATH}/exam/examination`,
+    //     component: lazy(
+    //         () => import('@/views/Student/Examination/components/exam')
+    //     ),
+    //     authority: [STUDENT],
+    // },
 ]
 
 export default studentRoutes
