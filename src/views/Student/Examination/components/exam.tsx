@@ -26,7 +26,6 @@ const ExamInterface = () => {
     const examinationList = useAppSelector(
         (state) => state.examinationQuestionList.data.examinationQuestionList
     )
-  
 
     const examCameraRef = useRef<{ stopCamera: () => void } | null>(null)
     useEffect(() => {
@@ -48,6 +47,33 @@ const ExamInterface = () => {
             document.removeEventListener(
                 'visibilitychange',
                 handleVisibilityChange
+            )
+        }
+    }, [])
+    useEffect(() => {
+        const beforeUnloadEventHandler = (event: BeforeUnloadEvent) => {
+            event.preventDefault()
+
+            const warningMessage = 'Are you sure you want to leave the exam?'
+
+            if (event) {
+                event.returnValue = warningMessage // Legacy method for cross browser support
+            }
+
+            return warningMessage
+        }
+
+        window.addEventListener('beforeunload', beforeUnloadEventHandler, {
+            capture: true,
+        })
+
+        return () => {
+            window.removeEventListener(
+                'beforeunload',
+                beforeUnloadEventHandler,
+                {
+                    capture: true,
+                }
             )
         }
     }, [])
@@ -121,7 +147,6 @@ const ExamInterface = () => {
         dispatch(sendAnswer({ examId, studentId, answers }))
             .unwrap()
             .then((response) => {
-               
                 alert('Answers submitted successfully.')
                 localStorage.removeItem('answers')
                 // Turn off the camera

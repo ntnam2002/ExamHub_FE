@@ -1,17 +1,28 @@
+// QuestionReducer.ts
 import { combineReducers } from '@reduxjs/toolkit'
+import { persistReducer } from 'redux-persist'
+import storage from 'redux-persist/lib/storage'
 import reducers, {
     ExaminationDataListState,
-    ExaminationQuestionListResponse,
     SLICE_NAME,
 } from './ExaminationSlice'
 import { useSelector } from 'react-redux'
-
 import type { TypedUseSelectorHook } from 'react-redux'
 import type { RootState } from '@/store'
 
-const Questionreducer = combineReducers({
+const questionPersistConfig = {
+    key: SLICE_NAME,
+    storage,
+}
+
+const combinedReducer = combineReducers({
     data: reducers,
 })
+
+const persistedQuestionReducer = persistReducer(
+    questionPersistConfig,
+    combinedReducer
+)
 
 export const useAppSelector: TypedUseSelectorHook<
     RootState & {
@@ -23,4 +34,4 @@ export const useAppSelector: TypedUseSelectorHook<
 
 export * from './ExaminationSlice'
 export { useAppDispatch } from '@/store'
-export default Questionreducer
+export default persistedQuestionReducer
