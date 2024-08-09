@@ -97,11 +97,11 @@ const SideNav = () => {
                             }
                         />
                     </div>
-                    <div style={{ margin: '20px 0px 0xp 50px' }}></div>
+                    <div style={{ margin: '30px 0px 0xp 50px' }}></div>
                     {sideNavCollapse ? (
                         <div className="p-1">{menuContent}</div>
                     ) : (
-                        <div className="side-nav-content p-1">
+                        <div className="side-nav-content p-3">
                             <ScrollBar autoHide direction={direction}>
                                 {menuContent}
                             </ScrollBar>

@@ -20,6 +20,7 @@ const adminRoutes: Routes = [
         ),
         authority: [ADMIN],
     },
+
     {
         key: 'ExamHub.admin.student-new',
         path: `${ADMIN_PREFIX_PATH}/student/new`,
@@ -30,6 +31,12 @@ const adminRoutes: Routes = [
         key: 'ExamHub.admin.student-edit',
         path: `${ADMIN_PREFIX_PATH}/student/edit/:id`,
         component: lazy(() => import('@/views/admin/Student/StudentEdit')),
+        authority: [ADMIN],
+    },
+    {
+        key: 'ExamHub.admin.teacher',
+        path: `${ADMIN_PREFIX_PATH}/teacher`,
+        component: lazy(() => import('@/views/admin/Teacher/TeacherList')),
         authority: [ADMIN],
     },
     {

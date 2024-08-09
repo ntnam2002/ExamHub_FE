@@ -20,7 +20,7 @@ const adminNavigationConfig: NavigationTree[] = [
                 key: 'ExamHub.admin.statistics',
                 path: `${ADMIN_PREFIX_PATH}/statistics`,
                 title: 'Thống kê',
-                translateKey: 'statistics',
+                translateKey: 'Thống kê',
                 icon: 'report',
                 type: NAV_ITEM_TYPE_ITEM,
                 authority: [ADMIN],
