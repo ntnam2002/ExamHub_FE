@@ -47,10 +47,10 @@ const SignInForm = (props: SignInFormProps) => {
         setSubmitting: (isSubmitting: boolean) => void
     ) => {
         const { username, password, isAdmin } = values
-
+        
         setSubmitting(true)
         const result = await signIn({ username, password }, isAdmin)
-   
+
         if (result?.status === 'failed') {
             setMessage(result.message)
         }
@@ -141,10 +141,10 @@ const SignInForm = (props: SignInFormProps) => {
                                     ? 'Đang đăng nhập...'
                                     : 'Đăng nhập'}
                             </Button>
-                            <div className="mt-4 text-center">
+                            {/* <div className="mt-4 text-center">
                                 <span>{`Chưa có tài khoản?`} </span>
                                 <ActionLink to={signUpUrl}>Đăng ký</ActionLink>
-                            </div>
+                            </div> */}
                         </FormContainer>
                     </Form>
                 )}

@@ -1,8 +1,8 @@
 import classNames from 'classnames'
 import { APP_NAME } from '@/constants/app.constant'
 import type { CommonProps } from '@/@types/common'
-import examhubLogo from '@/assets/svg/logo.png'
-import logobig from '@/assets/svg/examhub-logo-big.png'
+import examhubLogo from '@/assets/svg/examhub-small.png'
+import logobig from '@/assets/svg//examhub-biglogo.png'
 
 interface LogoProps extends CommonProps {
     type?: 'full' | 'streamline'
@@ -29,7 +29,7 @@ const Logo = (props: LogoProps) => {
             className={classNames('logo', className, logoClass)}
             style={{
                 ...style,
-                ...{ width: logoWidth, marginTop: '10px' },
+                ...{ width: logoWidth },
             }}
         >
             {type === 'streamline' && (
@@ -45,6 +45,11 @@ const Logo = (props: LogoProps) => {
                     className={imgClass}
                     src={logoSrc}
                     alt={`${APP_NAME} logo`}
+                    style={{
+                        width: '1000px',
+                        marginLeft: '0px',
+                        marginRight: '100px',
+                    }}
                 />
             )}
         </div>

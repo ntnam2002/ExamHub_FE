@@ -21,7 +21,8 @@ const _UserDropdown = ({ className }: CommonProps) => {
     function decodeJWT(getNameFromLocalStorage: string | null) {
         if (getNameFromLocalStorage) {
             const base64Url = getNameFromLocalStorage.split('.')[1]
-            const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/')
+            const base64 = base64Url?.replace(/-/g, '+').replace(/_/g, '/')
+            if (!base64) return null
             const jsonPayload = decodeURIComponent(
                 atob(base64)
                     .split('')
