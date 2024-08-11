@@ -1,7 +1,10 @@
+import { ADMIN_PREFIX_PATH } from '@/constants/route.constant'
+
 export type AppConfig = {
     apiPrefix: string
     authenticatedEntryPath: string
     unAuthenticatedEntryPath: string
+    authenicatedEntryPathStudent: string
     tourPath: string
     locale: string
     enableMock: boolean
@@ -10,9 +13,10 @@ export type AppConfig = {
 const appConfig: AppConfig = {
     apiPrefix: 'http://localhost:3120/',
     //apiPrefix: 'https://examhub-be.onrender.com/',
-    authenticatedEntryPath: '/',
+    authenticatedEntryPath: `/admin/statistics`,
+    authenicatedEntryPathStudent: `/student/exam`,
     unAuthenticatedEntryPath: '/sign-in',
-    tourPath: '/',
+    tourPath: `/${ADMIN_PREFIX_PATH}/statistics`,
     locale: 'vi',
     enableMock: false,
 }

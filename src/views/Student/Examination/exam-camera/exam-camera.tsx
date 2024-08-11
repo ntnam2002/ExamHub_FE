@@ -18,6 +18,7 @@ import {
 import classes from './exam-camera.module.scss'
 
 interface ExamCameraProps {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     ref: any
 }
 
@@ -46,7 +47,7 @@ const ExamCamera: React.FC<ExamCameraProps> = forwardRef((props, ref) => {
         })
 
         faceDetection.setOptions({
-            minDetectionConfidence: 1,
+            minDetectionConfidence: 0.5,
             model: 'short',
         })
 

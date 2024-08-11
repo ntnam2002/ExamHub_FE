@@ -10,7 +10,7 @@ import PublicRoute from '@/components/route/PublicRoute'
 import AuthorityGuard from '@/components/route/AuthorityGuard'
 import AppRoute from '@/components/route/AppRoute'
 import type { LayoutType } from '@/@types/theme'
-import { Exam } from './admin/Examination/ExamList/components/types'
+
 import ExamInterface from './Student/Examination/components/exam'
 
 interface ViewsProps {
@@ -20,17 +20,22 @@ interface ViewsProps {
 
 type AllRoutesProps = ViewsProps
 
-const { authenticatedEntryPath } = appConfig
+const { authenticatedEntryPath, authenicatedEntryPathStudent } = appConfig
 
 const AllRoutes = (props: AllRoutesProps) => {
     const userAuthority = useAppSelector((state) => state.auth.user.authority)
-
+    let directPath = null
+    if (userAuthority === 'admin' || userAuthority === 'teacher') {
+        directPath = authenticatedEntryPath
+    } else {
+        directPath = authenicatedEntryPathStudent
+    }
     return (
         <Routes>
             <Route path="/" element={<ProtectedRoute />}>
                 <Route
                     path="/"
-                    element={<Navigate replace to={authenticatedEntryPath} />}
+                    element={<Navigate replace to={directPath} />}
                 />
                 {protectedRoutes.map((route, index) => (
                     <Route
@@ -53,6 +58,10 @@ const AllRoutes = (props: AllRoutesProps) => {
                     />
                 ))}
                 <Route path="*" element={<Navigate replace to="/" />} />
+                <Route
+                    path="/examination/components/exam"
+                    Component={ExamInterface}
+                />
             </Route>
             <Route path="/" element={<PublicRoute />}>
                 {publicRoutes.map((route) => (
@@ -69,10 +78,10 @@ const AllRoutes = (props: AllRoutesProps) => {
                     />
                 ))}
             </Route>
-            <Route
+            {/* <Route
                 path="/examination/components/exam"
                 Component={ExamInterface}
-            />
+            /> */}
         </Routes>
     )
 }
