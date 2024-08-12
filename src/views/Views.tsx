@@ -58,10 +58,6 @@ const AllRoutes = (props: AllRoutesProps) => {
                     />
                 ))}
                 <Route path="*" element={<Navigate replace to="/" />} />
-                <Route
-                    path="/examination/components/exam"
-                    Component={ExamInterface}
-                />
             </Route>
             <Route path="/" element={<PublicRoute />}>
                 {publicRoutes.map((route) => (
@@ -78,10 +74,16 @@ const AllRoutes = (props: AllRoutesProps) => {
                     />
                 ))}
             </Route>
-            {/* <Route
+            <Route
                 path="/examination/components/exam"
-                Component={ExamInterface}
-            /> */}
+                element={
+                    <AppRoute
+                        routeKey="examInterface"
+                        component={ExamInterface}
+                        layout="blank"
+                    />
+                }
+            />
         </Routes>
     )
 }
