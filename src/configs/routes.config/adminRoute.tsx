@@ -72,14 +72,14 @@ const adminRoutes: Routes = [
         ) as LazyExoticComponent<<T extends Meta>(props: T) => JSX.Element>,
         authority: [ADMIN],
     },
-    // {
-    //     key: 'ExamHub.admin.department',
-    //     path: `${ADMIN_PREFIX_PATH}/department`,
-    //     component: lazy(
-    //         () => import('@/views/admin/Department/DepartmentList')
-    //     ),
-    //     authority: [ADMIN],
-    // },
+    {
+        key: 'ExamHub.admin.department',
+        path: `${ADMIN_PREFIX_PATH}/department`,
+        component: lazy(
+            () => import('@/views/admin/Department/DepartmentList')
+        ),
+        authority: [ADMIN],
+    },
 ]
 
 export default adminRoutes

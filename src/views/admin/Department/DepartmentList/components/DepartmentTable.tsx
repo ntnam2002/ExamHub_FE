@@ -1,19 +1,16 @@
 import { useEffect, useMemo, useRef } from 'react'
-import Avatar from '@/components/ui/Avatar'
-import Badge from '@/components/ui/Badge'
 import DataTable from '@/components/shared/DataTable'
 import { HiOutlinePencil, HiOutlineTrash } from 'react-icons/hi'
-import { FiPackage } from 'react-icons/fi'
 import {
     setTableData,
-    setSelectedProduct,
+    setSelectedDepartment,
     toggleDeleteConfirmation,
     useAppDispatch,
     useAppSelector,
-    getStudents,
+    getDepartments,
 } from '../store'
 import useThemeClass from '@/utils/hooks/useThemeClass'
-import ProductDeleteConfirmation from './StudentDeleteConfirmation'
+import DepartmentDeleteConfirmation from './DepartmentDeleteConfirmation'
 import { useNavigate } from 'react-router-dom'
 import cloneDeep from 'lodash/cloneDeep'
 import type {
@@ -23,53 +20,26 @@ import type {
 } from '@/components/shared/DataTable'
 import dayjs from 'dayjs'
 
-type Student = {
+type Department = {
     _id: string
-    username: string
-    email: string
-    role: string
+    department_name: string
+    teacher_ids: string[]
     class_ids: string[]
-    department_id: string
-    create_at: Date
+    created_at: Date
 }
 
-const inventoryStatusColor: Record<
-    number,
-    {
-        label: string
-        dotClass: string
-        textClass: string
-    }
-> = {
-    0: {
-        label: 'In Stock',
-        dotClass: 'bg-emerald-500',
-        textClass: 'text-emerald-500',
-    },
-    1: {
-        label: 'Limited',
-        dotClass: 'bg-amber-500',
-        textClass: 'text-amber-500',
-    },
-    2: {
-        label: 'Out of Stock',
-        dotClass: 'bg-red-500',
-        textClass: 'text-red-500',
-    },
-}
-
-const ActionColumn = ({ row }: { row: Student }) => {
+const ActionColumn = ({ row }: { row: Department }) => {
     const dispatch = useAppDispatch()
     const { textTheme } = useThemeClass()
     const navigate = useNavigate()
 
     const onEdit = () => {
-        navigate(`/app/sales/product-edit/${row._id}`)
+        navigate(`/app/departments/edit/${row._id}`)
     }
 
     const onDelete = () => {
         dispatch(toggleDeleteConfirmation(true))
-        dispatch(setSelectedProduct(row._id))
+        dispatch(setSelectedDepartment(row._id))
     }
 
     return (
@@ -90,7 +60,7 @@ const ActionColumn = ({ row }: { row: Student }) => {
     )
 }
 
-const StudentColumn = ({ row }: { row: Student }) => {
+const DepartmentColumn = ({ row }: { row: Department }) => {
     return (
         <div className="flex items-center">
             <span className={`ml-2 rtl:mr-2 font-semibold`}>{row._id}</span>
@@ -98,26 +68,27 @@ const StudentColumn = ({ row }: { row: Student }) => {
     )
 }
 
-const ProductTable = () => {
+const DepartmentTable = () => {
     const tableRef = useRef<DataTableResetHandle>(null)
 
     const dispatch = useAppDispatch()
 
     const { pageIndex, pageSize, sort, query, total } = useAppSelector(
-        (state) => state.StudentList.data.tableData
+        (state) => state.DepartmentList.data.tableData
     )
 
     const filterData = useAppSelector(
-        (state) => state.StudentList.data.filterData
+        (state) => state.DepartmentList.data.filterData
     )
 
-    const loading = useAppSelector((state) => state.StudentList.data.loading)
+    const loading = useAppSelector((state) => state.DepartmentList.data.loading)
 
-    const data = useAppSelector((state) => state.StudentList.data.studentList)
+    const data = useAppSelector(
+        (state) => state.DepartmentList.data.departmentList
+    )
 
     useEffect(() => {
         fetchData()
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [pageIndex, pageSize, sort])
 
     useEffect(() => {
@@ -132,32 +103,32 @@ const ProductTable = () => {
     )
 
     const fetchData = () => {
-        dispatch(getStudents())
+        dispatch(getDepartments())
     }
 
-    const columns: ColumnDef<Student>[] = useMemo(
+    const columns: ColumnDef<Department>[] = useMemo(
         () => [
             {
                 header: 'ID',
                 accessorKey: '_id',
                 cell: (props) => {
-                    return <StudentColumn row={props.row.original} />
+                    return <DepartmentColumn row={props.row.original} />
                 },
             },
             {
-                header: 'Username',
-                accessorKey: 'username',
+                header: 'Department Name',
+                accessorKey: 'department_name',
             },
             {
-                header: 'Email',
-                accessorKey: 'email',
+                header: 'Teacher IDs',
+                accessorKey: 'teacher_ids',
+                cell: (props) => {
+                    const row = props.row.original
+                    return <span>{row.teacher_ids.join(', ')}</span>
+                },
             },
             {
-                header: 'Chức vụ',
-                accessorKey: 'role',
-            },
-            {
-                header: 'Mã lớp',
+                header: 'Class IDs',
                 accessorKey: 'class_ids',
                 cell: (props) => {
                     const row = props.row.original
@@ -165,23 +136,21 @@ const ProductTable = () => {
                 },
             },
             {
-                header: 'mã Khoa',
-                accessorKey: 'department_id',
-            },
-            {
-                header: 'Thời gian tạo',
+                header: 'Created At',
                 accessorKey: 'created_at',
                 cell: (props) => {
                     const row = props.row.original
                     return (
                         <span>
-                            {dayjs(row.create_at).format('YYYY-MM-DD HH:mm:ss')}
+                            {dayjs(row.created_at).format(
+                                'YYYY-MM-DD HH:mm:ss'
+                            )}
                         </span>
                     )
                 },
             },
             {
-                header: 'Hành động',
+                header: 'Actions',
                 id: 'action',
                 cell: (props) => <ActionColumn row={props.row.original} />,
             },
@@ -226,9 +195,9 @@ const ProductTable = () => {
                 onSelectChange={onSelectChange}
                 onSort={onSort}
             />
-            <ProductDeleteConfirmation />
+            <DepartmentDeleteConfirmation />
         </>
     )
 }
 
-export default ProductTable
+export default DepartmentTable

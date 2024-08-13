@@ -67,6 +67,16 @@ const adminNavigationConfig: NavigationTree[] = [
                 subMenu: [],
             },
             {
+                key: 'ExamHub.admin.subject',
+                path: `${ADMIN_PREFIX_PATH}/subject`,
+                title: 'Môn học',
+                translateKey: 'Môn học',
+                icon: 'subject',
+                type: NAV_ITEM_TYPE_ITEM,
+                authority: [ADMIN],
+                subMenu: [],
+            },
+            {
                 key: 'ExamHub.admin.question',
                 path: `${ADMIN_PREFIX_PATH}/question`,
                 title: 'Câu hỏi',

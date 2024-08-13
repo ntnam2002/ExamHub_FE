@@ -53,7 +53,30 @@ export async function apiGetAllClass<T, U extends Record<string, unknown>>() {
         method: 'get',
     })
 }
-
+export async function apiCreateClass<T, U extends Record<string, unknown>>(
+    data: U
+) {
+    return ApiService.fetchData<T>({
+        url: '/admin/createClass',
+        method: 'post',
+        data,
+    })
+}
+export async function apiUpdateClass<T, U extends { id: string }>(data: U) {
+    const { id } = data
+    return ApiService.fetchData<T>({
+        url: `/admin/updateClass/${id}`,
+        method: 'put',
+        data,
+    })
+}
+export async function apiDeleteClass<T, U extends { id: string }>(data: U) {
+    const { id } = data
+    return ApiService.fetchData<T>({
+        url: `/admin/deleteClass/${id}`,
+        method: 'delete',
+    })
+}
 export async function apiGetAllDepartment<
     T,
     U extends Record<string, unknown>
@@ -61,5 +84,52 @@ export async function apiGetAllDepartment<
     return ApiService.fetchData<T>({
         url: '/admin/getAllDepartment',
         method: 'get',
+    })
+}
+
+export async function apiCreateDepartment<T, U extends Record<string, unknown>>(
+    data: U
+) {
+    return ApiService.fetchData<T>({
+        url: '/admin/createDepartment',
+        method: 'post',
+        data,
+    })
+}
+
+export async function apiUpdateDepartment<T, U extends { id: string }>(
+    data: U
+) {
+    const { id } = data
+    return ApiService.fetchData<T>({
+        url: `/admin/updateDepartment/${id}`,
+        method: 'put',
+        data,
+    })
+}
+
+export async function apiDeleteDepartment<T, U extends { id: string }>(
+    data: U
+) {
+    const { id } = data
+    return ApiService.fetchData<T>({
+        url: `/admin/deleteDepartment/${id}`,
+        method: 'delete',
+    })
+}
+
+export async function apiGetAllSubject<T, U extends Record<string, unknown>>() {
+    return ApiService.fetchData<T>({
+        url: '/admin/getAllSubject',
+        method: 'get',
+    })
+}
+export async function apiCreateSubject<T, U extends Record<string, unknown>>(
+    data: U
+) {
+    return ApiService.fetchData<T>({
+        url: '/admin/createSubject',
+        method: 'post',
+        data,
     })
 }

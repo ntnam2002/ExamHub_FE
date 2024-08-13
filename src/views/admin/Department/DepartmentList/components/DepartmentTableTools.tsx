@@ -1,17 +1,16 @@
 import Button from '@/components/ui/Button'
 import { HiDownload, HiPlusCircle } from 'react-icons/hi'
-import ProductTableSearch from './StudentTableSearch'
-
+import DepartmentTableSearch from './DepartmentTableSearch'
 import { Link } from 'react-router-dom'
 
-const ProductTableTools = () => {
+const DepartmentTableTools = () => {
     return (
         <div className="flex flex-col lg:flex-row lg:items-center">
-            <ProductTableSearch />
+            <DepartmentTableSearch />
             <Link
                 download
                 className="block lg:inline-block md:mx-2 md:mb-0 mb-4"
-                to="/data/product-list.csv"
+                to="/data/department-list.csv"
                 target="_blank"
             >
                 <Button block size="sm" icon={<HiDownload />}>
@@ -20,14 +19,14 @@ const ProductTableTools = () => {
             </Link>
             <Link
                 className="block lg:inline-block md:mb-0 mb-4"
-                to="/admin/student/new"
+                to="/admin/department/new"
             >
                 <Button block variant="solid" size="sm" icon={<HiPlusCircle />}>
-                    Thêm sinh viên
+                    Thêm khoa
                 </Button>
             </Link>
         </div>
     )
 }
 
-export default ProductTableTools
+export default DepartmentTableTools

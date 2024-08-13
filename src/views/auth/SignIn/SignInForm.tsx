@@ -47,7 +47,7 @@ const SignInForm = (props: SignInFormProps) => {
         setSubmitting: (isSubmitting: boolean) => void
     ) => {
         const { username, password, isAdmin } = values
-        
+
         setSubmitting(true)
         const result = await signIn({ username, password }, isAdmin)
 

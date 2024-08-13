@@ -19,6 +19,13 @@ const studentRoutes: Routes = [
         component: lazy(() => import('@/views/Student/StudentExamList')),
         authority: [STUDENT],
     },
+    {
+        key: 'ExamHub.student.statistics',
+        path: `${STUDENT_PREFIX_PATH}/statistics`,
+        component: lazy(() => import('@/views/Student/Statistic')),
+        authority: [STUDENT],
+    },
+    
     // {
     //     key: 'ExamHub.student.exam.detail',
     //     path: `${STUDENT_PREFIX_PATH}/exam/examination`,

@@ -31,7 +31,7 @@ import { AiOutlineQuestionCircle } from 'react-icons/ai'
 import { FcStatistics } from 'react-icons/fc'
 import { statistic } from 'antd/es/theme/internal'
 import { TbReportSearch } from 'react-icons/tb'
-import { MdClass, MdDomain } from 'react-icons/md'
+import { MdClass, MdDomain, MdSubject } from 'react-icons/md'
 
 export type NavigationIcons = Record<string, JSX.Element>
 
@@ -73,6 +73,7 @@ const navigationIcon: NavigationIcons = {
     teacher: <PiChalkboardTeacher />,
     class: <MdClass />,
     department: <MdDomain />,
+    subject: <MdSubject />,
 }
 
 export default navigationIcon

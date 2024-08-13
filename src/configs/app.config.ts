@@ -14,7 +14,7 @@ const appConfig: AppConfig = {
     apiPrefix: 'http://localhost:3120/',
     //apiPrefix: 'https://examhub-be.onrender.com/',
     authenticatedEntryPath: `/admin/statistics`,
-    authenicatedEntryPathStudent: `/student/exam`,
+    authenicatedEntryPathStudent: `/student/statistics`,
     unAuthenticatedEntryPath: '/sign-in',
     tourPath: `/${ADMIN_PREFIX_PATH}/statistics`,
     locale: 'vi',

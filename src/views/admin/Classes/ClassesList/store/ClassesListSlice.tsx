@@ -1,56 +1,52 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
-import { apiDeleteUser, apiGetAllStudent } from '@/services/AdminService'
+import { apiDeleteClass, apiGetAllClass } from '@/services/AdminService'
 import type { TableQueries } from '@/@types/common'
 
-type Student = {
+type Class = {
     _id: string
-    username: string
-    email: string
-    role: string
-    class_ids: string[]
-    department_id: string
-    created_at: Date
+    class_name: string
+    teacherId: string
+    student_ids: string[]
+    create_at: Date
+    update_at: Date
 }
 
-type Students = Student[]
+type Classes = Class[]
 
-type GetStudentResponse = {
-    data: Students
-    //total: number
-}
+type GetClassesResponse = Classes
 
 type FilterQueries = {
     name: string
     //category: string[]
 }
 
-export type SalesProductListState = {
+export type ClassListState = {
     loading: boolean
     deleteConfirmation: boolean
-    selectedProduct: string
+    selectedClass: string
     tableData: TableQueries
     filterData: FilterQueries
-    studentList: Students
+    classList: Class[]
 }
 
-type GetStudentRequest = TableQueries & { filterData?: FilterQueries }
+type GetClassesRequest = TableQueries & { filterData?: FilterQueries }
 
-export const SLICE_NAME = 'StudentList'
+export const SLICE_NAME = 'ClassesList'
 
-export const getStudents = createAsyncThunk(
-    SLICE_NAME + '/getStudentList',
+export const getClassess = createAsyncThunk(
+    SLICE_NAME + '/getClassesList',
     async () => {
-        const response = await apiGetAllStudent<
-            GetStudentResponse,
-            GetStudentRequest
+        const response = await apiGetAllClass<
+            GetClassesResponse,
+            GetClassesRequest
         >()
 
         return response.data
     }
 )
 
-export const deleteProduct = async (data: { id: string }) => {
-    const response = await apiDeleteUser<boolean, { id: string }>(data)
+export const deleteClass = async (data: { id: string }) => {
+    const response = await apiDeleteClass<boolean, { id: string }>(data)
     return response
 }
 
@@ -65,23 +61,23 @@ export const initialTableData: TableQueries = {
     },
 }
 
-const initialState: SalesProductListState = {
+const initialState: ClassListState = {
     loading: false,
     deleteConfirmation: false,
-    selectedProduct: '',
-    studentList: [],
+    selectedClass: '',
+    classList: [],
     tableData: initialTableData,
     filterData: {
         name: '',
     },
 }
 
-const studentListSlice = createSlice({
+const classesListState = createSlice({
     name: `${SLICE_NAME}/state`,
     initialState,
     reducers: {
-        updateStudentList: (state, action) => {
-            state.studentList = action.payload
+        updateClassList: (state, action) => {
+            state.classList = action.payload
         },
         setTableData: (state, action) => {
             state.tableData = action.payload
@@ -93,27 +89,27 @@ const studentListSlice = createSlice({
             state.deleteConfirmation = action.payload
         },
         setSelectedProduct: (state, action) => {
-            state.selectedProduct = action.payload
+            state.selectedClass = action.payload
         },
     },
     extraReducers: (builder) => {
         builder
-            .addCase(getStudents.fulfilled, (state, action) => {
-                state.studentList = action.payload
+            .addCase(getClassess.fulfilled, (state, action) => {
+                state.classList = action.payload
                 state.loading = false
             })
-            .addCase(getStudents.pending, (state) => {
+            .addCase(getClassess.pending, (state) => {
                 state.loading = true
             })
     },
 })
 
 export const {
-    updateStudentList,
+    updateClassList,
     setTableData,
     setFilterData,
     toggleDeleteConfirmation,
     setSelectedProduct,
-} = studentListSlice.actions
+} = classesListState.actions
 
-export default studentListSlice.reducer
+export default classesListState.reducer
