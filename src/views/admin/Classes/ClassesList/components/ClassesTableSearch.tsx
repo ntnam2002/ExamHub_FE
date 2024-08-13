@@ -5,20 +5,20 @@ import {
     setTableData,
     useAppSelector,
     useAppDispatch,
-    getStudents,
+    getClassess,
 } from '../store'
 import debounce from 'lodash/debounce'
 import cloneDeep from 'lodash/cloneDeep'
 import type { TableQueries } from '@/@types/common'
 import type { ChangeEvent } from 'react'
 
-const ProductTableSearch = () => {
+const ClassesTableSearch = () => {
     const dispatch = useAppDispatch()
 
     const searchInput = useRef(null)
 
     const tableData = useAppSelector(
-        (state) => state.StudentList.data.tableData
+        (state) => state.ClassesList.data.tableData
     )
 
     const debounceFn = debounce(handleDebounceFn, 500)
@@ -38,7 +38,7 @@ const ProductTableSearch = () => {
 
     const fetchData = (data: TableQueries) => {
         dispatch(setTableData(data))
-        dispatch(getStudents())
+        dispatch(getClassess())
     }
 
     const onEdit = (e: ChangeEvent<HTMLInputElement>) => {
@@ -50,11 +50,11 @@ const ProductTableSearch = () => {
             ref={searchInput}
             className="max-w-md md:w-52 md:mb-0 mb-4"
             size="sm"
-            placeholder="Tìm sinh viên"
+            placeholder="Tìm lớp học"
             prefix={<HiOutlineSearch className="text-lg" />}
             onChange={onEdit}
         />
     )
 }
 
-export default ProductTableSearch
+export default ClassesTableSearch

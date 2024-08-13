@@ -9,6 +9,7 @@ import type { TableQueries } from '@/@types/common'
 type Teacher = {
     _id: string
     username: string
+    name: string
     email: string
     role: string
     class_ids: string[]

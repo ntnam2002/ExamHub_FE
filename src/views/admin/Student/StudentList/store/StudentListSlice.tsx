@@ -5,6 +5,7 @@ import type { TableQueries } from '@/@types/common'
 type Student = {
     _id: string
     username: string
+    name: string
     email: string
     role: string
     class_ids: string[]

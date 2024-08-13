@@ -149,6 +149,10 @@ const ProductTable = () => {
                 accessorKey: 'username',
             },
             {
+                header: 'Tên',
+                accessorKey: 'name',
+            },
+            {
                 header: 'Email',
                 accessorKey: 'email',
             },

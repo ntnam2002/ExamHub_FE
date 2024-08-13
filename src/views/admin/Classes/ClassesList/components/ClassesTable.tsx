@@ -1,19 +1,15 @@
 import { useEffect, useMemo, useRef } from 'react'
-import Avatar from '@/components/ui/Avatar'
-import Badge from '@/components/ui/Badge'
 import DataTable from '@/components/shared/DataTable'
 import { HiOutlinePencil, HiOutlineTrash } from 'react-icons/hi'
-import { FiPackage } from 'react-icons/fi'
 import {
+    getClassess,
+    setSelectedClass,
     setTableData,
-    setSelectedProduct,
     toggleDeleteConfirmation,
     useAppDispatch,
     useAppSelector,
-    getStudents,
 } from '../store'
 import useThemeClass from '@/utils/hooks/useThemeClass'
-import ProductDeleteConfirmation from './ClassesDeleteConfirmation'
 import { useNavigate } from 'react-router-dom'
 import cloneDeep from 'lodash/cloneDeep'
 import type {
@@ -22,54 +18,29 @@ import type {
     ColumnDef,
 } from '@/components/shared/DataTable'
 import dayjs from 'dayjs'
+import ClassDeleteConfirmation from './ClassesDeleteConfirmation'
 
-type Student = {
+type Class = {
     _id: string
-    username: string
-    email: string
-    role: string
-    class_ids: string[]
-    department_id: string
+    class_name: string
+    teacherId: string
+    student_ids: string[]
     create_at: Date
+    update_at: Date
 }
 
-const inventoryStatusColor: Record<
-    number,
-    {
-        label: string
-        dotClass: string
-        textClass: string
-    }
-> = {
-    0: {
-        label: 'In Stock',
-        dotClass: 'bg-emerald-500',
-        textClass: 'text-emerald-500',
-    },
-    1: {
-        label: 'Limited',
-        dotClass: 'bg-amber-500',
-        textClass: 'text-amber-500',
-    },
-    2: {
-        label: 'Out of Stock',
-        dotClass: 'bg-red-500',
-        textClass: 'text-red-500',
-    },
-}
-
-const ActionColumn = ({ row }: { row: Student }) => {
+const ActionColumn = ({ row }: { row: Class }) => {
     const dispatch = useAppDispatch()
     const { textTheme } = useThemeClass()
     const navigate = useNavigate()
 
     const onEdit = () => {
-        navigate(`/app/sales/product-edit/${row._id}`)
+        navigate(`/app/admin/class-edit/${row._id}`)
     }
 
     const onDelete = () => {
         dispatch(toggleDeleteConfirmation(true))
-        dispatch(setSelectedProduct(row._id))
+        dispatch(setSelectedClass(row._id))
     }
 
     return (
@@ -90,34 +61,35 @@ const ActionColumn = ({ row }: { row: Student }) => {
     )
 }
 
-const StudentColumn = ({ row }: { row: Student }) => {
+const ClassColumn = ({ row }: { row: Class }) => {
     return (
         <div className="flex items-center">
-            <span className={`ml-2 rtl:mr-2 font-semibold`}>{row._id}</span>
+            <span className={`ml-2 rtl:mr-2 font-semibold`}>
+                {row.class_name}
+            </span>
         </div>
     )
 }
 
-const ProductTable = () => {
+const ClassTable = () => {
     const tableRef = useRef<DataTableResetHandle>(null)
 
     const dispatch = useAppDispatch()
 
     const { pageIndex, pageSize, sort, query, total } = useAppSelector(
-        (state) => state.StudentList.data.tableData
+        (state) => state.ClassesList.data.tableData
     )
 
     const filterData = useAppSelector(
-        (state) => state.StudentList.data.filterData
+        (state) => state.ClassesList.data.filterData
     )
 
-    const loading = useAppSelector((state) => state.StudentList.data.loading)
+    const loading = useAppSelector((state) => state.ClassesList.data.loading)
 
-    const data = useAppSelector((state) => state.StudentList.data.studentList)
+    const data = useAppSelector((state) => state.ClassesList.data.classList)
 
     useEffect(() => {
         fetchData()
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [pageIndex, pageSize, sort])
 
     useEffect(() => {
@@ -132,45 +104,36 @@ const ProductTable = () => {
     )
 
     const fetchData = () => {
-        dispatch(getStudents())
+        dispatch(getClassess())
     }
 
-    const columns: ColumnDef<Student>[] = useMemo(
+    const columns: ColumnDef<Class>[] = useMemo(
         () => [
             {
                 header: 'ID',
                 accessorKey: '_id',
-                cell: (props) => {
-                    return <StudentColumn row={props.row.original} />
-                },
+                cell: (props) => <span>{props.row.original._id}</span>,
             },
             {
-                header: 'Username',
-                accessorKey: 'username',
+                header: 'Class Name',
+                accessorKey: 'class_name',
+                cell: (props) => <ClassColumn row={props.row.original} />,
             },
             {
-                header: 'Email',
-                accessorKey: 'email',
+                header: 'Teacher ID',
+                accessorKey: 'teacherId',
             },
             {
-                header: 'Chức vụ',
-                accessorKey: 'role',
-            },
-            {
-                header: 'Mã lớp',
-                accessorKey: 'class_ids',
+                header: 'Student IDs',
+                accessorKey: 'student_ids',
                 cell: (props) => {
                     const row = props.row.original
-                    return <span>{row.class_ids.join(', ')}</span>
+                    return <span>{row.student_ids?.join(', ')}</span>
                 },
             },
             {
-                header: 'mã Khoa',
-                accessorKey: 'department_id',
-            },
-            {
-                header: 'Thời gian tạo',
-                accessorKey: 'created_at',
+                header: 'Created At',
+                accessorKey: 'create_at',
                 cell: (props) => {
                     const row = props.row.original
                     return (
@@ -181,7 +144,7 @@ const ProductTable = () => {
                 },
             },
             {
-                header: 'Hành động',
+                header: 'Actions',
                 id: 'action',
                 cell: (props) => <ActionColumn row={props.row.original} />,
             },
@@ -214,8 +177,6 @@ const ProductTable = () => {
                 ref={tableRef}
                 columns={columns}
                 data={data}
-                skeletonAvatarColumns={[0]}
-                skeletonAvatarProps={{ className: 'rounded-md' }}
                 loading={loading}
                 pagingData={{
                     total: tableData.total as number,
@@ -226,9 +187,9 @@ const ProductTable = () => {
                 onSelectChange={onSelectChange}
                 onSort={onSort}
             />
-            <ProductDeleteConfirmation />
+            <ClassDeleteConfirmation />
         </>
     )
 }
 
-export default ProductTable
+export default ClassTable

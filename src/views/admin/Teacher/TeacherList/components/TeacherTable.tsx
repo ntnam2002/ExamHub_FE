@@ -123,6 +123,10 @@ const StudentTable = () => {
                 accessorKey: 'username',
             },
             {
+                header: 'Name',
+                accessorKey: 'name',
+            },
+            {
                 header: 'Email',
                 accessorKey: 'email',
             },
