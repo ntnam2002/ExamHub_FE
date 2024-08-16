@@ -88,7 +88,7 @@ const classesListState = createSlice({
         toggleDeleteConfirmation: (state, action) => {
             state.deleteConfirmation = action.payload
         },
-        setSelectedProduct: (state, action) => {
+        setSelectedClass: (state, action) => {
             state.selectedClass = action.payload
         },
     },
@@ -109,7 +109,7 @@ export const {
     setTableData,
     setFilterData,
     toggleDeleteConfirmation,
-    setSelectedProduct,
+    setSelectedClass,
 } = classesListState.actions
 
 export default classesListState.reducer

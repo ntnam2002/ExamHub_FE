@@ -1,41 +1,54 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
-
-import type { TableQueries } from '@/@types/common'
 import { apiDeleteQuestion, apiGetAllQuestions } from '@/services/ExamService'
+import type { TableQueries } from '@/@types/common'
+
+// Định nghĩa kiểu cho câu hỏi
+type Option = {
+    _id: string
+    text: string
+    is_correct: boolean
+}
 
 type Question = {
     _id: string
     text: string
-    options: string[]
-    correctOption: string
+    points: number
+    options: Option[]
+    subjectId: string
+    difficuty: string
     created_at: Date
 }
 
 type Questions = Question[]
 
+// Định nghĩa kiểu cho phản hồi từ API
 type GetQuestionsResponse = {
     data: Questions
 }
 
+// Định nghĩa kiểu cho dữ liệu lọc
 type FilterQueries = {
     text: string
 }
 
+// Định nghĩa kiểu cho trạng thái của danh sách câu hỏi
 export type QuestionsListState = {
     loading: boolean
     deleteConfirmation: boolean
     selectedQuestion: string
     tableData: TableQueries
     filterData: FilterQueries
-    questionList?: Questions
+    questionList: Questions // Đặt mặc định là mảng rỗng thay vì undefined
 }
 
+// Thay đổi kiểu của yêu cầu để bao gồm dữ liệu lọc
 type GetQuestionsRequest = TableQueries & { filterData?: FilterQueries }
 
 export const SLICE_NAME = 'questionList'
 
+// Tạo thunk để lấy danh sách câu hỏi
 export const getQuestions = createAsyncThunk(
-    SLICE_NAME + '/getQuestionList',
+    `${SLICE_NAME}/getQuestions`,
     async () => {
         const response = await apiGetAllQuestions<
             GetQuestionsResponse,
@@ -45,11 +58,18 @@ export const getQuestions = createAsyncThunk(
     }
 )
 
-export const deleteQuestion = async (data: { id: string }) => {
-    const response = await apiDeleteQuestion<boolean, { id: string }>(data)
-    return response
-}
+// Tạo thunk để xóa câu hỏi
+export const deleteQuestion = createAsyncThunk(
+    `${SLICE_NAME}/deleteQuestion`,
+    async (id: string) => {
+        const response = await apiDeleteQuestion<boolean, { id: string }>({
+            id,
+        })
+        return response
+    }
+)
 
+// Định nghĩa dữ liệu ban đầu cho bảng
 export const initialTableData: TableQueries = {
     total: 0,
     pageIndex: 1,
@@ -61,6 +81,7 @@ export const initialTableData: TableQueries = {
     },
 }
 
+// Định nghĩa trạng thái ban đầu
 const initialState: QuestionsListState = {
     loading: false,
     deleteConfirmation: false,
@@ -72,6 +93,7 @@ const initialState: QuestionsListState = {
     },
 }
 
+// Tạo slice cho danh sách câu hỏi
 const questionsListSlice = createSlice({
     name: `${SLICE_NAME}/state`,
     initialState,
@@ -100,6 +122,27 @@ const questionsListSlice = createSlice({
             })
             .addCase(getQuestions.pending, (state) => {
                 state.loading = true
+            })
+            .addCase(getQuestions.rejected, (state, action) => {
+                state.loading = false
+                console.error(
+                    'Failed to fetch questions:',
+                    action.error.message
+                )
+            })
+            .addCase(deleteQuestion.fulfilled, (state, action) => {
+                if (action.payload) {
+                    state.questionList = state.questionList.filter(
+                        (question) => question._id !== state.selectedQuestion
+                    )
+                    state.deleteConfirmation = false
+                }
+            })
+            .addCase(deleteQuestion.rejected, (state, action) => {
+                console.error(
+                    'Failed to delete question:',
+                    action.error.message
+                )
             })
     },
 })

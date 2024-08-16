@@ -31,6 +31,8 @@ type Question = {
     text: string
     points: number
     options: Option[]
+    subjectId: string
+    difficuty: string
     created_at: Date
 }
 
@@ -89,8 +91,8 @@ const QuestionTable = () => {
     }, [pageIndex, pageSize, sort])
 
     useEffect(() => {
-        if (tableRef) {
-            tableRef.current?.resetSorting()
+        if (tableRef.current) {
+            tableRef.current.resetSorting()
         }
     }, [filterData])
 
@@ -126,7 +128,7 @@ const QuestionTable = () => {
                             {row.options.map((option) => (
                                 <li key={option._id}>
                                     {option.text}{' '}
-                                    {option.is_correct ? '(Correct)' : ''}
+                                    {option.is_correct ? '(Đúng)' : ''}
                                 </li>
                             ))}
                         </ul>
@@ -136,6 +138,20 @@ const QuestionTable = () => {
             {
                 header: 'Điểm',
                 accessorKey: 'points',
+            },
+            {
+                header: 'Môn học',
+                accessorKey: 'subjectId',
+                cell: (props) => {
+                    return <span>{props.row.original.subjectId}</span>
+                },
+            },
+            {
+                header: 'Độ khó',
+                accessorKey: 'difficuty',
+                cell: (props) => {
+                    return <span>{props.row.original.difficuty}</span>
+                },
             },
             {
                 header: 'Tạo lúc',
@@ -185,11 +201,6 @@ const QuestionTable = () => {
                 columns={columns}
                 data={data}
                 loading={loading}
-                pagingData={{
-                    total: tableData?.total,
-                    pageIndex: tableData?.pageIndex,
-                    pageSize: tableData?.pageSize,
-                }}
                 onPaginationChange={onPaginationChange}
                 onSelectChange={onSelectChange}
                 onSort={onSort}

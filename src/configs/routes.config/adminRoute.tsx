@@ -80,6 +80,12 @@ const adminRoutes: Routes = [
         ),
         authority: [ADMIN],
     },
+    {
+        key: 'ExamHub.admin.class',
+        path: `${ADMIN_PREFIX_PATH}/class`,
+        component: lazy(() => import('@/views/admin/Classes/ClassesList')),
+        authority: [ADMIN],
+    },
 ]
 
 export default adminRoutes
