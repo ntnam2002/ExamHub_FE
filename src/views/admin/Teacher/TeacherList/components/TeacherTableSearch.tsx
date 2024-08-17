@@ -50,7 +50,7 @@ const TeacherTableSearch = () => {
             ref={searchInput}
             className="max-w-md md:w-52 md:mb-0 mb-4"
             size="sm"
-            placeholder="Tìm giáo viên"
+            placeholder="Tìm Giảng viên"
             prefix={<HiOutlineSearch className="text-lg" />}
             onChange={onEdit}
         />

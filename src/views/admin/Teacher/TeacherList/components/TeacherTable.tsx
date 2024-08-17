@@ -12,7 +12,6 @@ import {
     useAppSelector,
 } from '../store'
 import useThemeClass from '@/utils/hooks/useThemeClass'
-import StudentDeleteConfirmation from './TeacherDeleteConfirmation'
 import { useNavigate } from 'react-router-dom'
 import cloneDeep from 'lodash/cloneDeep'
 import type {
@@ -21,8 +20,9 @@ import type {
     ColumnDef,
 } from '@/components/shared/DataTable'
 import dayjs from 'dayjs'
+import TeacherDeleteConfirmation from './TeacherDeleteConfirmation'
 
-type Student = {
+type Teacher = {
     _id: string
     username: string
     email: string
@@ -32,13 +32,13 @@ type Student = {
     created_at: Date
 }
 
-const ActionColumn = ({ row }: { row: Student }) => {
+const ActionColumn = ({ row }: { row: Teacher }) => {
     const dispatch = useAppDispatch()
     const { textTheme } = useThemeClass()
     const navigate = useNavigate()
 
     const onEdit = () => {
-        navigate(`/app/students/student-edit/${row._id}`)
+        navigate(`/admin/teacher/edit/${row._id}`)
     }
 
     const onDelete = () => {
@@ -64,7 +64,7 @@ const ActionColumn = ({ row }: { row: Student }) => {
     )
 }
 
-const StudentColumn = ({ row }: { row: Student }) => {
+const TeacherColumn = ({ row }: { row: Teacher }) => {
     return (
         <div className="flex items-center">
             <span className={`ml-2 rtl:mr-2 font-semibold`}>{row._id}</span>
@@ -72,7 +72,7 @@ const StudentColumn = ({ row }: { row: Student }) => {
     )
 }
 
-const StudentTable = () => {
+const TeacherTable = () => {
     const tableRef = useRef<DataTableResetHandle>(null)
 
     const dispatch = useAppDispatch()
@@ -109,13 +109,13 @@ const StudentTable = () => {
         dispatch(getTeachers())
     }
 
-    const columns: ColumnDef<Student>[] = useMemo(
+    const columns: ColumnDef<Teacher>[] = useMemo(
         () => [
             {
                 header: 'ID',
                 accessorKey: '_id',
                 cell: (props) => {
-                    return <StudentColumn row={props.row.original} />
+                    return <TeacherColumn row={props.row.original} />
                 },
             },
             {
@@ -206,9 +206,9 @@ const StudentTable = () => {
                 onSelectChange={onSelectChange}
                 onSort={onSort}
             />
-            <StudentDeleteConfirmation />
+            <TeacherDeleteConfirmation />
         </>
     )
 }
 
-export default StudentTable
+export default TeacherTable

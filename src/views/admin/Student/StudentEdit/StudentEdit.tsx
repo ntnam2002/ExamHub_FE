@@ -3,41 +3,52 @@ import Loading from '@/components/shared/Loading'
 import DoubleSidedImage from '@/components/shared/DoubleSidedImage'
 import toast from '@/components/ui/toast'
 import Notification from '@/components/ui/Notification'
-import reducer, { useAppSelector, useAppDispatch } from './store'
+import reducer, {
+    useAppSelector,
+    useAppDispatch,
+    getStudentToEdit,
+    updateStudent,
+    deleteStudent,
+} from './store'
 import { injectReducer } from '@/store'
 import { useLocation, useNavigate } from 'react-router-dom'
 
-import ProductForm, {
+import StudentForm, {
     FormModel,
     SetSubmitting,
     OnDeleteCallback,
 } from '@/views/admin/Student/StudentForm'
 import isEmpty from 'lodash/isEmpty'
-import StudentForm from '@/views/admin/Student/StudentForm'
 
-injectReducer('salesProductEdit', reducer)
+// Inject the reducer for the student edit slice
+injectReducer('StudentEdit', reducer)
 
-const ProductEdit = () => {
+const StudentEdit = () => {
     const dispatch = useAppDispatch()
-
     const location = useLocation()
     const navigate = useNavigate()
 
-    const productData = useAppSelector(
+    // Get the student data and loading state from the store
+    const studentData = useAppSelector(
         (state) => state.StudentEdit.data.StudentData
     )
     const loading = useAppSelector((state) => state.StudentEdit.data.loading)
 
-    const fetchData = (data: { id: string }) => {
-        dispatch(data)
-    }
+    // Fetch student data based on the current URL
+    useEffect(() => {
+        const path = location.pathname.substring(
+            location.pathname.lastIndexOf('/') + 1
+        )
+        dispatch(getStudentToEdit({ id: path }))
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [location.pathname])
 
     const handleFormSubmit = async (
         values: FormModel,
         setSubmitting: SetSubmitting
     ) => {
         setSubmitting(true)
-        const success = await updateProduct(values)
+        const success = await updateStudent({ id: studentData._id, ...values })
         setSubmitting(false)
         if (success) {
             popNotification('updated')
@@ -45,12 +56,12 @@ const ProductEdit = () => {
     }
 
     const handleDiscard = () => {
-        navigate('/app/sales/product-list')
+        navigate('/admin/student')
     }
 
     const handleDelete = async (setDialogOpen: OnDeleteCallback) => {
         setDialogOpen(false)
-        const success = await deleteProduct({ id: productData.id })
+        const success = await deleteStudent({ id: studentData.id })
         if (success) {
             popNotification('deleted')
         }
@@ -59,36 +70,27 @@ const ProductEdit = () => {
     const popNotification = (keyword: string) => {
         toast.push(
             <Notification
-                title={`Successfuly ${keyword}`}
+                title={`Successfully ${keyword}`}
                 type="success"
                 duration={2500}
             >
-                Product successfuly {keyword}
+                Student successfully {keyword}
             </Notification>,
             {
                 placement: 'top-center',
             }
         )
-        navigate('/app/sales/product-list')
+        navigate('/admin/student')
     }
-
-    useEffect(() => {
-        const path = location.pathname.substring(
-            location.pathname.lastIndexOf('/') + 1
-        )
-        const rquestParam = { id: path }
-        fetchData(rquestParam)
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [location.pathname])
 
     return (
         <>
             <Loading loading={loading}>
-                {!isEmpty(productData) && (
+                {!isEmpty(studentData) && (
                     <>
                         <StudentForm
                             type="edit"
-                            initialData={productData}
+                            initialData={studentData}
                             onFormSubmit={handleFormSubmit}
                             onDiscard={handleDiscard}
                             onDelete={handleDelete}
@@ -96,7 +98,7 @@ const ProductEdit = () => {
                     </>
                 )}
             </Loading>
-            {!loading && isEmpty(productData) && (
+            {!loading && isEmpty(studentData) && (
                 <div className="h-full flex flex-col items-center justify-center">
                     <DoubleSidedImage
                         src="/img/others/img-2.png"
@@ -110,4 +112,4 @@ const ProductEdit = () => {
     )
 }
 
-export default ProductEdit
+export default StudentEdit

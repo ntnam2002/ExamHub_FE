@@ -1,6 +1,6 @@
 import Button from '@/components/ui/Button'
 import { HiDownload, HiPlusCircle } from 'react-icons/hi'
-import ProductTableSearch from './StudentTableSearch'
+import ProductTableSearch from './SubjectTableSearch'
 
 import { Link } from 'react-router-dom'
 

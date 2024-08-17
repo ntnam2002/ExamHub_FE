@@ -2,11 +2,11 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 
 import {
     apiDeleteUser,
-    apiGetStudentToEdit,
+    apiGetTeacherToEdit,
     apiUpdateUser,
 } from '@/services/AdminService'
 
-type StudentData = {
+type TeacherData = {
     id?: string
     username?: string
     email?: string
@@ -15,56 +15,55 @@ type StudentData = {
     department_id?: string
 }
 
-export type SalesProductEditState = {
+export type TeacherEditState = {
     loading: boolean
-    StudentData: StudentData
+    TeacherData: TeacherData
 }
 
-type GetStudentResponse = StudentData
+type GetTeacherResponse = TeacherData
 
-export const SLICE_NAME = 'StudentEdit'
+export const SLICE_NAME = 'TeacherEdit'
 
-export const getStudentToEdit = createAsyncThunk(
-    SLICE_NAME + '/getStudentToEdit',
+export const getTeacherToEdit = createAsyncThunk(
+    SLICE_NAME + '/getTeacherToEdit',
     async (data: { id: string }) => {
-        const response = await apiGetStudentToEdit<
-            GetStudentResponse,
+        const response = await apiGetTeacherToEdit<
+            GetTeacherResponse,
             { id: string }
         >(data)
         return response.data
     }
 )
 
-export const updateStudent = async <T, U extends { id: string }>(
-    data: U
-) => {
+export const updateTeacher = async <T, U extends { id: string }>(data: U) => {
     const response = await apiUpdateUser<T, U>(data)
     return response.data
 }
 
-export const deleteStudent = async (data: { id: string }) => {
+export const deleteTeacher = async (data: { id: string }) => {
     const response = await apiDeleteUser<boolean, { id: string }>(data)
     return response
 }
-const initialState: SalesProductEditState = {
+
+const initialState: TeacherEditState = {
     loading: true,
-    StudentData: {},
+    TeacherData: {},
 }
 
-const productEditSlice = createSlice({
+const TeacherEditSlice = createSlice({
     name: `${SLICE_NAME}/state`,
     initialState,
     reducers: {},
     extraReducers: (builder) => {
         builder
-            .addCase(getStudentToEdit.fulfilled, (state, action) => {
-                state.StudentData = action.payload
+            .addCase(getTeacherToEdit.fulfilled, (state, action) => {
+                state.TeacherData = action.payload
                 state.loading = false
             })
-            .addCase(getStudentToEdit.pending, (state) => {
+            .addCase(getTeacherToEdit.pending, (state) => {
                 state.loading = true
             })
     },
 })
 
-export default productEditSlice.reducer
+export default TeacherEditSlice.reducer

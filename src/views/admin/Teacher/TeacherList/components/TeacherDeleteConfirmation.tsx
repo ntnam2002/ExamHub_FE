@@ -37,7 +37,7 @@ const TeacherDeleteConfirmation = () => {
                     type="success"
                     duration={2500}
                 >
-                    Xóa giáo viên thành công
+                    Xóa Giảng viên thành công
                 </Notification>,
                 {
                     placement: 'top-center',
@@ -58,7 +58,7 @@ const TeacherDeleteConfirmation = () => {
             onConfirm={onDelete}
         >
             <p>
-                Bạn có chắc chắn muốn xóa giáo viên này không? Hành động này
+                Bạn có chắc chắn muốn xóa Giảng viên này không? Hành động này
                 không thể hoàn tác.
             </p>
         </ConfirmDialog>

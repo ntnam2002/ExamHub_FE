@@ -4,7 +4,7 @@ import ProductTableSearch from './StudentTableSearch'
 
 import { Link } from 'react-router-dom'
 
-const ProductTableTools = () => {
+const StudentTableTools = () => {
     return (
         <div className="flex flex-col lg:flex-row lg:items-center">
             <ProductTableSearch />
@@ -30,4 +30,4 @@ const ProductTableTools = () => {
     )
 }
 
-export default ProductTableTools
+export default StudentTableTools

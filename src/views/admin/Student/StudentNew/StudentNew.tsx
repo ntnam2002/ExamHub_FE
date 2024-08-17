@@ -10,8 +10,10 @@ import { apiCreateUser } from '@/services/AdminService'
 const StudentNew = () => {
     const navigate = useNavigate()
 
-    const addProduct = async (data: FormModel) => {
+    const addStudent = async (data: FormModel) => {
+        console.log('data', data)
         const response = await apiCreateUser<boolean, FormModel>(data)
+
         return response.data
     }
 
@@ -20,7 +22,7 @@ const StudentNew = () => {
         setSubmitting: SetSubmitting
     ) => {
         setSubmitting(true)
-        const success = await addProduct(values)
+        const success = await addStudent(values)
         setSubmitting(false)
         if (success) {
             toast.push(
@@ -35,12 +37,12 @@ const StudentNew = () => {
                     placement: 'top-center',
                 }
             )
-            navigate('/app/sales/product-list')
+            navigate('/admin/student')
         }
     }
 
     const handleDiscard = () => {
-        navigate('/app/sales/product-list')
+        navigate('/admin/student')
     }
 
     return (

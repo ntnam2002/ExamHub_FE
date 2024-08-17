@@ -1,17 +1,19 @@
-import StudentForm, {
-    FormModel,
-    SetSubmitting,
-} from '@/views/admin/Student/StudentForm'
 import toast from '@/components/ui/toast'
 import Notification from '@/components/ui/Notification'
 import { useNavigate } from 'react-router-dom'
 import { apiCreateUser } from '@/services/AdminService'
+import TeacherForm, {
+    FormModel,
+    SetSubmitting,
+} from '../TeacherForm/TeacherForm'
 
-const StudentNew = () => {
+const TeacherNew = () => {
     const navigate = useNavigate()
 
-    const addProduct = async (data: FormModel) => {
+    const addTeacher = async (data: FormModel) => {
+        console.log('data', data)
         const response = await apiCreateUser<boolean, FormModel>(data)
+
         return response.data
     }
 
@@ -20,32 +22,32 @@ const StudentNew = () => {
         setSubmitting: SetSubmitting
     ) => {
         setSubmitting(true)
-        const success = await addProduct(values)
+        const success = await addTeacher(values)
         setSubmitting(false)
         if (success) {
             toast.push(
                 <Notification
-                    title={'Successfuly added'}
+                    title={'Thêm thành công'}
                     type="success"
                     duration={2500}
                 >
-                    Thêm mới sinh viên thành công
+                    Thêm mới giảng viên thành công
                 </Notification>,
                 {
                     placement: 'top-center',
                 }
             )
-            navigate('/app/sales/product-list')
+            navigate('/admin/teacher')
         }
     }
 
     const handleDiscard = () => {
-        navigate('/app/sales/product-list')
+        navigate('/admin/teacher')
     }
 
     return (
         <>
-            <StudentForm
+            <TeacherForm
                 type="new"
                 onFormSubmit={handleFormSubmit}
                 onDiscard={handleDiscard}
@@ -54,4 +56,4 @@ const StudentNew = () => {
     )
 }
 
-export default StudentNew
+export default TeacherNew

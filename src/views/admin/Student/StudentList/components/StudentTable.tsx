@@ -13,7 +13,7 @@ import {
     getStudents,
 } from '../store'
 import useThemeClass from '@/utils/hooks/useThemeClass'
-import ProductDeleteConfirmation from './StudentDeleteConfirmation'
+import StudentDeleteConfirmation from './StudentDeleteConfirmation'
 import { useNavigate } from 'react-router-dom'
 import cloneDeep from 'lodash/cloneDeep'
 import type {
@@ -64,7 +64,8 @@ const ActionColumn = ({ row }: { row: Student }) => {
     const navigate = useNavigate()
 
     const onEdit = () => {
-        navigate(`/app/sales/product-edit/${row._id}`)
+        console.log('row')
+        navigate(`/admin/student/edit/${row._id}`)
     }
 
     const onDelete = () => {
@@ -98,7 +99,7 @@ const StudentColumn = ({ row }: { row: Student }) => {
     )
 }
 
-const ProductTable = () => {
+const StudentTable = () => {
     const tableRef = useRef<DataTableResetHandle>(null)
 
     const dispatch = useAppDispatch()
@@ -230,9 +231,9 @@ const ProductTable = () => {
                 onSelectChange={onSelectChange}
                 onSort={onSort}
             />
-            <ProductDeleteConfirmation />
+            <StudentDeleteConfirmation />
         </>
     )
 }
 
-export default ProductTable
+export default StudentTable

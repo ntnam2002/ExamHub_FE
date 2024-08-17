@@ -13,7 +13,7 @@ import {
     getStudents,
 } from '../store'
 import useThemeClass from '@/utils/hooks/useThemeClass'
-import ProductDeleteConfirmation from './StudentDeleteConfirmation'
+import ProductDeleteConfirmation from './SubjectDeleteConfirmation'
 import { useNavigate } from 'react-router-dom'
 import cloneDeep from 'lodash/cloneDeep'
 import type {

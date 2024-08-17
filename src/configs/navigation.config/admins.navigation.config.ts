@@ -39,8 +39,8 @@ const adminNavigationConfig: NavigationTree[] = [
             {
                 key: 'ExamHub.admin.teacher',
                 path: `${ADMIN_PREFIX_PATH}/teacher`,
-                title: 'Giáo viên',
-                translateKey: 'Giáo viên',
+                title: 'Giảng viên',
+                translateKey: 'Giảng viên',
                 icon: 'teacher',
                 type: NAV_ITEM_TYPE_ITEM,
                 authority: [ADMIN],

@@ -203,7 +203,7 @@ const StudentForm = forwardRef<FormikRef, StudentForm>((props, ref) => {
                                         />
                                     )}
                                 </div>
-                                <div className="md:flex items-center">
+                                {/* <div className="md:flex items-center">
                                     <Button
                                         size="sm"
                                         className="ltr:mr-3 rtl:ml-3"
@@ -221,7 +221,7 @@ const StudentForm = forwardRef<FormikRef, StudentForm>((props, ref) => {
                                     >
                                         Lưu
                                     </Button>
-                                </div>
+                                </div> */}
                             </StickyFooter>
                         </FormContainer>
                     </Form>

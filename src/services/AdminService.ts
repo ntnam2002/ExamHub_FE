@@ -30,11 +30,21 @@ export async function apiGetStudentToEdit<T, U extends { id: string }>(
         method: 'get',
     })
 }
+export async function apiGetTeacherToEdit<T, U extends { id: string }>(
+    data: U
+) {
+    const { id } = data
+    return ApiService.fetchData<T>({
+        url: `/users/getTeacherById/${id}`,
+        method: 'get',
+    })
+}
 export async function apiUpdateUser<T, U extends { id: string }>(data: U) {
+    console.log('data', data)
     const { id } = data
     return ApiService.fetchData<T>({
         url: `/users/updateUser/${id}`,
-        method: 'put',
+        method: 'post',
         data,
     })
 }

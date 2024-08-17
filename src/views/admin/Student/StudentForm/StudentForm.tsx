@@ -6,9 +6,6 @@ import StickyFooter from '@/components/shared/StickyFooter'
 import ConfirmDialog from '@/components/shared/ConfirmDialog'
 import { Form, Formik, FormikProps } from 'formik'
 import BasicInformationFields from './BasicInformationFields'
-
-import OrganizationFields from './OrganizationFields'
-
 import cloneDeep from 'lodash/cloneDeep'
 import { HiOutlineTrash } from 'react-icons/hi'
 import { AiOutlineSave } from 'react-icons/ai'
@@ -18,31 +15,16 @@ import * as Yup from 'yup'
 type FormikRef = FormikProps<any>
 
 type InitialData = {
-    id?: string
+    username?: string
+    password?: string
+    role?: string
     name?: string
-    productCode?: string
-    img?: string
-    imgList?: {
-        id: string
-        name: string
-        img: string
-    }[]
-    category?: string
-    price?: number
-    stock?: number
-    status?: number
-    costPerItem?: number
-    bulkDiscountPrice?: number
-    taxRate?: number
-    tags?: string[]
-    brand?: string
-    vendor?: string
-    description?: string
+    Email?: string
+    class_ids?: string
+    department_id?: string
 }
 
-export type FormModel = Omit<InitialData, 'tags'> & {
-    tags: { label: string; value: string }[] | string[]
-}
+export type FormModel = InitialData
 
 export type SetSubmitting = (isSubmitting: boolean) => void
 
@@ -50,7 +32,7 @@ export type OnDeleteCallback = React.Dispatch<React.SetStateAction<boolean>>
 
 type OnDelete = (callback: OnDeleteCallback) => void
 
-type StudentForm = {
+type StudentFormProps = {
     initialData?: InitialData
     type: 'edit' | 'new'
     onDiscard?: () => void
@@ -61,13 +43,15 @@ type StudentForm = {
 const { useUniqueId } = hooks
 
 const validationSchema = Yup.object().shape({
-    name: Yup.string().required('Product Name Required'),
-    price: Yup.number().required('Price Required'),
-    stock: Yup.number().required('SKU Required'),
-    category: Yup.string().required('Category Required'),
+    username: Yup.string().required('User Name is required'),
+    password: Yup.string().required('Password is required'),
+    name: Yup.string().required('Name is required'),
+    email: Yup.string().required('Email is required').email('Invalid email'),
+    class_ids: Yup.string().required('Class ID is required'),
+    department_id: Yup.string().required('Department ID is required'),
 })
 
-const DeleteProductButton = ({ onDelete }: { onDelete: OnDelete }) => {
+const DeleteStudentButton = ({ onDelete }: { onDelete: OnDelete }) => {
     const [dialogOpen, setDialogOpen] = useState(false)
 
     const onConfirmDialogOpen = () => {
@@ -97,7 +81,7 @@ const DeleteProductButton = ({ onDelete }: { onDelete: OnDelete }) => {
             <ConfirmDialog
                 isOpen={dialogOpen}
                 type="danger"
-                title="Delete product"
+                title="Delete Student"
                 confirmButtonColor="red-600"
                 onClose={onConfirmDialogClose}
                 onRequestClose={onConfirmDialogClose}
@@ -105,7 +89,7 @@ const DeleteProductButton = ({ onDelete }: { onDelete: OnDelete }) => {
                 onConfirm={handleConfirm}
             >
                 <p>
-                    Bạn có chắc chắn muốn xóa sản phẩm này không? Hành động này
+                    Bạn có chắc chắn muốn xóa sinh viên này không? Hành động này
                     không thể hoàn tác.
                 </p>
             </ConfirmDialog>
@@ -113,33 +97,22 @@ const DeleteProductButton = ({ onDelete }: { onDelete: OnDelete }) => {
     )
 }
 
-const StudentForm = forwardRef<FormikRef, StudentForm>((props, ref) => {
+const StudentForm = forwardRef<FormikRef, StudentFormProps>((props, ref) => {
     const {
         type,
         initialData = {
-            id: '',
+            username: '',
+            password: '',
             name: '',
-            productCode: '',
-            img: '',
-            imgList: [],
-            category: '',
-            price: 0,
-            stock: 0,
-            status: 0,
-            costPerItem: 0,
-            bulkDiscountPrice: 0,
-            taxRate: 6,
-            tags: [],
-            brand: '',
-            vendor: '',
-            description: '',
+            role: 'student',
+            email: '',
+            class_ids: '',
+            department_id: '',
         },
         onFormSubmit,
         onDiscard,
         onDelete,
     } = props
-
-    const newId = useUniqueId('product-')
 
     return (
         <>
@@ -147,32 +120,15 @@ const StudentForm = forwardRef<FormikRef, StudentForm>((props, ref) => {
                 innerRef={ref}
                 initialValues={{
                     ...initialData,
-                    tags: initialData?.tags
-                        ? initialData.tags.map((value) => ({
-                              label: value,
-                              value,
-                          }))
-                        : [],
                 }}
                 validationSchema={validationSchema}
                 onSubmit={(values: FormModel, { setSubmitting }) => {
                     const formData = cloneDeep(values)
-                    formData.tags = formData.tags.map((tag) => {
-                        if (typeof tag !== 'string') {
-                            return tag.value
-                        }
-                        return tag
-                    })
-                    if (type === 'new') {
-                        formData.id = newId
-                        if (formData.imgList && formData.imgList.length > 0) {
-                            formData.img = formData.imgList[0].img
-                        }
-                    }
+                    formData.role = 'student'
                     onFormSubmit?.(formData, setSubmitting)
                 }}
             >
-                {({ values, touched, errors, isSubmitting }) => (
+                {({ touched, errors, isSubmitting }) => (
                     <Form>
                         <FormContainer>
                             <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
@@ -181,16 +137,7 @@ const StudentForm = forwardRef<FormikRef, StudentForm>((props, ref) => {
                                         touched={touched}
                                         errors={errors}
                                     />
-
-                                    {/* <OrganizationFields
-                                        touched={touched}
-                                        errors={errors}
-                                        values={values}
-                                    /> */}
                                 </div>
-                                {/* <div className="lg:col-span-1">
-                                    <ProductImages values={values} />
-                                </div> */}
                             </div>
                             <StickyFooter
                                 className="-mx-8 px-8 flex items-center justify-between py-4"
@@ -198,7 +145,7 @@ const StudentForm = forwardRef<FormikRef, StudentForm>((props, ref) => {
                             >
                                 <div>
                                     {type === 'edit' && (
-                                        <DeleteProductButton
+                                        <DeleteStudentButton
                                             onDelete={onDelete as OnDelete}
                                         />
                                     )}

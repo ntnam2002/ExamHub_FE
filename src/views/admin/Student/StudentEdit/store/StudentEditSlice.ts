@@ -15,7 +15,7 @@ type StudentData = {
     department_id?: string
 }
 
-export type SalesProductEditState = {
+export type StudentEditState = {
     loading: boolean
     StudentData: StudentData
 }
@@ -35,9 +35,7 @@ export const getStudentToEdit = createAsyncThunk(
     }
 )
 
-export const updateStudent = async <T, U extends { id: string }>(
-    data: U
-) => {
+export const updateStudent = async <T, U extends { id: string }>(data: U) => {
     const response = await apiUpdateUser<T, U>(data)
     return response.data
 }
@@ -46,12 +44,13 @@ export const deleteStudent = async (data: { id: string }) => {
     const response = await apiDeleteUser<boolean, { id: string }>(data)
     return response
 }
-const initialState: SalesProductEditState = {
+
+const initialState: StudentEditState = {
     loading: true,
     StudentData: {},
 }
 
-const productEditSlice = createSlice({
+const studentEditSlice = createSlice({
     name: `${SLICE_NAME}/state`,
     initialState,
     reducers: {},
@@ -67,4 +66,4 @@ const productEditSlice = createSlice({
     },
 })
 
-export default productEditSlice.reducer
+export default studentEditSlice.reducer

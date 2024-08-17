@@ -40,6 +40,19 @@ const adminRoutes: Routes = [
         authority: [ADMIN],
     },
     {
+        key: 'ExamHub.admin.teacher-new',
+        path: `${ADMIN_PREFIX_PATH}/teacher/new`,
+        component: lazy(() => import('@/views/admin/Teacher/TeacherNew')),
+        authority: [ADMIN],
+    },
+    {
+        key: 'ExamHub.admin.teacher-edit',
+        path: `${ADMIN_PREFIX_PATH}/teacher/edit/:id`,
+        component: lazy(() => import('@/views/admin/Teacher/TeacherEdit')),
+        authority: [ADMIN],
+    },
+
+    {
         key: 'ExamHub.admin.question',
         path: `${ADMIN_PREFIX_PATH}/question`,
         component: lazy(() => import('@/views/admin/Examination/QuestionList')),

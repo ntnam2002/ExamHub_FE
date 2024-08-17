@@ -1,8 +1,8 @@
 import reducer from './store'
 import { injectReducer } from '@/store'
 import AdaptableCard from '@/components/shared/AdaptableCard'
-import ProductTable from './components/StudentTable'
-import ProductTableTools from './components/StudentTableTools'
+import ProductTable from './components/SubjectTable'
+import ProductTableTools from './components/SubjectTableTools'
 
 injectReducer('StudentList', reducer)
 
