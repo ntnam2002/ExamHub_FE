@@ -48,22 +48,15 @@ const ExaminationTable: React.FC = () => {
     const columns = useMemo(
         () => [
             {
-                header: 'ID',
-                accessorKey: '_id',
-            },
-            {
-                header: 'Exam Name',
+                header: 'Tên bài thi',
                 accessorKey: 'exam_id.exam_name',
                 cell: (props: { row: { original: any } }) => (
                     <span>{props.row.original.exam_id.exam_name}</span>
                 ),
             },
+
             {
-                header: 'Access Keys',
-                accessorKey: 'access_keys',
-            },
-            {
-                header: 'Started At',
+                header: 'Bắt đầu lúc',
                 accessorKey: 'started_at',
                 cell: (props: { row: { original: any } }) => (
                     <span>
@@ -74,7 +67,7 @@ const ExaminationTable: React.FC = () => {
                 ),
             },
             {
-                header: 'Total Score',
+                header: 'Tổng điểm',
                 accessorKey: 'total_score',
             },
             {

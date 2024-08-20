@@ -30,10 +30,6 @@ const ExamTable: React.FC<ExamTableProps> = ({ onEdit, onDelete }) => {
     const columns = useMemo(
         () => [
             {
-                header: 'ID',
-                accessorKey: '_id',
-            },
-            {
                 header: 'Tên đề thi',
                 accessorKey: 'exam_name',
             },

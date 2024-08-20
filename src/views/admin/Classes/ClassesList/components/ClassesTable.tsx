@@ -110,27 +110,26 @@ const ClassTable = () => {
     const columns: ColumnDef<Class>[] = useMemo(
         () => [
             {
-                header: 'ID',
-                accessorKey: '_id',
-                cell: (props) => <span>{props.row.original._id}</span>,
-            },
-            {
                 header: 'Class Name',
                 accessorKey: 'class_name',
                 cell: (props) => <ClassColumn row={props.row.original} />,
             },
             {
-                header: 'Teacher ID',
-                accessorKey: 'teacherId',
+                header: 'Chuyên ngành',
+                accessorKey: 'specialization',
             },
-            {
-                header: 'Student IDs',
-                accessorKey: 'student_ids',
-                cell: (props) => {
-                    const row = props.row.original
-                    return <span>{row.student_ids?.join(', ')}</span>
-                },
-            },
+            // {
+            //     header: 'Teacher ID',
+            //     accessorKey: 'teacherId',
+            // },
+            // {
+            //     header: 'Student IDs',
+            //     accessorKey: 'student_ids',
+            //     cell: (props) => {
+            //         const row = props.row.original
+            //         return <span>{row.student_ids?.join(', ')}</span>
+            //     },
+            // },
             {
                 header: 'Created At',
                 accessorKey: 'create_at',

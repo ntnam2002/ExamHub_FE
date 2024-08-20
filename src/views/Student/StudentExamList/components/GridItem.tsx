@@ -49,13 +49,13 @@ const GridItem: React.FC<GridItemProps> = ({
                             <div className="flex items-center px-2 py-1 border border-gray-300 rounded-full">
                                 <HiOutlineClipboardCheck className="text-base" />
                                 <span className="ml-1 rtl:mr-1 whitespace-nowrap">
-                                    Total Score: {total_score}
+                                    Tổng điểm: {total_score}
                                 </span>
                             </div>
                         </div>
                     </div>
                     <p className="mt-2 text-sm">
-                        Started at: {new Date(started_at).toLocaleString()}
+                        Bắt đầu lúc: {new Date(started_at).toLocaleString()}
                     </p>
                 </div>
             </div>

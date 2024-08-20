@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react'
-
 import {
     getQuestionsByExamId,
     sendAnswer,
@@ -8,11 +7,10 @@ import {
 } from '../../Examination/store'
 import { useNavigate } from 'react-router-dom'
 import ExamCamera from '../exam-camera/exam-camera'
-
 import { getStudentIdFromToken } from '../../StudentExamList/store'
 
 const ExamInterface = () => {
-    const [timeLeft, setTimeLeft] = useState(60 * 60) // Initial time in seconds
+    const [timeLeft, setTimeLeft] = useState(60 * 60)
     const [warning, setWarning] = useState(false)
     const [cheatAttempts, setCheatAttempts] = useState(0)
     const [cheatingStatus, setCheatingStatus] = useState('')
@@ -77,9 +75,7 @@ const ExamInterface = () => {
             )
         }
     }, [])
-    const handleCameraDetection = useCallback(() => {
-        setCheatAttempts((prevAttempts) => prevAttempts + 1)
-    }, [])
+
     useEffect(() => {
         if (cheatAttempts > 15) {
             alert(
@@ -134,6 +130,14 @@ const ExamInterface = () => {
     )
 
     const submitAnswers = useCallback(() => {
+        if (timeLeft) {
+            const confirmSubmit = confirm(
+                'Are you sure you want to submit the answers early?'
+            )
+            if (!confirmSubmit) {
+                return
+            }
+        }
         const answers = JSON.parse(localStorage.getItem('answers') || '[]')
         console.log('answers', answers)
         if (answers.length === 0) {

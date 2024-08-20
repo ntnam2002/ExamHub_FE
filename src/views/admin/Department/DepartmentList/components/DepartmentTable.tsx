@@ -109,46 +109,27 @@ const DepartmentTable = () => {
     const columns: ColumnDef<Department>[] = useMemo(
         () => [
             {
-                header: 'ID',
-                accessorKey: '_id',
-                cell: (props) => {
-                    return <DepartmentColumn row={props.row.original} />
-                },
-            },
-            {
-                header: 'Department Name',
+                header: 'Mã khoa',
                 accessorKey: 'department_name',
             },
             {
-                header: 'Teacher IDs',
-                accessorKey: 'teacher_ids',
-                cell: (props) => {
-                    const row = props.row.original
-                    return <span>{row.teacher_ids.join(', ')}</span>
-                },
+                header: 'Tên khoa',
+                accessorKey: 'name',
             },
-            {
-                header: 'Class IDs',
-                accessorKey: 'class_ids',
-                cell: (props) => {
-                    const row = props.row.original
-                    return <span>{row.class_ids.join(', ')}</span>
-                },
-            },
-            {
-                header: 'Created At',
-                accessorKey: 'created_at',
-                cell: (props) => {
-                    const row = props.row.original
-                    return (
-                        <span>
-                            {dayjs(row.created_at).format(
-                                'YYYY-MM-DD HH:mm:ss'
-                            )}
-                        </span>
-                    )
-                },
-            },
+            // {
+            //     header: 'Created At',
+            //     accessorKey: 'created_at',
+            //     cell: (props) => {
+            //         const row = props.row.original
+            //         return (
+            //             <span>
+            //                 {dayjs(row.created_at).format(
+            //                     'YYYY-MM-DD HH:mm:ss'
+            //                 )}
+            //             </span>
+            //         )
+            //     },
+            // },
             {
                 header: 'Actions',
                 id: 'action',

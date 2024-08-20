@@ -122,10 +122,20 @@ const SignInForm = (props: SignInFormProps) => {
                                     name="isAdmin"
                                     type="checkbox"
                                     component={Checkbox}
+                                    className="float-left"
                                 >
                                     Admin
                                 </Field>
+                                <Field
+                                    name="isRemember"
+                                    type="checkbox"
+                                    component={Checkbox}
+                                    className="float-right"
+                                >
+                                    Nhớ đăng nhập
+                                </Field>
                             </FormItem>
+
                             {/* <div className="flex justify-between mb-6">
                                 <ActionLink to={forgotPasswordUrl}>
                                     Quên mật khẩu
@@ -141,10 +151,10 @@ const SignInForm = (props: SignInFormProps) => {
                                     ? 'Đang đăng nhập...'
                                     : 'Đăng nhập'}
                             </Button>
-                            {/* <div className="mt-4 text-center">
+                            <div className="mt-4 text-center">
                                 <span>{`Chưa có tài khoản?`} </span>
                                 <ActionLink to={signUpUrl}>Đăng ký</ActionLink>
-                            </div> */}
+                            </div>
                         </FormContainer>
                     </Form>
                 )}

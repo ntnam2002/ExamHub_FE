@@ -21,12 +21,12 @@ type SignUpFormSchema = {
 }
 
 const validationSchema = Yup.object().shape({
-    username: Yup.string().required('Please enter your user name'),
+    username: Yup.string().required('Hãy nhập tên tài khoản'),
 
-    password: Yup.string().required('Please enter your password'),
+    password: Yup.string().required('Hãy nhập mật khẩu'),
     confirmPassword: Yup.string().oneOf(
         [Yup.ref('password')],
-        'Your passwords do not match'
+        'Mật khẩu không khớp'
     ),
 })
 
