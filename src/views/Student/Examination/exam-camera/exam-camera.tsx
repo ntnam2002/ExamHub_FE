@@ -17,21 +17,28 @@ import {
 } from '../face-detection/face-detection-helper'
 import classes from './exam-camera.module.scss'
 
+// Định nghĩa các props cho component ExamCamera
 interface ExamCameraProps {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     ref: any
 }
 
+// Định nghĩa component ExamCamera
 const ExamCamera: React.FC<ExamCameraProps> = forwardRef((props, ref) => {
+    // State để lưu trữ hình ảnh chụp từ webcam
     const [img_, setImg_] = useState<string>()
+    // Các ref cho webcam, face detection, và camera
     const webcamRef = useRef<Webcam>(null)
     const faceDetectionRef = useRef<FaceDetection | null>(null)
     const cameraRef = useRef<Camera | null>(null)
+    // Bật phát hiện gian lận theo thời gian thực
     const realtimeDetection = true
 
+    // Tốc độ làm mới khung hình và bộ đếm khung hình hiện tại
     const frameRefresh = 30
     const currentFrame = useRef(0)
 
+    // Các state cho trạng thái gian lận, thông báo cảnh báo, cảnh báo, và số lần gian lận
     const [cheatingStatus, setCheatingStatus] = useState('')
     const [caution, setCaution] = useState('')
     const [alert, setAlert] = useState(false)
@@ -40,22 +47,25 @@ const ExamCamera: React.FC<ExamCameraProps> = forwardRef((props, ref) => {
     const [previousWarning, setPreviousWarning] = useState(false)
 
     useEffect(() => {
-        let faceDetection = new FaceDetection({
+        // Khởi tạo đối tượng FaceDetection
+        const faceDetection: FaceDetection = new FaceDetection({
             locateFile: (file) => {
                 return `https://cdn.jsdelivr.net/npm/@mediapipe/face_detection/${file}`
             },
         })
 
+        // Thiết lập các tùy chọn cho FaceDetection
         faceDetection.setOptions({
             minDetectionConfidence: 0.5,
             model: 'short',
         })
 
-        // eslint-disable-next-line no-inner-declarations
+        // Hàm xử lý kết quả phát hiện khuôn mặt
         function onResult(result: Results) {
             let warning = false
             let cautionMessage = ''
 
+            // Kiểm tra nếu không phát hiện được khuôn mặt hoặc phát hiện nhiều khuôn mặt
             if (result.detections.length < 1) {
                 warning = true
                 cautionMessage =
@@ -66,12 +76,14 @@ const ExamCamera: React.FC<ExamCameraProps> = forwardRef((props, ref) => {
                     'Phát hiện nhiều khuôn mặt, có thể bị coi là gian lận!'
             }
 
+            // Cập nhật trạng thái cảnh báo nếu có thay đổi
             if (warning !== previousWarning) {
                 setPreviousWarning(warning)
                 setAlert(warning)
                 setCaution(cautionMessage)
             }
 
+            // Nếu không có cảnh báo, kiểm tra trạng thái gian lận
             if (!warning) {
                 const faceCoordinates = extractFaceCoordinates(result)
                 const [lookingLeft, lookingRight] = detectCheating(
@@ -84,6 +96,7 @@ const ExamCamera: React.FC<ExamCameraProps> = forwardRef((props, ref) => {
                     lookingRight
                 )
 
+                // Cập nhật trạng thái gian lận nếu có thay đổi
                 if (currentCheatingStatus !== previousCheatingStatus) {
                     if (currentCheatingStatus !== 'Bình thường!') {
                         setAlert(true)
@@ -95,9 +108,11 @@ const ExamCamera: React.FC<ExamCameraProps> = forwardRef((props, ref) => {
             }
         }
 
+        // Thiết lập hàm xử lý kết quả cho FaceDetection
         faceDetection.onResults(onResult)
         faceDetectionRef.current = faceDetection
 
+        // Khởi động camera nếu webcam có sẵn
         if (webcamRef.current && webcamRef.current.video) {
             const camera = new Camera(webcamRef.current.video, {
                 onFrame: async () => {
@@ -122,24 +137,29 @@ const ExamCamera: React.FC<ExamCameraProps> = forwardRef((props, ref) => {
             cameraRef.current = camera
         }
 
+        // Dọn dẹp khi component bị hủy
         return () => {
             faceDetection.close()
             cameraRef.current?.stop()
         }
     }, [webcamRef, realtimeDetection, previousCheatingStatus, previousWarning])
 
+    // Sử dụng useImperativeHandle để cung cấp phương thức stopCamera cho ref
     useImperativeHandle(ref, () => ({
         stopCamera: () => {
             cameraRef.current?.stop()
         },
     }))
 
+    // Hàm xử lý khi đóng cảnh báo
     const handleCloseWarning = () => {
         if (alert) {
             setCheatCount((prevCount) => prevCount + 1)
         }
         setAlert(false)
     }
+
+    // Kiểm tra số lần gian lận và hiển thị thông báo nếu vượt quá giới hạn
     useEffect(() => {
         if (cheatCount >= 10) {
             toast.error(
@@ -150,6 +170,7 @@ const ExamCamera: React.FC<ExamCameraProps> = forwardRef((props, ref) => {
             }, 5000)
         }
     }, [cheatCount])
+
     return (
         <div className={classes.cameraContainer}>
             <p className={classes.cheatingStatus}>{cheatingStatus}</p>
