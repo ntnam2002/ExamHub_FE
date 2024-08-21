@@ -1,7 +1,7 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Card from '@/components/ui/Card'
 import { HiOutlineClipboardCheck } from 'react-icons/hi'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
 export type GridItemProps = {
     _id: string
@@ -20,6 +20,10 @@ const GridItem: React.FC<GridItemProps> = ({
     total_score,
     started_at,
 }) => {
+    const [error, setError] = useState<string | null>(null)
+    const [canNavigate, setCanNavigate] = useState(false)
+    const navigate = useNavigate()
+
     // Check if exam_id or exam_name is missing, then return null to avoid errors
     if (!exam_id || !exam_id.exam_name) {
         return null // Or you can display a different error message
@@ -27,18 +31,25 @@ const GridItem: React.FC<GridItemProps> = ({
 
     const { exam_name, description } = exam_id
 
-    const handleClick = () => {
-        localStorage.setItem('examinationId', _id)
+    const handleClick = async (
+        e: React.MouseEvent<HTMLAnchorElement, MouseEvent>
+    ) => {
+        e.preventDefault()
+        try {
+            await navigator.mediaDevices.getUserMedia({ video: true })
+            localStorage.setItem('examinationId', _id)
+            setCanNavigate(true)
+            navigate('/examination/components/exam')
+        } catch (err) {
+            setError('No camera found. Please connect a camera to proceed.')
+        }
     }
 
     return (
         <Card bodyClass="h-full">
             <div className="flex flex-col justify-between h-full">
                 <div className="flex justify-between">
-                    <Link
-                        to={`/examination/components/exam`}
-                        onClick={handleClick}
-                    >
+                    <Link to="#" onClick={handleClick}>
                         <h6>{exam_name}</h6>
                     </Link>
                 </div>
@@ -58,6 +69,7 @@ const GridItem: React.FC<GridItemProps> = ({
                         Started at: {new Date(started_at).toLocaleString()}
                     </p>
                 </div>
+                {error && <p className="mt-2 text-red-500">{error}</p>}
             </div>
         </Card>
     )

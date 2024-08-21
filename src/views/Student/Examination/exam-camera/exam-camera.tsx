@@ -1,4 +1,3 @@
-/* eslint-disable prefer-const */
 import { Camera } from '@mediapipe/camera_utils'
 import { FaceDetection, Results } from '@mediapipe/face_detection'
 import React, {
@@ -18,7 +17,6 @@ import {
 import classes from './exam-camera.module.scss'
 
 interface ExamCameraProps {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     ref: any
 }
 
@@ -40,18 +38,17 @@ const ExamCamera: React.FC<ExamCameraProps> = forwardRef((props, ref) => {
     const [previousWarning, setPreviousWarning] = useState(false)
 
     useEffect(() => {
-        let faceDetection = new FaceDetection({
+        const faceDetection: FaceDetection = new FaceDetection({
             locateFile: (file) => {
                 return `https://cdn.jsdelivr.net/npm/@mediapipe/face_detection/${file}`
             },
         })
-
+        console.log('faceDetection', faceDetection)
         faceDetection.setOptions({
             minDetectionConfidence: 0.5,
             model: 'short',
         })
 
-        // eslint-disable-next-line no-inner-declarations
         function onResult(result: Results) {
             let warning = false
             let cautionMessage = ''
@@ -83,6 +80,7 @@ const ExamCamera: React.FC<ExamCameraProps> = forwardRef((props, ref) => {
                     lookingLeft,
                     lookingRight
                 )
+                console.log('cheating status', currentCheatingStatus)
 
                 if (currentCheatingStatus !== previousCheatingStatus) {
                     if (currentCheatingStatus !== 'Bình thường!') {
