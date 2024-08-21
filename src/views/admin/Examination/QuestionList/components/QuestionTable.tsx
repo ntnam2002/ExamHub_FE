@@ -31,8 +31,8 @@ type Question = {
     text: string
     points: number
     options: Option[]
-    subjectId: string
-    difficuty: string
+    subject_name: string
+    difficulty: string
     created_at: Date
 }
 
@@ -108,13 +108,6 @@ const QuestionTable = () => {
     const columns: ColumnDef<Question>[] = useMemo(
         () => [
             {
-                header: 'ID',
-                accessorKey: '_id',
-                cell: (props) => {
-                    return <span>{props.row.original._id}</span>
-                },
-            },
-            {
                 header: 'Câu hỏi',
                 accessorKey: 'text',
             },
@@ -141,31 +134,31 @@ const QuestionTable = () => {
             },
             {
                 header: 'Môn học',
-                accessorKey: 'subjectId',
+                accessorKey: 'subject',
                 cell: (props) => {
-                    return <span>{props.row.original.subjectId}</span>
+                    return <span>{props.row.original.subject_name}</span>
                 },
             },
             {
                 header: 'Độ khó',
-                accessorKey: 'difficuty',
+                accessorKey: 'difficulty',
                 cell: (props) => {
-                    return <span>{props.row.original.difficuty}</span>
+                    return <span>{props.row.original.difficulty}</span>
                 },
             },
-            {
-                header: 'Tạo lúc',
-                accessorKey: 'created_at',
-                cell: (props) => {
-                    return (
-                        <span>
-                            {dayjs(props.row.original.created_at).format(
-                                'YYYY-MM-DD HH:mm:ss'
-                            )}
-                        </span>
-                    )
-                },
-            },
+            // {
+            //     header: 'Tạo lúc',
+            //     accessorKey: 'created_at',
+            //     cell: (props) => {
+            //         return (
+            //             <span>
+            //                 {dayjs(props.row.original.created_at).format(
+            //                     'YYYY-MM-DD HH:mm:ss'
+            //                 )}
+            //             </span>
+            //         )
+            //     },
+            // },
             {
                 header: 'Hành động',
                 id: 'action',
@@ -200,7 +193,14 @@ const QuestionTable = () => {
                 ref={tableRef}
                 columns={columns}
                 data={data}
+                skeletonAvatarColumns={[0]}
+                skeletonAvatarProps={{ className: 'rounded-md' }}
                 loading={loading}
+                pagingData={{
+                    total: tableData.total as number,
+                    pageIndex: tableData.pageIndex as number,
+                    pageSize: tableData.pageSize as number,
+                }}
                 onPaginationChange={onPaginationChange}
                 onSelectChange={onSelectChange}
                 onSort={onSort}

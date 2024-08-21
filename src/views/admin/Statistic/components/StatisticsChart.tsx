@@ -1,10 +1,11 @@
 import { Container } from '@/components/shared'
 import { Card } from '@/components/ui'
-import { Flex } from 'antd'
+import { Flex, Typography } from 'antd'
 import { ApexOptions } from 'apexcharts'
 import React from 'react'
 import Chart from 'react-apexcharts'
 
+const { Title } = Typography
 function StatisticsChart() {
     // Data for the bar chart
     const barChartOptions: ApexOptions = {
@@ -113,10 +114,22 @@ function StatisticsChart() {
     ]
 
     return (
-        <>
-            <Flex gap={30}>
-                <Card>
-                    <h3>Bar Chart</h3>
+        <Container>
+            <Title
+                level={2}
+                style={{ marginBottom: '24px', textAlign: 'center' }}
+            >
+                School Statistics Dashboard
+            </Title>
+            <Flex gap={24} wrap="wrap" justify="space-around">
+                <Card
+                    style={{
+                        width: '30%',
+                        minWidth: '300px',
+                        marginBottom: '24px',
+                    }}
+                >
+                    <Title level={4}>Students vs Teachers</Title>
                     <Chart
                         options={barChartOptions}
                         series={barChartSeries}
@@ -124,8 +137,14 @@ function StatisticsChart() {
                         height={350}
                     />
                 </Card>
-                <Card>
-                    <h3>Line Chart</h3>
+                <Card
+                    style={{
+                        width: '30%',
+                        minWidth: '300px',
+                        marginBottom: '24px',
+                    }}
+                >
+                    <Title level={4}>Exam Score Trends</Title>
                     <Chart
                         options={lineChartOptions}
                         series={lineChartSeries}
@@ -133,20 +152,30 @@ function StatisticsChart() {
                         height={350}
                     />
                 </Card>
-                <Card>
-                    <h3>Pie Chart</h3>
+                <Card
+                    style={{
+                        width: '30%',
+                        minWidth: '300px',
+                        marginBottom: '24px',
+                    }}
+                >
+                    <Title level={4}>Pass/Fail Ratio</Title>
                     <Chart
                         options={pieChartOptions}
                         series={pieChartSeries}
                         type="pie"
-                        height={250}
-                        width={350}
+                        height={350}
                     />
                 </Card>
             </Flex>
-            <Flex gap={30} style={{ marginTop: '20px' }}>
-                <Card>
-                    <h3>Sparkline Sales</h3>
+            <Flex
+                gap={24}
+                wrap="wrap"
+                justify="space-around"
+                style={{ marginTop: '24px' }}
+            >
+                <Card style={{ width: '48%', minWidth: '300px' }}>
+                    <Title level={4}>Score Overview</Title>
                     <Chart
                         options={sparklineOptions}
                         series={sparklineSeries}
@@ -156,7 +185,7 @@ function StatisticsChart() {
                 </Card>
                 {/* Add additional sparkline charts here */}
             </Flex>
-        </>
+        </Container>
     )
 }
 

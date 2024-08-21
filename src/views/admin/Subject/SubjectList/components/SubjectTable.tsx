@@ -138,13 +138,6 @@ const ProductTable = () => {
     const columns: ColumnDef<Student>[] = useMemo(
         () => [
             {
-                header: 'ID',
-                accessorKey: '_id',
-                cell: (props) => {
-                    return <StudentColumn row={props.row.original} />
-                },
-            },
-            {
                 header: 'Username',
                 accessorKey: 'username',
             },

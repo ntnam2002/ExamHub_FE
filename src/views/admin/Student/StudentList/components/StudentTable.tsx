@@ -28,8 +28,8 @@ type Student = {
     username: string
     email: string
     role: string
-    class_ids: string[]
-    department_id: string
+    class_names: string[]
+    department_name: string
     create_at: Date
 }
 
@@ -139,20 +139,14 @@ const StudentTable = () => {
     const columns: ColumnDef<Student>[] = useMemo(
         () => [
             {
-                header: 'ID',
-                accessorKey: '_id',
-                cell: (props) => {
-                    return <StudentColumn row={props.row.original} />
-                },
+                header: 'Tên',
+                accessorKey: 'name',
             },
             {
                 header: 'Username',
                 accessorKey: 'username',
             },
-            {
-                header: 'Tên',
-                accessorKey: 'name',
-            },
+
             {
                 header: 'Email',
                 accessorKey: 'email',
@@ -162,29 +156,29 @@ const StudentTable = () => {
                 accessorKey: 'role',
             },
             {
-                header: 'Mã lớp',
-                accessorKey: 'class_ids',
+                header: 'Lớp',
+                accessorKey: 'class_names',
                 cell: (props) => {
                     const row = props.row.original
-                    return <span>{row.class_ids.join(', ')}</span>
+                    return <span>{row.class_names.join(', ')}</span>
                 },
             },
             {
-                header: 'mã Khoa',
-                accessorKey: 'department_id',
+                header: 'Khoa',
+                accessorKey: 'department_name',
             },
-            {
-                header: 'Thời gian tạo',
-                accessorKey: 'created_at',
-                cell: (props) => {
-                    const row = props.row.original
-                    return (
-                        <span>
-                            {dayjs(row.create_at).format('YYYY-MM-DD HH:mm:ss')}
-                        </span>
-                    )
-                },
-            },
+            // {
+            //     header: 'Thời gian tạo',
+            //     accessorKey: 'created_at',
+            //     cell: (props) => {
+            //         const row = props.row.original
+            //         return (
+            //             <span>
+            //                 {dayjs(row.create_at).format('YYYY-MM-DD HH:mm:ss')}
+            //             </span>
+            //         )
+            //     },
+            // },
             {
                 header: 'Hành động',
                 id: 'action',

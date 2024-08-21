@@ -32,6 +32,8 @@ import { FcStatistics } from 'react-icons/fc'
 import { statistic } from 'antd/es/theme/internal'
 import { TbReportSearch } from 'react-icons/tb'
 import { MdClass, MdDomain, MdSubject } from 'react-icons/md'
+import { RiAlarmWarningLine } from 'react-icons/ri'
+import { BiUniversalAccess } from 'react-icons/bi'
 
 export type NavigationIcons = Record<string, JSX.Element>
 
@@ -74,6 +76,8 @@ const navigationIcon: NavigationIcons = {
     class: <MdClass />,
     department: <MdDomain />,
     subject: <MdSubject />,
+    behavior: <RiAlarmWarningLine />,
+    accesscontrol: <BiUniversalAccess />,
 }
 
 export default navigationIcon

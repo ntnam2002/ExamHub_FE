@@ -112,20 +112,14 @@ const TeacherTable = () => {
     const columns: ColumnDef<Teacher>[] = useMemo(
         () => [
             {
-                header: 'ID',
-                accessorKey: '_id',
-                cell: (props) => {
-                    return <TeacherColumn row={props.row.original} />
-                },
+                header: 'Name',
+                accessorKey: 'name',
             },
             {
                 header: 'Username',
                 accessorKey: 'username',
             },
-            {
-                header: 'Name',
-                accessorKey: 'name',
-            },
+
             {
                 header: 'Email',
                 accessorKey: 'email',
