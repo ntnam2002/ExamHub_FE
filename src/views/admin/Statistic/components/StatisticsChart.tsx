@@ -6,43 +6,44 @@ import React from 'react'
 import Chart from 'react-apexcharts'
 
 const { Title } = Typography
-function StatisticsChart() {
-    // Data for the bar chart
-    const barChartOptions: ApexOptions = {
+
+function OnlineExamStatistics() {
+    // Biểu đồ cột: Số lượng bài thi theo môn học
+    const subjectExamCountOptions: ApexOptions = {
         chart: {
             type: 'bar',
             height: 350,
         },
         title: {
-            text: 'Number of Students and Teachers',
+            text: 'Số lượng bài thi theo môn học',
         },
         xaxis: {
-            categories: ['Students', 'Teachers'],
+            categories: ['Toán', 'Lý', 'Hóa', 'Sinh', 'Văn', 'Anh'],
         },
         dataLabels: {
             enabled: true,
         },
-        colors: ['#00E396', '#008FFB'],
+        colors: ['#008FFB'],
     }
 
-    const barChartSeries = [
+    const subjectExamCountSeries = [
         {
-            name: 'Count',
-            data: [120, 15],
+            name: 'Số lượng bài thi',
+            data: [150, 120, 100, 80, 130, 140],
         },
     ]
 
-    // Data for the line chart
-    const lineChartOptions: ApexOptions = {
+    // Biểu đồ đường: Điểm trung bình theo thời gian
+    const averageScoreOptions: ApexOptions = {
         chart: {
             type: 'line',
             height: 350,
         },
         title: {
-            text: 'Exam Scores Over Time',
+            text: 'Điểm trung bình theo tháng',
         },
         xaxis: {
-            categories: ['January', 'February', 'March', 'April', 'May'],
+            categories: ['T1', 'T2', 'T3', 'T4', 'T5', 'T6'],
         },
         stroke: {
             curve: 'smooth',
@@ -50,30 +51,30 @@ function StatisticsChart() {
         dataLabels: {
             enabled: false,
         },
-        colors: ['#FEB019'],
+        colors: ['#00E396'],
     }
 
-    const lineChartSeries = [
+    const averageScoreSeries = [
         {
-            name: 'Average Score',
-            data: [75, 80, 70, 90, 85],
+            name: 'Điểm trung bình',
+            data: [7.5, 7.8, 7.2, 8.0, 7.9, 8.2],
         },
     ]
 
-    // Data for the pie chart
-    const pieChartOptions: ApexOptions = {
+    // Biểu đồ tròn: Phân bố kết quả thi
+    const examResultOptions: ApexOptions = {
         chart: {
             type: 'pie',
             height: 350,
         },
-        labels: ['Pass', 'Fail'],
-        colors: ['#00E396', '#FF4560'],
+        labels: ['Xuất sắc', 'Giỏi', 'Khá', 'Trung bình', 'Yếu'],
+        colors: ['#00E396', '#0090FF', '#FEB019', '#FF4560', '#775DD0'],
     }
 
-    const pieChartSeries = [85, 15]
+    const examResultSeries = [15, 30, 35, 15, 5]
 
-    // Sparkline and other small charts
-    const sparklineOptions: ApexOptions = {
+    // Biểu đồ sparkline: Số lượng thí sinh tham gia
+    const participantCountOptions: ApexOptions = {
         chart: {
             type: 'area',
             height: 160,
@@ -90,16 +91,16 @@ function StatisticsChart() {
         yaxis: {
             min: 0,
         },
-        colors: ['blue'],
+        colors: ['#008FFB'],
         title: {
-            text: '$424,652',
+            text: '1,254',
             offsetX: 0,
             style: {
                 fontSize: '24px',
             },
         },
         subtitle: {
-            text: 'Sales',
+            text: 'Tổng số thí sinh',
             offsetX: 0,
             style: {
                 fontSize: '14px',
@@ -107,9 +108,9 @@ function StatisticsChart() {
         },
     }
 
-    const sparklineSeries = [
+    const participantCountSeries = [
         {
-            data: [25, 66, 41, 89, 63, 25, 44, 12, 36, 9, 54],
+            data: [800, 950, 1100, 980, 1200, 1254],
         },
     ]
 
@@ -119,74 +120,68 @@ function StatisticsChart() {
                 level={2}
                 style={{ marginBottom: '24px', textAlign: 'center' }}
             >
-                School Statistics Dashboard
+                Thống kê hệ thống thi trực tuyến
             </Title>
             <Flex gap={24} wrap="wrap" justify="space-around">
                 <Card
                     style={{
-                        width: '30%',
+                        width: '48%',
                         minWidth: '300px',
                         marginBottom: '24px',
                     }}
                 >
-                    <Title level={4}>Students vs Teachers</Title>
                     <Chart
-                        options={barChartOptions}
-                        series={barChartSeries}
+                        options={subjectExamCountOptions}
+                        series={subjectExamCountSeries}
                         type="bar"
                         height={350}
                     />
                 </Card>
                 <Card
                     style={{
-                        width: '30%',
+                        width: '48%',
                         minWidth: '300px',
                         marginBottom: '24px',
                     }}
                 >
-                    <Title level={4}>Exam Score Trends</Title>
                     <Chart
-                        options={lineChartOptions}
-                        series={lineChartSeries}
+                        options={averageScoreOptions}
+                        series={averageScoreSeries}
                         type="line"
                         height={350}
                     />
                 </Card>
                 <Card
                     style={{
-                        width: '30%',
+                        width: '48%',
                         minWidth: '300px',
                         marginBottom: '24px',
                     }}
                 >
-                    <Title level={4}>Pass/Fail Ratio</Title>
                     <Chart
-                        options={pieChartOptions}
-                        series={pieChartSeries}
+                        options={examResultOptions}
+                        series={examResultSeries}
                         type="pie"
                         height={350}
                     />
                 </Card>
-            </Flex>
-            <Flex
-                gap={24}
-                wrap="wrap"
-                justify="space-around"
-                style={{ marginTop: '24px' }}
-            >
-                <Card style={{ width: '48%', minWidth: '300px' }}>
-                    <Title level={4}>Score Overview</Title>
+                <Card
+                    style={{
+                        width: '48%',
+                        minWidth: '300px',
+                        marginBottom: '24px',
+                    }}
+                >
                     <Chart
-                        options={sparklineOptions}
-                        series={sparklineSeries}
+                        options={participantCountOptions}
+                        series={participantCountSeries}
                         type="area"
                         height={160}
                     />
                 </Card>
-                {/* Add additional sparkline charts here */}
             </Flex>
         </Container>
     )
 }
 
-export default StatisticsChart
+export default OnlineExamStatistics

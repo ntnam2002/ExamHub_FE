@@ -46,7 +46,7 @@ const ExamCamera: React.FC<ExamCameraProps> = forwardRef((props, ref) => {
 
     useEffect(() => {
         // Khởi tạo đối tượng FaceDetection
-        const faceDetection: FaceDetection = new FaceDetection({
+        const faceDetection = new FaceDetection({
             locateFile: (file) => {
                 return `https://cdn.jsdelivr.net/npm/@mediapipe/face_detection/${file}`
             },

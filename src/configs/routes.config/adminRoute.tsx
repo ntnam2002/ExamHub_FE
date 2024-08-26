@@ -99,6 +99,20 @@ const adminRoutes: Routes = [
         component: lazy(() => import('@/views/admin/Classes/ClassesList')),
         authority: [ADMIN],
     },
+    {
+        key: 'ExamHub.admin.behavior',
+        path: `${ADMIN_PREFIX_PATH}/behavior`,
+        component: lazy(() => import('@/views/admin/Behavior/BehaviorList')),
+        authority: [ADMIN],
+    },
+    {
+        key: 'ExamHub.admin.loginlogs',
+        path: `${ADMIN_PREFIX_PATH}/loginlogs`,
+        component: lazy(
+            () => import('@/views/admin/LoginLogs/LoginlogsList/LoginLogs')
+        ),
+        authority: [ADMIN],
+    },
 ]
 
 export default adminRoutes

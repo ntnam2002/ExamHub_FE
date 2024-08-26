@@ -27,8 +27,8 @@ type Teacher = {
     username: string
     email: string
     role: string
-    class_ids: string[]
-    department_id: string
+    class_names: string[]
+    department_name: string
     created_at: Date
 }
 
@@ -112,7 +112,7 @@ const TeacherTable = () => {
     const columns: ColumnDef<Teacher>[] = useMemo(
         () => [
             {
-                header: 'Name',
+                header: 'Tên',
                 accessorKey: 'name',
             },
             {
@@ -129,31 +129,31 @@ const TeacherTable = () => {
                 accessorKey: 'role',
             },
             {
-                header: 'Class IDs',
-                accessorKey: 'class_ids',
+                header: 'Lớp',
+                accessorKey: 'class_names',
                 cell: (props) => {
                     const row = props.row.original
-                    return <span>{row.class_ids.join(', ')}</span>
+                    return <span>{row.class_names.join(', ')}</span>
                 },
             },
             {
-                header: 'Department ID',
-                accessorKey: 'department_id',
+                header: 'Khoa',
+                accessorKey: 'department_name',
             },
-            {
-                header: 'Created At',
-                accessorKey: 'created_at',
-                cell: (props) => {
-                    const row = props.row.original
-                    return (
-                        <span>
-                            {dayjs(row.created_at).format(
-                                'YYYY-MM-DD HH:mm:ss'
-                            )}
-                        </span>
-                    )
-                },
-            },
+            // {
+            //     header: 'Created At',
+            //     accessorKey: 'created_at',
+            //     cell: (props) => {
+            //         const row = props.row.original
+            //         return (
+            //             <span>
+            //                 {dayjs(row.created_at).format(
+            //                     'YYYY-MM-DD HH:mm:ss'
+            //                 )}
+            //             </span>
+            //         )
+            //     },
+            // },
             {
                 header: 'Actions',
                 id: 'action',

@@ -117,8 +117,8 @@ const adminNavigationConfig: NavigationTree[] = [
                 subMenu: [],
             },
             {
-                key: 'ExamHub.admin.access-control',
-                path: `${ADMIN_PREFIX_PATH}/access-control`,
+                key: 'ExamHub.admin.loginlogs',
+                path: `${ADMIN_PREFIX_PATH}/loginlogs`,
                 title: 'Truy cập',
                 translateKey: 'Truy cập',
                 icon: 'accesscontrol',
