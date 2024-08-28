@@ -6,6 +6,7 @@ import React, {
     useState,
     useImperativeHandle,
     forwardRef,
+    useCallback,
 } from 'react'
 import { toast } from 'react-toastify'
 import Webcam from 'react-webcam'
@@ -16,112 +17,114 @@ import {
 } from '../face-detection/face-detection-helper'
 import classes from './exam-camera.module.scss'
 
-// Định nghĩa các props cho component ExamCamera
 interface ExamCameraProps {
     ref: any
 }
 
-// Định nghĩa component ExamCamera
 const ExamCamera: React.FC<ExamCameraProps> = forwardRef((props, ref) => {
-    // State để lưu trữ hình ảnh chụp từ webcam
-    const [img_, setImg_] = useState<string>()
-    // Các ref cho webcam, face detection, và camera
     const webcamRef = useRef<Webcam>(null)
     const faceDetectionRef = useRef<FaceDetection | null>(null)
     const cameraRef = useRef<Camera | null>(null)
-    // Bật phát hiện gian lận theo thời gian thực
-    const realtimeDetection = true
+    const realtimeDetection = useRef(true)
 
-    // Tốc độ làm mới khung hình và bộ đếm khung hình hiện tại
-    const frameRefresh = 30
+    const frameRefresh = useRef(30)
     const currentFrame = useRef(0)
 
-    // Các state cho trạng thái gian lận, thông báo cảnh báo, cảnh báo, và số lần gian lận
-    const [cheatingStatus, setCheatingStatus] = useState('')
-    const [caution, setCaution] = useState('')
-    const [alert, setAlert] = useState(false)
-    const [cheatCount, setCheatCount] = useState(0)
-    const [previousCheatingStatus, setPreviousCheatingStatus] = useState('')
-    const [previousWarning, setPreviousWarning] = useState(false)
+    const [cheatingInfo, setCheatingInfo] = useState({
+        status: '',
+        caution: '',
+        alert: false,
+        count: 0,
+    })
+
+    const consecutiveCheatingDetections = useRef(0)
+    const CHEATING_THRESHOLD = 2
+
+    const handleCloseWarning = useCallback(() => {
+        setCheatingInfo((prev) => ({
+            ...prev,
+            alert: false,
+            count: prev.alert ? prev.count + 1 : prev.count,
+        }))
+    }, [])
+
+    const onResult = useCallback((result: Results) => {
+        let warning = false
+        let cautionMessage = ''
+
+        if (result.detections.length < 1) {
+            warning = true
+            cautionMessage =
+                'Không phát hiện được khuôn mặt, có thể bị coi là gian lận!'
+        } else if (result.detections.length > 1) {
+            warning = true
+            cautionMessage =
+                'Phát hiện nhiều khuôn mặt, có thể bị coi là gian lận!'
+        }
+
+        if (!warning) {
+            const faceCoordinates = extractFaceCoordinates(result)
+            const [lookingLeft, lookingRight] = detectCheating(
+                faceCoordinates,
+                false
+            )
+            const currentCheatingStatus = getCheatingStatus(
+                lookingLeft,
+                lookingRight
+            )
+
+            if (currentCheatingStatus !== 'Bình thường!') {
+                consecutiveCheatingDetections.current += 1
+            } else {
+                consecutiveCheatingDetections.current = 0
+            }
+
+            if (consecutiveCheatingDetections.current >= CHEATING_THRESHOLD) {
+                setCheatingInfo((prev) => ({
+                    ...prev,
+                    status: currentCheatingStatus,
+                    caution: currentCheatingStatus,
+                    alert: true,
+                }))
+            } else {
+                setCheatingInfo((prev) => ({
+                    ...prev,
+                    status: 'Bình thường!',
+                    alert: false,
+                }))
+            }
+        } else {
+            setCheatingInfo((prev) => ({
+                ...prev,
+                caution: cautionMessage,
+                alert: warning,
+            }))
+        }
+    }, [])
 
     useEffect(() => {
-        // Khởi tạo đối tượng FaceDetection
         const faceDetection = new FaceDetection({
             locateFile: (file) => {
                 return `https://cdn.jsdelivr.net/npm/@mediapipe/face_detection/${file}`
             },
         })
 
-        // Thiết lập các tùy chọn cho FaceDetection
         faceDetection.setOptions({
             minDetectionConfidence: 0.5,
             model: 'short',
         })
 
-        // Hàm xử lý kết quả phát hiện khuôn mặt
-        function onResult(result: Results) {
-            let warning = false
-            let cautionMessage = ''
-
-            // Kiểm tra nếu không phát hiện được khuôn mặt hoặc phát hiện nhiều khuôn mặt
-            if (result.detections.length < 1) {
-                warning = true
-                cautionMessage =
-                    'Không phát hiện được khuôn mặt, có thể bị coi là gian lận!'
-            } else if (result.detections.length > 1) {
-                warning = true
-                cautionMessage =
-                    'Phát hiện nhiều khuôn mặt, có thể bị coi là gian lận!'
-            }
-
-            // Cập nhật trạng thái cảnh báo nếu có thay đổi
-            if (warning !== previousWarning) {
-                setPreviousWarning(warning)
-                setAlert(warning)
-                setCaution(cautionMessage)
-            }
-
-            // Nếu không có cảnh báo, kiểm tra trạng thái gian lận
-            if (!warning) {
-                const faceCoordinates = extractFaceCoordinates(result)
-                const [lookingLeft, lookingRight] = detectCheating(
-                    faceCoordinates,
-                    false
-                )
-
-                const currentCheatingStatus = getCheatingStatus(
-                    lookingLeft,
-                    lookingRight
-                )
-                console.log('cheating status', currentCheatingStatus)
-
-                // Cập nhật trạng thái gian lận nếu có thay đổi
-                if (currentCheatingStatus !== previousCheatingStatus) {
-                    if (currentCheatingStatus !== 'Bình thường!') {
-                        setAlert(true)
-                        setCaution(currentCheatingStatus)
-                    }
-                    setPreviousCheatingStatus(currentCheatingStatus)
-                    setCheatingStatus(currentCheatingStatus)
-                }
-            }
-        }
-
-        // Thiết lập hàm xử lý kết quả cho FaceDetection
         faceDetection.onResults(onResult)
         faceDetectionRef.current = faceDetection
 
-        // Khởi động camera nếu webcam có sẵn
         if (webcamRef.current && webcamRef.current.video) {
             const camera = new Camera(webcamRef.current.video, {
                 onFrame: async () => {
-                    if (!realtimeDetection) {
-                        return
-                    }
+                    if (!realtimeDetection.current) return
 
                     currentFrame.current += 1
 
-                    if (currentFrame.current >= frameRefresh) {
+                    if (currentFrame.current >= frameRefresh.current) {
                         currentFrame.current = 0
                         await faceDetection.send({
                             image: webcamRef.current?.video as HTMLVideoElement,
@@ -136,31 +139,20 @@ const ExamCamera: React.FC<ExamCameraProps> = forwardRef((props, ref) => {
             cameraRef.current = camera
         }
 
-        // Dọn dẹp khi component bị hủy
         return () => {
             faceDetection.close()
             cameraRef.current?.stop()
         }
-    }, [webcamRef, realtimeDetection, previousCheatingStatus, previousWarning])
+    }, [onResult])
 
-    // Sử dụng useImperativeHandle để cung cấp phương thức stopCamera cho ref
     useImperativeHandle(ref, () => ({
         stopCamera: () => {
             cameraRef.current?.stop()
         },
     }))
 
-    // Hàm xử lý khi đóng cảnh báo
-    const handleCloseWarning = () => {
-        if (alert) {
-            setCheatCount((prevCount) => prevCount + 1)
-        }
-        setAlert(false)
-    }
-
-    // Kiểm tra số lần gian lận và hiển thị thông báo nếu vượt quá giới hạn
     useEffect(() => {
-        if (cheatCount >= 10) {
+        if (cheatingInfo.count >= 10) {
             toast.error(
                 'Bạn đã gian lận quá số lần, hệ thống sẽ kết thúc bài thi!'
             )
@@ -168,11 +160,11 @@ const ExamCamera: React.FC<ExamCameraProps> = forwardRef((props, ref) => {
                 window.location.reload()
             }, 5000)
         }
-    }, [cheatCount])
+    }, [cheatingInfo.count])
 
     return (
         <div className={classes.cameraContainer}>
-            <p className={classes.cheatingStatus}>{cheatingStatus}</p>
+            <p className={classes.cheatingStatus}>{cheatingInfo.status}</p>
 
             <Webcam
                 ref={webcamRef}
@@ -181,11 +173,13 @@ const ExamCamera: React.FC<ExamCameraProps> = forwardRef((props, ref) => {
             />
 
             <br />
-            {alert && (
+            {cheatingInfo.alert && (
                 <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50 z-50">
                     <div className="bg-white p-8 rounded-lg shadow-lg text-center">
                         <p className="text-red-600 font-bold mb-4">Cảnh báo!</p>
-                        <p className="text-gray-700 mb-4">{caution}</p>
+                        <p className="text-gray-700 mb-4">
+                            {cheatingInfo.caution}
+                        </p>
                         <button
                             className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded"
                             onClick={handleCloseWarning}
@@ -195,7 +189,6 @@ const ExamCamera: React.FC<ExamCameraProps> = forwardRef((props, ref) => {
                     </div>
                 </div>
             )}
-            {img_ && <img src={img_} alt="Profile" />}
         </div>
     )
 })
@@ -203,3 +196,4 @@ const ExamCamera: React.FC<ExamCameraProps> = forwardRef((props, ref) => {
 ExamCamera.displayName = 'ExamCamera'
 
 export default ExamCamera
+s
