@@ -196,4 +196,3 @@ const ExamCamera: React.FC<ExamCameraProps> = forwardRef((props, ref) => {
 ExamCamera.displayName = 'ExamCamera'
 
 export default ExamCamera
-s

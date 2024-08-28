@@ -1,3 +1,3 @@
-import Main from './main'
+import StudentExamStatistics from './main'
 
-export default Main
+export default StudentExamStatistics
