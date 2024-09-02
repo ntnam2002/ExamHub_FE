@@ -1,56 +1,54 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
-import { apiDeleteUser, apiGetAllStudent } from '@/services/AdminService'
+import {
+    apiDeleteSubject,
+    apiGetAllSubject,
+} from '@/services/managementService'
 import type { TableQueries } from '@/@types/common'
 
-type Student = {
+type Subject = {
     _id: string
-    username: string
-    email: string
-    role: string
-    class_ids: string[]
-    department_id: string
+    subject_name: string
+    specializtion: string
     created_at: Date
 }
 
-type Students = Student[]
+type Subjects = Subject[]
 
-type GetStudentResponse = {
-    data: Students
-    //total: number
+type GetSubjectResponse = {
+    data: Subjects
 }
 
 type FilterQueries = {
     name: string
-    //category: string[]
 }
 
-export type SalesProductListState = {
+export type SubjectListState = {
     loading: boolean
     deleteConfirmation: boolean
-    selectedProduct: string
+    selectedSubject: string
     tableData: TableQueries
     filterData: FilterQueries
-    studentList: Students
+    subjectList: Subjects
 }
 
-type GetStudentRequest = TableQueries & { filterData?: FilterQueries }
+type GetSubjectRequest = TableQueries & { filterData?: FilterQueries }
 
-export const SLICE_NAME = 'StudentList'
+export const SLICE_NAME = 'SubjectList'
 
-export const getStudents = createAsyncThunk(
-    SLICE_NAME + '/getStudentList',
+export const getSubjects = createAsyncThunk(
+    SLICE_NAME + '/getSubjectList',
     async () => {
-        const response = await apiGetAllStudent<
-            GetStudentResponse,
-            GetStudentRequest
+        const response = await apiGetAllSubject<
+            GetSubjectResponse,
+            GetSubjectRequest
         >()
 
         return response.data
     }
 )
 
-export const deleteProduct = async (data: { id: string }) => {
-    const response = await apiDeleteUser<boolean, { id: string }>(data)
+export const deleteSubject = async (data: { id: string }) => {
+    const response = await apiDeleteSubject<boolean, { id: string }>(data)
     return response
 }
 
@@ -65,23 +63,23 @@ export const initialTableData: TableQueries = {
     },
 }
 
-const initialState: SalesProductListState = {
+const initialState: SubjectListState = {
     loading: false,
     deleteConfirmation: false,
-    selectedProduct: '',
-    studentList: [],
+    selectedSubject: '',
+    subjectList: [],
     tableData: initialTableData,
     filterData: {
         name: '',
     },
 }
 
-const studentListSlice = createSlice({
+const subjectListSlice = createSlice({
     name: `${SLICE_NAME}/state`,
     initialState,
     reducers: {
-        updateStudentList: (state, action) => {
-            state.studentList = action.payload
+        updateSubjectList: (state, action) => {
+            state.subjectList = action.payload
         },
         setTableData: (state, action) => {
             state.tableData = action.payload
@@ -92,28 +90,28 @@ const studentListSlice = createSlice({
         toggleDeleteConfirmation: (state, action) => {
             state.deleteConfirmation = action.payload
         },
-        setSelectedProduct: (state, action) => {
-            state.selectedProduct = action.payload
+        setSelectedSubject: (state, action) => {
+            state.selectedSubject = action.payload
         },
     },
     extraReducers: (builder) => {
         builder
-            .addCase(getStudents.fulfilled, (state, action) => {
-                state.studentList = action.payload
+            .addCase(getSubjects.fulfilled, (state, action) => {
+                state.subjectList = action.payload
                 state.loading = false
             })
-            .addCase(getStudents.pending, (state) => {
+            .addCase(getSubjects.pending, (state) => {
                 state.loading = true
             })
     },
 })
 
 export const {
-    updateStudentList,
+    updateSubjectList,
     setTableData,
     setFilterData,
     toggleDeleteConfirmation,
-    setSelectedProduct,
-} = studentListSlice.actions
+    setSelectedSubject,
+} = subjectListSlice.actions
 
-export default studentListSlice.reducer
+export default subjectListSlice.reducer

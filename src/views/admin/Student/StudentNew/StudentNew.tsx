@@ -11,7 +11,6 @@ const StudentNew = () => {
     const navigate = useNavigate()
 
     const addStudent = async (data: FormModel) => {
-        console.log('data', data)
         const response = await apiCreateUser<boolean, FormModel>(data)
 
         return response.data

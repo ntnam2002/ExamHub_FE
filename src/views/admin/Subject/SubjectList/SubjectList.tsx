@@ -1,21 +1,21 @@
 import reducer from './store'
 import { injectReducer } from '@/store'
 import AdaptableCard from '@/components/shared/AdaptableCard'
-import ProductTable from './components/SubjectTable'
-import ProductTableTools from './components/SubjectTableTools'
+import SubjectTable from './components/SubjectTable'
+import SubjectTableTools from './components/SubjectTableTools'
 
-injectReducer('StudentList', reducer)
+injectReducer('SubjectList', reducer)
 
-const StudentList = () => {
+const SubjectList = () => {
     return (
         <AdaptableCard className="h-full" bodyClass="h-full">
             <div className="lg:flex items-center justify-between mb-4">
-                <h3 className="mb-4 lg:mb-0">Sinh viên</h3>
-                <ProductTableTools />
+                <h3 className="mb-4 lg:mb-0">Môn học</h3>
+                <SubjectTableTools />
             </div>
-            <ProductTable />
+            <SubjectTable />
         </AdaptableCard>
     )
 }
 
-export default StudentList
+export default SubjectList

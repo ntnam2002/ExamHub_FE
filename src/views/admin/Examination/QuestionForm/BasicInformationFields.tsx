@@ -1,101 +1,111 @@
-import AdaptableCard from '@/components/shared/AdaptableCard'
-import RichTextEditor from '@/components/shared/RichTextEditor'
+import {
+    FieldArray,
+    Field,
+    FormikTouched,
+    FormikErrors,
+    FieldProps,
+} from 'formik'
+import Button from '@/components/ui/Button'
 import Input from '@/components/ui/Input'
 import { FormItem } from '@/components/ui/Form'
-import { Field, FormikErrors, FormikTouched, FieldProps } from 'formik'
-import { Select } from '@/components/ui'
+import { Select } from '@/components/ui' // Ensure Option is imported if it's part of your UI components
+import AdaptableCard from '@/components/shared/AdaptableCard'
+import { apiGetAllSubject } from '@/services/managementService'
+import { useEffect, useState } from 'react'
+
+const difficultyOptions = [
+    { value: 1, label: 'Dễ' },
+    { value: 2, label: 'Vừa' },
+    { value: 3, label: 'Khó' },
+]
+
+type OptionType = {
+    text: string
+    is_correct: boolean
+}
+
+type SubjectType = {
+    _id: string
+    subject_name: string
+}
 
 type FormFieldsName = {
-    UserName: string
-    PassWord: string
-    Email: string
-    ClassID: string
-    DepartmentId: string
+    text: string
+    points: number
+    subject_id: string
+    difficulty: number
+    options: OptionType[]
 }
 
-type BasicInformationFields = {
+type BasicInformationFieldsProps = {
     touched: FormikTouched<FormFieldsName>
     errors: FormikErrors<FormFieldsName>
+    values: FormFieldsName // Pass values as a prop
+    setFieldValue: (field: string, value: any, shouldValidate?: boolean) => void
 }
 
-const ClassID = {
-    value: '1',
-    label: '1',
-}
+const BasicInformationFields = (props: BasicInformationFieldsProps) => {
+    const { touched, errors, values, setFieldValue } = props
+    const [subjects, setSubjects] = useState<SubjectType[]>([])
 
-const BasicInformationFields = (props: BasicInformationFields) => {
-    const { touched, errors } = props
+    useEffect(() => {
+        const fetchSubjects = async () => {
+            try {
+                const response = await apiGetAllSubject()
+                setSubjects(response.data)
+            } catch (error) {
+                console.error('Failed to fetch subjects', error)
+            }
+        }
+        fetchSubjects()
+    }, [])
 
     return (
         <AdaptableCard divider className="mb-4">
-            <h5>Thông tin sinh viên</h5>
-            <p className="mb-6">Nhập thông tin sinh viên</p>
+            <h5>Thông tin câu hỏi</h5>
+            <p className="mb-6">Nhập thông tin câu hỏi</p>
+
             <FormItem
-                label="Tên đăng nhập"
-                invalid={(errors.UserName && touched.UserName) as boolean}
-                errorMessage={errors.UserName}
+                label="Câu hỏi"
+                invalid={!!(errors.text && touched.text)}
+                errorMessage={errors.text}
             >
                 <Field
                     type="text"
                     autoComplete="off"
-                    name="name"
-                    placeholder="VD: 1234567890"
+                    name="text"
+                    placeholder="VD: What is the capital of Japan?"
                     component={Input}
                 />
             </FormItem>
+
             <FormItem
-                label="Mật khẩu"
-                invalid={(errors.PassWord && touched.PassWord) as boolean}
-                errorMessage={errors.PassWord}
+                label="Điểm số"
+                invalid={!!(errors.points && touched.points)}
+                errorMessage={errors.points}
             >
                 <Field
-                    type="text"
+                    type="number"
                     autoComplete="off"
-                    name="PassWord"
-                    placeholder="VD: 123"
+                    name="points"
+                    placeholder="VD: 10"
                     component={Input}
                 />
             </FormItem>
+
             <FormItem
-                label="Email"
-                invalid={(errors.Email && touched.Email) as boolean}
-                errorMessage={errors.Email}
+                label="Mã môn học"
+                invalid={!!(errors.subject_id && touched.subject_id)}
+                errorMessage={errors.subject_id}
             >
-                <Field
-                    type="text"
-                    autoComplete="off"
-                    name="Email"
-                    placeholder="Email"
-                    component={Input}
-                />
-            </FormItem>
-            <FormItem
-                label="Mã lớp"
-                invalid={(errors.ClassID && touched.ClassID) as boolean}
-                errorMessage={errors.ClassID}
-            >
-                <Field
-                    type="text"
-                    autoComplete="off"
-                    name="ClassID"
-                    placeholder="VD: 123"
-                    component={Input}
-                />
-            </FormItem>
-            <FormItem
-                label="Category"
-                invalid={(errors.ClassID && touched.ClassID) as boolean}
-                errorMessage={errors.ClassID}
-            >
-                <Field name="category">
+                <Field name="subject_id">
                     {({ field, form }: FieldProps) => (
                         <Select
-                            field={field}
-                            form={form}
-                            options={ClassID}
-                            value={categories.filter(
-                                (category) => category.value === values.category
-                            )}
+                            options={subjects.map((subject) => ({
+                                label: subject.subject_name,
+                                value: subject._id,
+                            }))}
+                            placeholder="Chọn môn học"
                             onChange={(option) =>
                                 form.setFieldValue(field.name, option?.value)
                             }
@@ -103,23 +113,74 @@ const BasicInformationFields = (props: BasicInformationFields) => {
                     )}
                 </Field>
             </FormItem>
-            {/* <FormItem
-                label="Description"
-                labelClass="!justify-start"
-                invalid={(errors.description && touched.description) as boolean}
-                errorMessage={errors.description}
+
+            <FormItem
+                label="Độ khó"
+                invalid={!!(errors.difficulty && touched.difficulty)}
+                errorMessage={errors.difficulty}
             >
-                <Field name="description">
+                <Field name="difficulty">
                     {({ field, form }: FieldProps) => (
-                        <RichTextEditor
-                            value={field.value}
-                            onChange={(val) =>
-                                form.setFieldValue(field.name, val)
+                        <Select
+                            value={
+                                difficultyOptions.find(
+                                    (option) => option.value === field.value
+                                ) || null
+                            }
+                            options={difficultyOptions}
+                            placeholder="Chọn độ khó"
+                            onChange={(option) =>
+                                form.setFieldValue(field.name, option?.value)
                             }
                         />
                     )}
                 </Field>
-            </FormItem> */}
+            </FormItem>
+
+            <FormItem
+                label="Tùy chọn"
+                invalid={!!(errors.options && touched.options)}
+                errorMessage={errors.options?.[0]?.text}
+            >
+                <FieldArray name="options">
+                    {({ remove, push }) => (
+                        <div>
+                            {values.options.map((option, index) => (
+                                <div
+                                    key={index}
+                                    className="flex items-center space-x-2 mb-2"
+                                >
+                                    <Field
+                                        name={`options.${index}.text`}
+                                        placeholder={`Option ${index + 1}`}
+                                        component={Input}
+                                    />
+                                    <Field
+                                        type="checkbox"
+                                        name={`options.${index}.is_correct`}
+                                    />
+                                    <Button
+                                        type="button"
+                                        className="text-red-500"
+                                        onClick={() => remove(index)}
+                                    >
+                                        Remove
+                                    </Button>
+                                </div>
+                            ))}
+                            <Button
+                                type="button"
+                                className="mt-2"
+                                onClick={() =>
+                                    push({ text: '', is_correct: false })
+                                }
+                            >
+                                Add Option
+                            </Button>
+                        </div>
+                    )}
+                </FieldArray>
+            </FormItem>
         </AdaptableCard>
     )
 }

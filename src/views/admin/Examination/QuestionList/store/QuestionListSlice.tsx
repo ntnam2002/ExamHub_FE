@@ -59,16 +59,10 @@ export const getQuestions = createAsyncThunk(
 )
 
 // Tạo thunk để xóa câu hỏi
-export const deleteQuestion = createAsyncThunk(
-    `${SLICE_NAME}/deleteQuestion`,
-    async (id: string) => {
-        const response = await apiDeleteQuestion<boolean, { id: string }>({
-            id,
-        })
-        return response
-    }
-)
-
+export const deleteQuestion = async (data: { id: string }) => {
+    const response = await apiDeleteQuestion<boolean, { id: string }>(data)
+    return response
+}
 // Định nghĩa dữ liệu ban đầu cho bảng
 export const initialTableData: TableQueries = {
     total: 0,
@@ -127,20 +121,6 @@ const questionsListSlice = createSlice({
                 state.loading = false
                 console.error(
                     'Failed to fetch questions:',
-                    action.error.message
-                )
-            })
-            .addCase(deleteQuestion.fulfilled, (state, action) => {
-                if (action.payload) {
-                    state.questionList = state.questionList.filter(
-                        (question) => question._id !== state.selectedQuestion
-                    )
-                    state.deleteConfirmation = false
-                }
-            })
-            .addCase(deleteQuestion.rejected, (state, action) => {
-                console.error(
-                    'Failed to delete question:',
                     action.error.message
                 )
             })

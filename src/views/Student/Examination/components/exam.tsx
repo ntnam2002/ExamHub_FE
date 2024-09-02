@@ -139,7 +139,6 @@ const ExamInterface = () => {
             }
         }
         const answers = JSON.parse(localStorage.getItem('answers') || '[]')
-        console.log('answers', answers)
         if (answers.length === 0) {
             alert('No answers to submit.')
             return
@@ -254,7 +253,7 @@ const ExamInterface = () => {
                             Thời gian còn lại: {formatTime(timeLeft)}
                         </div>
                         <div className="text-lg text-gray-600 text-center">
-                            Cheating Attempts: {cheatAttempts}
+                            Số lần gian lận: {cheatAttempts}
                         </div>
                     </div>
 

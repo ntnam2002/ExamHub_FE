@@ -64,7 +64,6 @@ const ActionColumn = ({ row }: { row: Student }) => {
     const navigate = useNavigate()
 
     const onEdit = () => {
-        console.log('row')
         navigate(`/admin/student/edit/${row._id}`)
     }
 

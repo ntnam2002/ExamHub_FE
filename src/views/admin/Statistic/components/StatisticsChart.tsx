@@ -13,6 +13,7 @@ function OnlineExamStatistics() {
         chart: {
             type: 'bar',
             height: 350,
+            fontFamily: 'Helvetica, Arial, sans-serif',
         },
         title: {
             text: 'Số lượng bài thi theo môn học',
@@ -20,9 +21,11 @@ function OnlineExamStatistics() {
         xaxis: {
             categories: ['Toán', 'Lý', 'Hóa', 'Sinh', 'Văn', 'Anh'],
         },
+
         dataLabels: {
             enabled: true,
         },
+
         colors: ['#008FFB'],
     }
 
@@ -41,6 +44,9 @@ function OnlineExamStatistics() {
         },
         title: {
             text: 'Điểm trung bình theo tháng',
+            style: {
+                fontFamily: 'sans-serif',
+            },
         },
         xaxis: {
             categories: ['T1', 'T2', 'T3', 'T4', 'T5', 'T6'],
@@ -110,12 +116,12 @@ function OnlineExamStatistics() {
 
     const participantCountSeries = [
         {
-            data: [800, 950, 1100, 980, 1200, 1254],
+            data: [3, 4],
         },
     ]
 
     return (
-        <Container>
+        <Container style={{ fontFamily: 'sans-serif' }}>
             <Title
                 level={2}
                 style={{ marginBottom: '24px', textAlign: 'center' }}
@@ -128,6 +134,7 @@ function OnlineExamStatistics() {
                         width: '48%',
                         minWidth: '300px',
                         marginBottom: '24px',
+                        fontFamily: 'sans-serif',
                     }}
                 >
                     <Chart
@@ -135,6 +142,7 @@ function OnlineExamStatistics() {
                         series={subjectExamCountSeries}
                         type="bar"
                         height={350}
+                        style={{ fontFamily: 'sans-serif' }}
                     />
                 </Card>
                 <Card

@@ -59,10 +59,34 @@ const adminRoutes: Routes = [
         authority: [ADMIN],
     },
     {
+        key: 'ExamHub.admin.question-new',
+        path: `${ADMIN_PREFIX_PATH}/question/new`,
+        component: lazy(() => import('@/views/admin/Examination/QuestionNew')),
+        authority: [ADMIN],
+    },
+    {
         key: 'ExamHub.admin.exam',
         path: `${ADMIN_PREFIX_PATH}/exam`,
         component: lazy(
             () => import('@/views/admin/Examination/ExamList')
+        ) as LazyExoticComponent<<T extends Meta>(props: T) => JSX.Element>,
+        authority: [ADMIN],
+    },
+    {
+        key: 'ExamHub.admin.exam-new',
+        path: `${ADMIN_PREFIX_PATH}/exam/new`,
+        component: lazy(
+            () =>
+                import('@/views/admin/Examination/ExamList/components/ExamForm')
+        ) as LazyExoticComponent<<T extends Meta>(props: T) => JSX.Element>,
+        authority: [ADMIN],
+    },
+    {
+        key: 'ExamHub.admin.exam-edit',
+        path: `${ADMIN_PREFIX_PATH}/exam/edit/:id`,
+        component: lazy(
+            () =>
+                import('@/views/admin/Examination/ExamList/components/ExamForm')
         ) as LazyExoticComponent<<T extends Meta>(props: T) => JSX.Element>,
         authority: [ADMIN],
     },
@@ -99,6 +123,13 @@ const adminRoutes: Routes = [
         component: lazy(() => import('@/views/admin/Classes/ClassesList')),
         authority: [ADMIN],
     },
+    {
+        key: 'ExamHub.admin.subject',
+        path: `${ADMIN_PREFIX_PATH}/subject`,
+        component: lazy(() => import('@/views/admin/Subject/SubjectList')),
+        authority: [ADMIN],
+    },
+
     {
         key: 'ExamHub.admin.behavior',
         path: `${ADMIN_PREFIX_PATH}/behavior`,

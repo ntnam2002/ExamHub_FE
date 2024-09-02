@@ -3,17 +3,16 @@ import Avatar from '@/components/ui/Avatar'
 import Badge from '@/components/ui/Badge'
 import DataTable from '@/components/shared/DataTable'
 import { HiOutlinePencil, HiOutlineTrash } from 'react-icons/hi'
-import { FiPackage } from 'react-icons/fi'
 import {
     setTableData,
-    setSelectedProduct,
+    setSelectedSubject,
     toggleDeleteConfirmation,
     useAppDispatch,
     useAppSelector,
-    getStudents,
+    getSubjects,
 } from '../store'
 import useThemeClass from '@/utils/hooks/useThemeClass'
-import ProductDeleteConfirmation from './SubjectDeleteConfirmation'
+import SubjectDeleteConfirmation from './SubjectDeleteConfirmation'
 import { useNavigate } from 'react-router-dom'
 import cloneDeep from 'lodash/cloneDeep'
 import type {
@@ -23,53 +22,25 @@ import type {
 } from '@/components/shared/DataTable'
 import dayjs from 'dayjs'
 
-type Student = {
+type Subject = {
     _id: string
-    username: string
-    email: string
-    role: string
-    class_ids: string[]
-    department_id: string
-    create_at: Date
+    subject_name: string
+    specializtion: string
+    created_at: Date
 }
 
-const inventoryStatusColor: Record<
-    number,
-    {
-        label: string
-        dotClass: string
-        textClass: string
-    }
-> = {
-    0: {
-        label: 'In Stock',
-        dotClass: 'bg-emerald-500',
-        textClass: 'text-emerald-500',
-    },
-    1: {
-        label: 'Limited',
-        dotClass: 'bg-amber-500',
-        textClass: 'text-amber-500',
-    },
-    2: {
-        label: 'Out of Stock',
-        dotClass: 'bg-red-500',
-        textClass: 'text-red-500',
-    },
-}
-
-const ActionColumn = ({ row }: { row: Student }) => {
+const ActionColumn = ({ row }: { row: Subject }) => {
     const dispatch = useAppDispatch()
     const { textTheme } = useThemeClass()
     const navigate = useNavigate()
 
     const onEdit = () => {
-        navigate(`/app/sales/product-edit/${row._id}`)
+        navigate(`/app/subjects/edit/${row._id}`)
     }
 
     const onDelete = () => {
         dispatch(toggleDeleteConfirmation(true))
-        dispatch(setSelectedProduct(row._id))
+        dispatch(setSelectedSubject(row._id))
     }
 
     return (
@@ -90,30 +61,32 @@ const ActionColumn = ({ row }: { row: Student }) => {
     )
 }
 
-const StudentColumn = ({ row }: { row: Student }) => {
+const SubjectColumn = ({ row }: { row: Subject }) => {
     return (
         <div className="flex items-center">
-            <span className={`ml-2 rtl:mr-2 font-semibold`}>{row._id}</span>
+            <span className={`ml-2 rtl:mr-2 font-semibold`}>
+                {row.subject_name}
+            </span>
         </div>
     )
 }
 
-const ProductTable = () => {
+const SubjectTable = () => {
     const tableRef = useRef<DataTableResetHandle>(null)
 
     const dispatch = useAppDispatch()
 
     const { pageIndex, pageSize, sort, query, total } = useAppSelector(
-        (state) => state.StudentList.data.tableData
+        (state) => state.SubjectList.data.tableData
     )
 
     const filterData = useAppSelector(
-        (state) => state.StudentList.data.filterData
+        (state) => state.SubjectList.data.filterData
     )
 
-    const loading = useAppSelector((state) => state.StudentList.data.loading)
+    const loading = useAppSelector((state) => state.SubjectList.data.loading)
 
-    const data = useAppSelector((state) => state.StudentList.data.studentList)
+    const data = useAppSelector((state) => state.SubjectList.data.subjectList)
 
     useEffect(() => {
         fetchData()
@@ -132,49 +105,35 @@ const ProductTable = () => {
     )
 
     const fetchData = () => {
-        dispatch(getStudents())
+        dispatch(getSubjects())
     }
 
-    const columns: ColumnDef<Student>[] = useMemo(
+    const columns: ColumnDef<Subject>[] = useMemo(
         () => [
             {
-                header: 'Username',
-                accessorKey: 'username',
+                header: 'Subject Name',
+                accessorKey: 'subject_name',
             },
             {
-                header: 'Email',
-                accessorKey: 'email',
+                header: 'Specialization',
+                accessorKey: 'specializtion',
             },
             {
-                header: 'Chức vụ',
-                accessorKey: 'role',
-            },
-            {
-                header: 'Mã lớp',
-                accessorKey: 'class_ids',
-                cell: (props) => {
-                    const row = props.row.original
-                    return <span>{row.class_ids.join(', ')}</span>
-                },
-            },
-            {
-                header: 'mã Khoa',
-                accessorKey: 'department_id',
-            },
-            {
-                header: 'Thời gian tạo',
+                header: 'Created At',
                 accessorKey: 'created_at',
                 cell: (props) => {
                     const row = props.row.original
                     return (
                         <span>
-                            {dayjs(row.create_at).format('YYYY-MM-DD HH:mm:ss')}
+                            {dayjs(row.created_at).format(
+                                'YYYY-MM-DD HH:mm:ss'
+                            )}
                         </span>
                     )
                 },
             },
             {
-                header: 'Hành động',
+                header: 'Actions',
                 id: 'action',
                 cell: (props) => <ActionColumn row={props.row.original} />,
             },
@@ -219,9 +178,9 @@ const ProductTable = () => {
                 onSelectChange={onSelectChange}
                 onSort={onSort}
             />
-            <ProductDeleteConfirmation />
+            <SubjectDeleteConfirmation />
         </>
     )
 }
 
-export default ProductTable
+export default SubjectTable

@@ -3,22 +3,19 @@ import Notification from '@/components/ui/Notification'
 import ConfirmDialog from '@/components/shared/ConfirmDialog'
 import {
     toggleDeleteConfirmation,
-    deleteProduct,
+    deleteSubject,
     useAppDispatch,
     useAppSelector,
-    getStudents,
+    getSubjects,
 } from '../store'
 
-const ProductDeleteConfirmation = () => {
+const SubjectDeleteConfirmation = () => {
     const dispatch = useAppDispatch()
     const dialogOpen = useAppSelector(
-        (state) => state.StudentList.data.deleteConfirmation
+        (state) => state.SubjectList.data.deleteConfirmation
     )
-    const selectedProduct = useAppSelector(
-        (state) => state.StudentList.data.selectedProduct
-    )
-    const tableData = useAppSelector(
-        (state) => state.StudentList.data.tableData
+    const selectedSubject = useAppSelector(
+        (state) => state.SubjectList.data.selectedSubject
     )
 
     const onDialogClose = () => {
@@ -27,17 +24,17 @@ const ProductDeleteConfirmation = () => {
 
     const onDelete = async () => {
         dispatch(toggleDeleteConfirmation(false))
-        const success = await deleteProduct({ id: selectedProduct })
+        const success = await deleteSubject({ id: selectedSubject })
 
         if (success.status === 'success') {
-            dispatch(getStudents())
+            dispatch(getSubjects())
             toast.push(
                 <Notification
-                    title={'Successfuly Deleted'}
+                    title={'Successfully Deleted'}
                     type="success"
                     duration={2500}
                 >
-                    Xóa sinh viên thành công
+                    Xóa môn học thành công
                 </Notification>,
                 {
                     placement: 'top-center',
@@ -50,7 +47,7 @@ const ProductDeleteConfirmation = () => {
         <ConfirmDialog
             isOpen={dialogOpen}
             type="danger"
-            title="Delete product"
+            title="Delete Subject"
             confirmButtonColor="red-600"
             onClose={onDialogClose}
             onRequestClose={onDialogClose}
@@ -58,11 +55,11 @@ const ProductDeleteConfirmation = () => {
             onConfirm={onDelete}
         >
             <p>
-                Bạn có chắc chắn muốn xóa sinh viên này không ? Hành động này
-                không thể hoàn tác.
+                Bạn có chắc chắn muốn xóa môn học này không? Hành động này không
+                thể hoàn tác.
             </p>
         </ConfirmDialog>
     )
 }
 
-export default ProductDeleteConfirmation
+export default SubjectDeleteConfirmation

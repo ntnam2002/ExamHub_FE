@@ -40,7 +40,6 @@ export async function apiGetTeacherToEdit<T, U extends { id: string }>(
     })
 }
 export async function apiUpdateUser<T, U extends { id: string }>(data: U) {
-    console.log('data', data)
     const { id } = data
     return ApiService.fetchData<T>({
         url: `/users/updateUser/${id}`,

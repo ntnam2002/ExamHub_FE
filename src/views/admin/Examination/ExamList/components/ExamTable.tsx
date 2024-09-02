@@ -1,31 +1,57 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react'
-import axios from 'axios'
-import DataTable from '@/components/shared/DataTable' // Thay đổi đường dẫn nếu cần
+import React, { useEffect, useMemo, useState, useCallback } from 'react'
+import DataTable from '@/components/shared/DataTable'
 import { Exam } from './types'
-import { HiOutlinePencil, HiOutlineTrash } from 'react-icons/hi'
-import dayjs from 'dayjs'
+import {
+    HiOutlinePencil,
+    HiOutlineTrash,
+    HiOutlinePlusCircle,
+} from 'react-icons/hi'
 import { apiGetExams } from '@/services/ExamService'
+import ExamTableTools from './ExamTableTools'
 
 interface ExamTableProps {
+    onAdd: () => void
     onEdit: (exam: Exam) => void
     onDelete: (id: string) => void
 }
 
-const ExamTable: React.FC<ExamTableProps> = ({ onEdit, onDelete }) => {
+const ExamTable: React.FC<ExamTableProps> = ({ onAdd, onEdit, onDelete }) => {
     const [data, setData] = useState<Exam[]>([])
     const [loading, setLoading] = useState<boolean>(true)
 
-    useEffect(() => {
-        apiGetExams()
-            .then((response) => {
-                setData(response.data)
-                setLoading(false)
-            })
-            .catch((error) => {
-                console.error(error)
-                setLoading(false)
-            })
+    const fetchExams = useCallback(async () => {
+        try {
+            setLoading(true)
+            const response = await apiGetExams()
+            setData(response.data)
+        } catch (error) {
+            console.error('Error fetching exams:', error)
+        } finally {
+            setLoading(false)
+        }
     }, [])
+
+    useEffect(() => {
+        fetchExams()
+    }, [fetchExams])
+
+    const handleAdd = useCallback(() => {
+        onAdd()
+    }, [onAdd])
+
+    const handleEdit = useCallback(
+        (exam: Exam) => {
+            onEdit(exam)
+        },
+        [onEdit]
+    )
+
+    const handleDelete = useCallback(
+        (id: string) => {
+            onDelete(id)
+        },
+        [onDelete]
+    )
 
     const columns = useMemo(
         () => [
@@ -36,42 +62,59 @@ const ExamTable: React.FC<ExamTableProps> = ({ onEdit, onDelete }) => {
             {
                 header: 'Mô tả',
                 accessorKey: 'description',
+                cell: ({ row }: { row: { original: Exam } }) => (
+                    <div className="max-w-xs truncate">
+                        {row.original.description}
+                    </div>
+                ),
             },
             {
-                header: 'Thời gian',
+                header: 'Thời gian (phút)',
                 accessorKey: 'duration_minutes',
+            },
+            {
+                header: 'Số câu hỏi',
+                accessorKey: 'questions',
+                cell: ({ row }: { row: { original: Exam } }) =>
+                    row.original.questions.length,
             },
             {
                 header: '',
                 id: 'action',
-                cell: (props: { row: { original: Exam } }) => (
+                cell: ({ row }: { row: { original: Exam } }) => (
                     <div className="flex justify-end text-lg">
-                        <span
-                            className="cursor-pointer p-2 hover:text-blue-500"
-                            onClick={() => onEdit(props.row.original)}
+                        <button
+                            className="p-2 hover:text-blue-500 transition-colors"
+                            aria-label="Edit"
+                            onClick={() => handleEdit(row.original)}
                         >
                             <HiOutlinePencil />
-                        </span>
-                        <span
-                            className="cursor-pointer p-2 hover:text-red-500"
-                            onClick={() => onDelete(props.row.original._id)}
+                        </button>
+                        <button
+                            className="p-2 hover:text-red-500 transition-colors"
+                            aria-label="Delete"
+                            onClick={() => handleDelete(row.original._id)}
                         >
                             <HiOutlineTrash />
-                        </span>
+                        </button>
                     </div>
                 ),
             },
         ],
-        [onEdit, onDelete]
+        [handleEdit, handleDelete]
     )
 
     return (
-        <DataTable
-            columns={columns}
-            data={data}
-            loading={loading}
-            // Thêm các thuộc tính khác của DataTable nếu cần
-        />
+        <div>
+            <ExamTableTools onExamChange={fetchExams} />
+            <DataTable
+                pagination
+                sortable
+                columns={columns}
+                data={data}
+                loading={loading}
+            />
+        </div>
     )
 }
 

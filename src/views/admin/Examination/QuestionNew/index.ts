@@ -1,3 +1,3 @@
-import StudentNew from './StudentNew'
+import StudentNew from './QuestionNew'
 
 export default StudentNew

@@ -16,7 +16,6 @@ const LoginlogsTable = () => {
     useEffect(() => {
         apiGetAllLoginLogs()
             .then((response) => {
-                console.log(response.data)
                 setData(response.data)
                 setLoading(false)
             })

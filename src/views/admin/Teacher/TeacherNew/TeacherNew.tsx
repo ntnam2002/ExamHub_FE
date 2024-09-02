@@ -11,7 +11,7 @@ const TeacherNew = () => {
     const navigate = useNavigate()
 
     const addTeacher = async (data: FormModel) => {
-        console.log('data', data)
+        'data', data
         const response = await apiCreateUser<boolean, FormModel>(data)
 
         return response.data

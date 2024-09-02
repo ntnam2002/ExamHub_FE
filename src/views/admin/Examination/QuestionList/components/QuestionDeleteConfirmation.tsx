@@ -25,7 +25,7 @@ const QuestionDeleteConfirmation = () => {
     const onDelete = async () => {
         dispatch(toggleDeleteConfirmation(false))
         const success = await deleteQuestion({ id: selectedQuestion })
-     
+
         if (success.status === 'success') {
             dispatch(getQuestions())
             toast.push(

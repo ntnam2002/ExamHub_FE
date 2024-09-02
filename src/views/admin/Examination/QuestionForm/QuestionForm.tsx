@@ -6,43 +6,27 @@ import StickyFooter from '@/components/shared/StickyFooter'
 import ConfirmDialog from '@/components/shared/ConfirmDialog'
 import { Form, Formik, FormikProps } from 'formik'
 import BasicInformationFields from './BasicInformationFields'
-
-import OrganizationFields from './OrganizationFields'
-
 import cloneDeep from 'lodash/cloneDeep'
 import { HiOutlineTrash } from 'react-icons/hi'
 import { AiOutlineSave } from 'react-icons/ai'
 import * as Yup from 'yup'
 
-// eslint-disable-next-line  @typescript-eslint/no-explicit-any
 type FormikRef = FormikProps<any>
 
-type InitialData = {
-    id?: string
-    name?: string
-    productCode?: string
-    img?: string
-    imgList?: {
-        id: string
-        name: string
-        img: string
-    }[]
-    category?: string
-    price?: number
-    stock?: number
-    status?: number
-    costPerItem?: number
-    bulkDiscountPrice?: number
-    taxRate?: number
-    tags?: string[]
-    brand?: string
-    vendor?: string
-    description?: string
+type Option = {
+    text: string
+    is_correct: boolean
 }
 
-export type FormModel = Omit<InitialData, 'tags'> & {
-    tags: { label: string; value: string }[] | string[]
+type InitialData = {
+    text?: string
+    points?: number
+    subject_id?: string
+    difficulty?: number
+    options?: Option[]
 }
+
+export type FormModel = InitialData
 
 export type SetSubmitting = (isSubmitting: boolean) => void
 
@@ -50,7 +34,7 @@ export type OnDeleteCallback = React.Dispatch<React.SetStateAction<boolean>>
 
 type OnDelete = (callback: OnDeleteCallback) => void
 
-type StudentForm = {
+type QuestionFormProps = {
     initialData?: InitialData
     type: 'edit' | 'new'
     onDiscard?: () => void
@@ -61,10 +45,19 @@ type StudentForm = {
 const { useUniqueId } = hooks
 
 const validationSchema = Yup.object().shape({
-    name: Yup.string().required('Product Name Required'),
-    price: Yup.number().required('Price Required'),
-    stock: Yup.number().required('SKU Required'),
-    category: Yup.string().required('Category Required'),
+    text: Yup.string().required('Question Text Required'),
+    points: Yup.number().required('Points Required'),
+    subject_id: Yup.string().required('Subject ID Required'),
+    difficulty: Yup.number().required('Difficulty Required'),
+    options: Yup.array()
+        .of(
+            Yup.object().shape({
+                text: Yup.string().required('Option Text Required'),
+                is_correct: Yup.boolean().required('Is Correct Required'),
+            })
+        )
+        .min(2, 'At least two options are required')
+        .required('Options Required'),
 })
 
 const DeleteProductButton = ({ onDelete }: { onDelete: OnDelete }) => {
@@ -97,7 +90,7 @@ const DeleteProductButton = ({ onDelete }: { onDelete: OnDelete }) => {
             <ConfirmDialog
                 isOpen={dialogOpen}
                 type="danger"
-                title="Delete product"
+                title="Delete question"
                 confirmButtonColor="red-600"
                 onClose={onConfirmDialogClose}
                 onRequestClose={onConfirmDialogClose}
@@ -105,7 +98,7 @@ const DeleteProductButton = ({ onDelete }: { onDelete: OnDelete }) => {
                 onConfirm={handleConfirm}
             >
                 <p>
-                    Bạn có chắc chắn muốn xóa sản phẩm này không? Hành động này
+                    Bạn có chắc chắn muốn xóa câu hỏi này không? Hành động này
                     không thể hoàn tác.
                 </p>
             </ConfirmDialog>
@@ -113,62 +106,30 @@ const DeleteProductButton = ({ onDelete }: { onDelete: OnDelete }) => {
     )
 }
 
-const StudentForm = forwardRef<FormikRef, StudentForm>((props, ref) => {
+const QuestionForm = forwardRef<FormikRef, QuestionFormProps>((props, ref) => {
     const {
         type,
         initialData = {
-            id: '',
-            name: '',
-            productCode: '',
-            img: '',
-            imgList: [],
-            category: '',
-            price: 0,
-            stock: 0,
-            status: 0,
-            costPerItem: 0,
-            bulkDiscountPrice: 0,
-            taxRate: 6,
-            tags: [],
-            brand: '',
-            vendor: '',
-            description: '',
+            text: '',
+            points: 0,
+            subject_id: '',
+            difficulty: 1,
+            options: [], // Ensure that options is initialized as an array
         },
         onFormSubmit,
         onDiscard,
         onDelete,
     } = props
 
-    const newId = useUniqueId('product-')
-
     return (
         <>
             <Formik
                 innerRef={ref}
-                initialValues={{
-                    ...initialData,
-                    tags: initialData?.tags
-                        ? initialData.tags.map((value) => ({
-                              label: value,
-                              value,
-                          }))
-                        : [],
-                }}
+                initialValues={initialData} // Ensure initialData contains options array
                 validationSchema={validationSchema}
                 onSubmit={(values: FormModel, { setSubmitting }) => {
                     const formData = cloneDeep(values)
-                    formData.tags = formData.tags.map((tag) => {
-                        if (typeof tag !== 'string') {
-                            return tag.value
-                        }
-                        return tag
-                    })
-                    if (type === 'new') {
-                        formData.id = newId
-                        if (formData.imgList && formData.imgList.length > 0) {
-                            formData.img = formData.imgList[0].img
-                        }
-                    }
+
                     onFormSubmit?.(formData, setSubmitting)
                 }}
             >
@@ -180,17 +141,18 @@ const StudentForm = forwardRef<FormikRef, StudentForm>((props, ref) => {
                                     <BasicInformationFields
                                         touched={touched}
                                         errors={errors}
+                                        values={values} // Pass values to ensure proper initialization
+                                        setFieldValue={function (
+                                            field: string,
+                                            value: any,
+                                            shouldValidate?: boolean
+                                        ): void {
+                                            throw new Error(
+                                                'Function not implemented.'
+                                            )
+                                        }}
                                     />
-
-                                    {/* <OrganizationFields
-                                        touched={touched}
-                                        errors={errors}
-                                        values={values}
-                                    /> */}
                                 </div>
-                                {/* <div className="lg:col-span-1">
-                                    <ProductImages values={values} />
-                                </div> */}
                             </div>
                             <StickyFooter
                                 className="-mx-8 px-8 flex items-center justify-between py-4"
@@ -231,6 +193,6 @@ const StudentForm = forwardRef<FormikRef, StudentForm>((props, ref) => {
     )
 })
 
-StudentForm.displayName = 'StudentForm'
+QuestionForm.displayName = 'QuestionForm'
 
-export default StudentForm
+export default QuestionForm

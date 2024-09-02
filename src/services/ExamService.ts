@@ -12,6 +12,28 @@ export function apiGetExams() {
         method: 'get',
     })
 }
+
+export function apiGetExamById(id: string) {
+    return ApiService.fetchData<Exam>({
+        url: `/exams/${id}`,
+        method: 'get',
+    })
+}
+export function apiCreateExam(data: Exam) {
+    return ApiService.fetchData<Exam>({
+        url: '/exams',
+        method: 'post',
+        data,
+    })
+}
+export function apiUpdateExam(id: string, data: Exam) {
+    return ApiService.fetchData<Exam>({
+        url: `/exams/${id}`,
+        method: 'put',
+        data,
+    })
+}
+
 export function apiGetAllClasses() {
     return ApiService.fetchData<Exam[]>({
         url: '/admin/getAllClass',
@@ -67,7 +89,7 @@ export async function apiCreateQuestion<T, U extends Record<string, unknown>>(
     data: U
 ) {
     return ApiService.fetchData<T>({
-        url: '/exams/questions/createQuestion',
+        url: '/exams/questions',
         method: 'post',
         data,
     })
@@ -137,7 +159,6 @@ export async function apiGetExaminationById<T, U extends { id: string }>(
 export async function apiSendAnswers<T, U extends Record<string, unknown>>(
     data: U
 ) {
-    console.log('send answer data', data)
     return ApiService.fetchData<T>({
         url: `/exams/${data.examId}/score/${data.studentId}`,
         method: 'post',

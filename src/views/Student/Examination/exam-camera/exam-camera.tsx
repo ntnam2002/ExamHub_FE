@@ -156,9 +156,6 @@ const ExamCamera: React.FC<ExamCameraProps> = forwardRef((props, ref) => {
             toast.error(
                 'Bạn đã gian lận quá số lần, hệ thống sẽ kết thúc bài thi!'
             )
-            setTimeout(() => {
-                window.location.reload()
-            }, 5000)
         }
     }, [cheatingInfo.count])
 
