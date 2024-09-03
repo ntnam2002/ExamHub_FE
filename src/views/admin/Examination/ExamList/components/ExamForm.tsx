@@ -92,7 +92,7 @@ const ExamForm: React.FC<ExamFormProps> = ({ onSave }) => {
             }
             message.success('Exam saved successfully')
             onSave?.()
-            navigate('/exams')
+            navigate('/admin/exam')
         } catch (err) {
             setError('Error saving exam. Please try again.')
             console.error('Error saving exam:', err)
@@ -131,9 +131,10 @@ const ExamForm: React.FC<ExamFormProps> = ({ onSave }) => {
     return (
         <Card
             title={
-                <Title level={2}>{id ? 'Edit Exam' : 'Create New Exam'}</Title>
+                <Title level={2}>
+                    {id ? 'Sửa bài thi' : 'Tạo bài thi mới'}
+                </Title>
             }
-            style={{ maxWidth: 800, margin: '0 auto' }}
         >
             {error && (
                 <Alert
@@ -224,7 +225,9 @@ const ExamForm: React.FC<ExamFormProps> = ({ onSave }) => {
                         >
                             {isLoading ? 'Đang lưu...' : 'Lưu'}
                         </Button>
-                        <Button onClick={() => navigate('/exams')}>Hủy</Button>
+                        <Button onClick={() => navigate('/admin/exam')}>
+                            Hủy
+                        </Button>
                     </Space>
                 </Form.Item>
             </Form>

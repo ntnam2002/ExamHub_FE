@@ -1,35 +1,64 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react'
-import axios from 'axios'
-import DataTable from '@/components/shared/DataTable' // Thay đổi đường dẫn nếu cần
-import { Behavior } from './types'
-import { HiOutlinePencil, HiOutlineTrash } from 'react-icons/hi'
-import dayjs from 'dayjs'
-import { apiGetAllBehavior } from '@/services/managementService'
+import React, { useEffect, useState } from 'react'
+import { HiOutlineSearch } from 'react-icons/hi'
+import debounce from 'lodash/debounce'
+import DataTable from '@/components/shared/DataTable'
+import Input from '@/components/ui/Input'
+import {
+    apiGetAllBehavior,
+    apiSearchBehavior,
+} from '@/services/managementService'
 
 const BehaviorTable = () => {
     const [data, setData] = useState([])
-    const [loading, setLoading] = useState<boolean>(true)
+    const [loading, setLoading] = useState(true)
+    const [query, setQuery] = useState('')
 
     useEffect(() => {
-        apiGetAllBehavior()
-            .then((response) => {
-                setData(response.data)
-                setLoading(false)
-            })
-            .catch((error) => {
-                console.error(error)
-                setLoading(false)
-            })
+        fetchAllBehaviors()
     }, [])
+
+    const fetchAllBehaviors = async () => {
+        try {
+            const response = await apiGetAllBehavior()
+            setData(response.data)
+            setLoading(false)
+        } catch (error) {
+            console.error('Error fetching behaviors:', error)
+            setLoading(false)
+        }
+    }
+
+    const fetchBehavior = debounce(async (searchQuery: string) => {
+        if (!searchQuery) {
+            fetchAllBehaviors()
+            return
+        }
+
+        setLoading(true)
+        try {
+            const response = await apiSearchBehavior(searchQuery)
+            setData(response.data)
+        } catch (error) {
+            console.error('Error searching behaviors:', error)
+        } finally {
+            setLoading(false)
+        }
+    }, 300)
+
+    const onSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const value = e.target.value
+        setQuery(value)
+        fetchBehavior(value)
+    }
 
     const columns = [
         {
             header: 'Tên sinh viên',
-            accessorKey: 'studentName',
+            accessorKey: 'student_name',
         },
         {
             header: 'Tên kỳ thi',
-            accessorKey: 'examinationName',
+            accessorKey: 'examination_name',
         },
         {
             header: 'Hành vi',
@@ -40,13 +69,19 @@ const BehaviorTable = () => {
             accessorKey: 'date',
         },
     ]
+
     return (
-        <DataTable
-            columns={columns}
-            data={data}
-            loading={loading}
-            // Thêm các thuộc tính khác của DataTable nếu cần
-        />
+        <div className="space-y-4">
+            <Input
+                className="max-w-md"
+                size="sm"
+                placeholder="Tìm sinh viên"
+                prefix={<HiOutlineSearch className="text-lg" />}
+                value={query}
+                onChange={onSearch}
+            />
+            <DataTable columns={columns} data={data} loading={loading} />
+        </div>
     )
 }
 

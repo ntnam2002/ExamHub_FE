@@ -44,6 +44,8 @@ const _UserDropdown = ({ className }: CommonProps) => {
     const decodedJWT = decodeJWT(getNameFromLocalStorage)
     const name = decodedJWT ? decodedJWT.name : 'User'
 
+    const editProfile = () => {}
+
     const UserAvatar = (
         <div className={classNames(className, 'flex items-center gap-2')}>
             <Avatar size={32} shape="circle" icon={<HiOutlineUser />} />
@@ -95,12 +97,22 @@ const _UserDropdown = ({ className }: CommonProps) => {
                 <Dropdown.Item
                     eventKey="Sign Out"
                     className="gap-2"
+                    onClick={editProfile}
+                >
+                    <span className="text-xl opacity-50">
+                        <HiOutlineLogout />
+                    </span>
+                    <span>Sửa thông tin</span>
+                </Dropdown.Item>
+                <Dropdown.Item
+                    eventKey="Sign Out"
+                    className="gap-2"
                     onClick={signOut}
                 >
                     <span className="text-xl opacity-50">
                         <HiOutlineLogout />
                     </span>
-                    <span>Sign Out</span>
+                    <span>Đăng xuất</span>
                 </Dropdown.Item>
             </Dropdown>
         </div>

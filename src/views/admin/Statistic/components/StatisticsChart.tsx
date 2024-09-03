@@ -8,7 +8,7 @@ import Chart from 'react-apexcharts'
 const { Title } = Typography
 
 function OnlineExamStatistics() {
-    // Biểu đồ cột: Số lượng bài thi theo môn học
+    // Biểu đồ cột: Số lượng bài thi theo môn học CNTT
     const subjectExamCountOptions: ApexOptions = {
         chart: {
             type: 'bar',
@@ -16,10 +16,17 @@ function OnlineExamStatistics() {
             fontFamily: 'Helvetica, Arial, sans-serif',
         },
         title: {
-            text: 'Số lượng bài thi theo môn học',
+            text: 'Số lượng bài thi theo môn học CNTT',
         },
         xaxis: {
-            categories: ['Toán', 'Lý', 'Hóa', 'Sinh', 'Văn', 'Anh'],
+            categories: [
+                'Lập trình',
+                'Mạng',
+                'Cơ sở dữ liệu',
+                'Hệ điều hành',
+                'An ninh mạng',
+                'Trí tuệ nhân tạo',
+            ],
         },
 
         dataLabels: {

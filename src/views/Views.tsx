@@ -24,9 +24,11 @@ const { authenticatedEntryPath, authenicatedEntryPathStudent } = appConfig
 
 const AllRoutes = (props: AllRoutesProps) => {
     const userAuthority = useAppSelector((state) => state.auth.user.authority)
+    console.log(userAuthority)
     let directPath = null
     if (userAuthority === 'admin' || userAuthority === 'teacher') {
         directPath = authenticatedEntryPath
+        console.log(directPath)
     } else {
         directPath = authenicatedEntryPathStudent
     }

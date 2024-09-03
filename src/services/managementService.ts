@@ -50,3 +50,12 @@ export function apiDeleteSubject<T, U extends Record<string, unknown>>(
         data,
     })
 }
+
+export function apiSearchBehavior<T, U extends Record<string, unknown>>(
+    query: string
+) {
+    return ApiService.fetchData<T>({
+        url: `/management/searchBehavior?search=${query}`,
+        method: 'get',
+    })
+}

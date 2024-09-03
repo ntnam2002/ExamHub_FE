@@ -14,7 +14,7 @@ const adminNavigationConfig: NavigationTree[] = [
         translateKey: '',
         icon: '',
         type: NAV_ITEM_TYPE_TITLE,
-        authority: [ADMIN],
+        authority: [ADMIN, TEACHER],
         subMenu: [
             {
                 key: 'ExamHub.admin.statistics',
@@ -23,7 +23,7 @@ const adminNavigationConfig: NavigationTree[] = [
                 translateKey: 'Thống kê',
                 icon: 'report',
                 type: NAV_ITEM_TYPE_ITEM,
-                authority: [ADMIN],
+                authority: [ADMIN, TEACHER],
                 subMenu: [],
             },
             {

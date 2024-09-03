@@ -5,9 +5,11 @@ import {
     HiOutlinePencil,
     HiOutlineTrash,
     HiOutlinePlusCircle,
+    HiOutlineEye,
 } from 'react-icons/hi'
 import { apiGetExams } from '@/services/ExamService'
 import ExamTableTools from './ExamTableTools'
+import { Modal, Button } from 'antd'
 
 interface ExamTableProps {
     onAdd: () => void
@@ -18,6 +20,8 @@ interface ExamTableProps {
 const ExamTable: React.FC<ExamTableProps> = ({ onAdd, onEdit, onDelete }) => {
     const [data, setData] = useState<Exam[]>([])
     const [loading, setLoading] = useState<boolean>(true)
+    const [selectedExam, setSelectedExam] = useState<Exam | null>(null)
+    const [isModalVisible, setIsModalVisible] = useState<boolean>(false)
 
     const fetchExams = useCallback(async () => {
         try {
@@ -35,9 +39,10 @@ const ExamTable: React.FC<ExamTableProps> = ({ onAdd, onEdit, onDelete }) => {
         fetchExams()
     }, [fetchExams])
 
-    const handleAdd = useCallback(() => {
-        onAdd()
-    }, [onAdd])
+    const handleDetail = useCallback((exam: Exam) => {
+        setSelectedExam(exam)
+        setIsModalVisible(true)
+    }, [])
 
     const handleEdit = useCallback(
         (exam: Exam) => {
@@ -52,6 +57,11 @@ const ExamTable: React.FC<ExamTableProps> = ({ onAdd, onEdit, onDelete }) => {
         },
         [onDelete]
     )
+
+    const handleModalClose = () => {
+        setIsModalVisible(false)
+        setSelectedExam(null)
+    }
 
     const columns = useMemo(
         () => [
@@ -85,6 +95,13 @@ const ExamTable: React.FC<ExamTableProps> = ({ onAdd, onEdit, onDelete }) => {
                     <div className="flex justify-end text-lg">
                         <button
                             className="p-2 hover:text-blue-500 transition-colors"
+                            aria-label="View Details"
+                            onClick={() => handleDetail(row.original)}
+                        >
+                            <HiOutlineEye />
+                        </button>
+                        <button
+                            className="p-2 hover:text-blue-500 transition-colors"
                             aria-label="Edit"
                             onClick={() => handleEdit(row.original)}
                         >
@@ -101,19 +118,49 @@ const ExamTable: React.FC<ExamTableProps> = ({ onAdd, onEdit, onDelete }) => {
                 ),
             },
         ],
-        [handleEdit, handleDelete]
+        [handleDetail, handleEdit, handleDelete]
     )
 
     return (
         <div>
+            <Modal
+                title={selectedExam?.exam_name}
+                visible={isModalVisible}
+                footer={[
+                    <Button key="close" onClick={handleModalClose}>
+                        Đóng
+                    </Button>,
+                ]}
+                onCancel={handleModalClose}
+            >
+                {selectedExam && (
+                    <div>
+                        <p>
+                            <strong>Mô tả:</strong> {selectedExam.description}
+                        </p>
+                        <p>
+                            <strong>Thời gian:</strong>{' '}
+                            {selectedExam.duration_minutes} phút
+                        </p>
+                        <p>
+                            <strong>Số câu hỏi:</strong>{' '}
+                            {selectedExam.questions.length}
+                        </p>
+                        <ul>
+                            {selectedExam.questions.map((q, index) => (
+                                <li key={index}>{q.text}</li>
+                            ))}
+                        </ul>
+                        <p>
+                            <strong>Ngày tạo:</strong>{' '}
+                            {new Date(selectedExam.created_at).toLocaleString()}
+                        </p>
+                    </div>
+                )}
+            </Modal>
+
             <ExamTableTools onExamChange={fetchExams} />
-            <DataTable
-                pagination
-                sortable
-                columns={columns}
-                data={data}
-                loading={loading}
-            />
+            <DataTable columns={columns} data={data} loading={loading} />
         </div>
     )
 }

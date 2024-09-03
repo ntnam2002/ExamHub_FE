@@ -1,3 +1,4 @@
+import { ConfirmDialog } from '@/components/shared'
 import React from 'react'
 
 interface ConfirmDeleteModalProps {
@@ -14,13 +15,19 @@ const ConfirmDeleteModal: React.FC<ConfirmDeleteModalProps> = ({
     if (!show) return null
 
     return (
-        <div className="modal">
-            <div className="modal-content">
-                <h3>Are you sure you want to delete this exam?</h3>
-                <button onClick={onConfirm}>Yes</button>
-                <button onClick={onCancel}>No</button>
-            </div>
-        </div>
+        <ConfirmDialog
+            isOpen={dialogOpen}
+            type="danger"
+            title="Delete question"
+            confirmButtonColor="red-600"
+            onCancel={onCancel}
+            onConfirm={onConfirm}
+        >
+            <p>
+                Bạn có chắc chắn muốn xóa câu hỏi này không? Hành động này không
+                thể hoàn tác.
+            </p>
+        </ConfirmDialog>
     )
 }
 
