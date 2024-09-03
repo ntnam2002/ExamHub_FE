@@ -25,6 +25,7 @@ interface ExamFormProps {
 
 const ExamForm: React.FC<ExamFormProps> = ({ onSave }) => {
     const { id } = useParams<{ id: string }>()
+    console.log('id:', id)
     const navigate = useNavigate()
     const [form] = Form.useForm()
 
@@ -42,9 +43,14 @@ const ExamForm: React.FC<ExamFormProps> = ({ onSave }) => {
             if (!id) return
             setIsLoading(true)
             try {
-                const response = await axios.get<Exam>(`/api/exams/${id}`)
-                form.setFieldsValue(response.data)
-                setSelectedQuestions(response.data.questions.map((q) => q._id))
+                const response = await axios.get<Exam>(
+                    `http://localhost:3120/exams/${id}`
+                )
+                form.setFieldsValue(response.data.data)
+                console.log('response.data:', response.data)
+                setSelectedQuestions(
+                    response.data.data.questions.map((q) => q._id)
+                )
             } catch (err) {
                 setError('Error fetching exam data. Please try again.')
                 console.error('Error fetching exam data:', err)

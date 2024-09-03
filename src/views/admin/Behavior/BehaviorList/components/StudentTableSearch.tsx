@@ -13,8 +13,6 @@ const BehaviorSearch = () => {
     const fetchBehavior = debounce(async (searchQuery: string) => {
         try {
             const response = await apiSearchBehavior(searchQuery)
-            const data = await response.json()
-            console.log(data) // Handle the response data as needed
         } catch (error) {
             console.error('Error fetching behavior:', error)
         }

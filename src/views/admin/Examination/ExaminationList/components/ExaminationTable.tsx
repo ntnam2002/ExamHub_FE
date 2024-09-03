@@ -1,4 +1,3 @@
-// components/ExaminationTable.tsx
 import React, { useState, useEffect, useMemo } from 'react'
 import { Examination } from './types'
 import {
@@ -9,7 +8,7 @@ import DataTable from '@/components/shared/DataTable'
 import ExaminationForm from './ExaminationForm'
 import ExaminationTableTools from './ExaminationTableTools'
 import { HiOutlinePencil, HiOutlineTrash } from 'react-icons/hi'
-import { Modal } from 'antd'
+import { Modal, message } from 'antd'
 
 const ExaminationTable: React.FC = () => {
     const [data, setData] = useState<Examination[]>([])
@@ -19,8 +18,10 @@ const ExaminationTable: React.FC = () => {
     const [pageIndex, setPageIndex] = useState<number>(1)
     const [pageSize, setPageSize] = useState<number>(10)
     const [sort, setSort] = useState<any>(null)
+    const [isModalVisible, setIsModalVisible] = useState<boolean>(false)
 
-    useEffect(() => {
+    const fetchExaminations = () => {
+        setLoading(true)
         apiGetExaminations()
             .then((response) => {
                 setData(response.data)
@@ -29,7 +30,12 @@ const ExaminationTable: React.FC = () => {
             .catch((error) => {
                 console.error(error)
                 setLoading(false)
+                message.error('Failed to fetch examinations')
             })
+    }
+
+    useEffect(() => {
+        fetchExaminations()
     }, [pageIndex, pageSize, sort])
 
     const onPaginationChange = (page: number) => {
@@ -54,7 +60,6 @@ const ExaminationTable: React.FC = () => {
                     <span>{props.row.original.exam_id.exam_name}</span>
                 ),
             },
-
             {
                 header: 'Bắt đầu lúc',
                 accessorKey: 'started_at',
@@ -93,24 +98,39 @@ const ExaminationTable: React.FC = () => {
         ],
         []
     )
-
     const handleEdit = (examination: Examination) => {
         setSelectedExamination(examination)
+        setIsModalVisible(true)
     }
 
     const handleDelete = (id: string) => {
         apiDeleteExamination(id)
             .then(() => {
-                setData((prevData) =>
-                    prevData.filter((item) => item._id !== id)
+                fetchExaminations()
+                message.success('Examination deleted successfully')
+            })
+            .catch((error) => {
+                console.error(error)
+                message.error(
+                    'An error occurred while deleting the examination'
                 )
             })
-            .catch((error) => console.error(error))
+    }
+
+    const handleSave = (updatedExamination: Examination) => {
+        fetchExaminations()
+        setIsModalVisible(false)
+        setSelectedExamination(null)
     }
 
     return (
         <div>
-            <ExaminationTableTools onEdit={handleEdit} />
+            <ExaminationTableTools
+                onEdit={() => {
+                    setSelectedExamination(null)
+                    setIsModalVisible(true)
+                }}
+            />
             <div>&nbsp;</div>
             <DataTable
                 columns={columns}
@@ -126,18 +146,26 @@ const ExaminationTable: React.FC = () => {
                 onSort={onSort}
             />
             <Modal
-                title={selectedExamination ? 'Cập nhật kỳ thi' : 'Tạo kỳ thi'}
-                open={!!selectedExamination}
-                onCancel={() => setSelectedExamination(null)}
-                onOk={() => setSelectedExamination(null)}
+                title={
+                    selectedExamination
+                        ? 'Edit Examination'
+                        : 'Create Examination'
+                }
+                open={isModalVisible}
+                footer={null}
+                onCancel={() => {
+                    setIsModalVisible(false)
+                    setSelectedExamination(null)
+                }}
             >
-                {selectedExamination && (
-                    <ExaminationForm
-                        examinationToEdit={selectedExamination}
-                        onSave={() => setSelectedExamination(null)}
-                        onCancel={() => setSelectedExamination(null)}
-                    />
-                )}
+                <ExaminationForm
+                    examinationToEdit={selectedExamination}
+                    onCancel={() => {
+                        setIsModalVisible(false)
+                        setSelectedExamination(null)
+                    }}
+                    onSave={handleSave}
+                />
             </Modal>
         </div>
     )

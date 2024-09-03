@@ -1,43 +1,33 @@
-// components/ExaminationForm.tsx
-import React, { useState, useEffect, ChangeEvent } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Examination } from './types'
-import { Form, Input, Button, DatePicker, Select, Space } from 'antd'
+import { Form, Input, Button, DatePicker, Select, Space, message } from 'antd'
 import moment from 'moment'
 import {
     apiGetExams,
     apiGetAllClasses,
     apiCreateExamination,
-    apiGetExaminations,
+    apiUpdateExamination,
 } from '@/services/ExamService'
 
 const { Option } = Select
 
 interface ExaminationFormProps {
-    examinationToEdit?: Examination
-    onSave: (examination: Examination) => void
+    examinationToEdit?: Examination | null
     onCancel: () => void
+    onSave: (examination: Examination) => void
 }
 
 const ExaminationForm: React.FC<ExaminationFormProps> = ({
     examinationToEdit,
-    onSave,
     onCancel,
+    onSave,
 }) => {
-    const [examination, setExamination] = useState<any>({
-        //_id: '',
-        exam_id: '',
-        class_id: [],
-        student_id: [],
-        access_keys: '',
-        started_at: new Date(),
-        //created_by: '',
-        //total_score: 0,
-    })
-    
+    const [form] = Form.useForm()
     const [exams, setExams] = useState<{ _id: string; exam_name: string }[]>([])
     const [classes, setClasses] = useState<
         { _id: string; class_name: string }[]
     >([])
+    const [isSubmitting, setIsSubmitting] = useState(false)
 
     useEffect(() => {
         apiGetExams()
@@ -51,61 +41,69 @@ const ExaminationForm: React.FC<ExaminationFormProps> = ({
 
     useEffect(() => {
         if (examinationToEdit) {
-            setExamination(examinationToEdit)
-        }
-    }, [examinationToEdit])
-
-    const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = e.target
-        setExamination((prevExam) => ({ ...prevExam, [name]: value }))
-    }
-
-    const handleDateChange = (date: moment.Moment | null) => {
-        setExamination((prevExam) => ({
-            ...prevExam,
-            started_at: date ? date.toDate() : new Date(),
-        }))
-    }
-    const handleSave = () => {
-       
-        apiCreateExamination(examination)
-            .then((response) => {
-                onSave(response.data)
+            form.setFieldsValue({
+                ...examinationToEdit,
+                started_at: moment(examinationToEdit.started_at),
+                student_id: examinationToEdit.student_id
+                    ? examinationToEdit.student_id.join(', ')
+                    : '',
             })
-            .catch((error) => console.error(error))
-        apiGetExaminations()
+        } else {
+            form.resetFields()
+        }
+    }, [examinationToEdit, form])
+
+    const handleSave = async (values: any) => {
+        if (isSubmitting) return
+        setIsSubmitting(true)
+        try {
+            const examData = {
+                ...values,
+                student_id: values.student_id
+                    ? values.student_id
+                          .split(',')
+                          .map((id: string) => id.trim())
+                    : [],
+                started_at: values.started_at.toDate(),
+            }
+            let response
+            if (examinationToEdit) {
+                response = await apiUpdateExamination(
+                    examinationToEdit._id,
+                    examData
+                )
+                message.success('Examination updated successfully')
+            } else {
+                response = await apiCreateExamination(examData)
+                message.success('Examination created successfully')
+            }
+            onSave(response.data)
+        } catch (error) {
+            console.error(error)
+            message.error('An error occurred while saving the examination')
+        } finally {
+            setIsSubmitting(false)
+        }
     }
-    const handleSubmit = () => {
-        onSave(examination)
-    }
+
     const formItemLayout = { labelCol: { span: 4 }, wrapperCol: { span: 20 } }
 
     return (
         <div style={{ maxWidth: '700px', margin: '0 auto' }}>
             <Form
+                form={form}
                 {...formItemLayout}
                 layout="horizontal"
-                initialValues={{
-                    exam_id: examination._id,
-                    class_id: examination.class_id,
-                    student_id: examination.student_id.join(', '),
-                    access_keys: examination.access_keys,
-                    started_at: moment(examination.started_at),
-                    //created_by: examination.created_by,
-                    //total_score: examination.total_score,
-                }}
-                onFinish={handleSubmit}
+                onFinish={handleSave}
             >
-                <Form.Item label="Exam ID" name="exam_id" {...formItemLayout}>
-                    <Select
-                        value={examination.exam_id}
-                        onChange={(value) =>
-                            setExamination((prev) => ({
-                                ...prev,
-                                exam_id: value,
-                            }))
-                        }
-                    >
+                <Form.Item
+                    label="Exam ID"
+                    name="exam_id"
+                    rules={[
+                        { required: true, message: 'Please select an exam' },
+                    ]}
+                >
+                    <Select>
                         {exams.map((exam) => (
                             <Option key={exam._id} value={exam._id}>
                                 {exam.exam_name}
@@ -116,18 +114,14 @@ const ExaminationForm: React.FC<ExaminationFormProps> = ({
                 <Form.Item
                     label="Class IDs"
                     name="class_id"
-                    {...formItemLayout}
+                    rules={[
+                        {
+                            required: true,
+                            message: 'Please select at least one class',
+                        },
+                    ]}
                 >
-                    <Select
-                        mode="multiple"
-                        value={examination.class_id}
-                        onChange={(values) =>
-                            setExamination((prev) => ({
-                                ...prev,
-                                class_id: values,
-                            }))
-                        }
-                    >
+                    <Select mode="multiple">
                         {classes.map((cls) => (
                             <Option key={cls._id} value={cls._id}>
                                 {cls.class_name}
@@ -135,73 +129,24 @@ const ExaminationForm: React.FC<ExaminationFormProps> = ({
                         ))}
                     </Select>
                 </Form.Item>
-                <Form.Item
-                    label="Student IDs"
-                    name="student_id"
-                    {...formItemLayout}
-                >
-                    <Input
-                        type="text"
-                        name="student_id"
-                        value={examination.student_id.join(', ')}
-                        onChange={(e) =>
-                            setExamination((prevExam) => ({
-                                ...prevExam,
-                                student_id: e.target.value
-                                    .split(',')
-                                    .map((id) => id.trim()),
-                            }))
-                        }
-                    />
+                <Form.Item label="Student IDs" name="student_id">
+                    <Input />
                 </Form.Item>
-                <Form.Item
-                    label="Access Keys"
-                    name="access_keys"
-                    {...formItemLayout}
-                >
-                    <Input
-                        type="text"
-                        name="access_keys"
-                        value={examination.access_keys}
-                        onChange={handleChange}
-                    />
+                <Form.Item label="Access Keys" name="access_keys">
+                    <Input />
                 </Form.Item>
                 <Form.Item
                     label="Started At"
                     name="started_at"
-                    {...formItemLayout}
+                    rules={[
+                        {
+                            required: true,
+                            message: 'Please select a start time',
+                        },
+                    ]}
                 >
-                    <DatePicker
-                        showTime
-                        format="YYYY-MM-DD HH:mm:ss"
-                        value={moment(examination.started_at)}
-                        onChange={handleDateChange}
-                    />
+                    <DatePicker showTime format="YYYY-MM-DD HH:mm:ss" />
                 </Form.Item>
-                {/* <Form.Item
-                    label="Created By"
-                    name="created_by"
-                    {...formItemLayout}
-                >
-                    <Input
-                        type="text"
-                        name="created_by"
-                        value={examination.created_by}
-                        onChange={handleChange}
-                    />
-                </Form.Item>
-                <Form.Item
-                    label="Total Score"
-                    name="total_score"
-                    {...formItemLayout}
-                >
-                    <Input
-                        type="number"
-                        name="total_score"
-                        value={examination.total_score}
-                        onChange={handleChange}
-                    />
-                </Form.Item> */}
                 <Form.Item
                     wrapperCol={{ span: 24 }}
                     style={{ textAlign: 'right' }}
@@ -210,9 +155,13 @@ const ExaminationForm: React.FC<ExaminationFormProps> = ({
                         <Button
                             type="primary"
                             htmlType="submit"
-                            onClick={handleSave}
+                            disabled={isSubmitting}
                         >
-                            Save
+                            {isSubmitting
+                                ? 'Saving...'
+                                : examinationToEdit
+                                ? 'Update'
+                                : 'Create'}
                         </Button>
                         <Button onClick={onCancel}>Cancel</Button>
                     </Space>

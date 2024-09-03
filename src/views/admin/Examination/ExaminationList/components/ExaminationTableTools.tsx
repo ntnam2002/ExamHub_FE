@@ -32,19 +32,6 @@ const ExaminationTableTools: React.FC<ExaminationTableToolsProps> = ({
         setSelectedExamination(null)
     }
 
-    const handleSaveExamination = async (examination: Examination) => {
-        try {
-            if (selectedExamination) {
-                await apiUpdateExamination(selectedExamination._id, examination)
-            } else {
-                await apiCreateExamination(examination)
-            }
-            handleCloseModal()
-        } catch (error) {
-            console.error(`Error updating examination: ${error}`)
-        }
-    }
-
     return (
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-end">
             <div style={{ display: 'flex' }}>
@@ -79,7 +66,6 @@ const ExaminationTableTools: React.FC<ExaminationTableToolsProps> = ({
             >
                 <ExaminationForm
                     examinationToEdit={selectedExamination || undefined}
-                    onSave={handleSaveExamination}
                     onCancel={handleCloseModal}
                 />
             </Modal>

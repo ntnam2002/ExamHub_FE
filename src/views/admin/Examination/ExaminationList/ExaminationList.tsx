@@ -1,9 +1,6 @@
-import reducer from './store'
 import { injectReducer } from '@/store'
 import AdaptableCard from '@/components/shared/AdaptableCard'
 import ExaminationTable from './components/ExaminationTable'
-
-injectReducer('StudentList', reducer)
 
 const ExaminationList = () => {
     return (

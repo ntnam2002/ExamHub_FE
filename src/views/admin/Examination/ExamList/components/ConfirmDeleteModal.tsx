@@ -1,28 +1,44 @@
-import { Card, Modal } from 'antd'
-import React from 'react'
+// import React from 'react'
+// import { Modal, Typography, Space, Button } from 'antd'
+// import { ExclamationCircleOutlined } from '@ant-design/icons'
 
-interface ConfirmDeleteModalProps {
-    show: boolean
-    onConfirm: () => void
-    onCancel: () => void
-}
+// const { Text } = Typography
 
-const ConfirmDeleteModal: React.FC<ConfirmDeleteModalProps> = ({
-    show,
-    onConfirm,
-    onCancel,
-}) => {
-    if (!show) return null
+// interface ConfirmDeleteModalProps {
+//     show: boolean
+//     onConfirm: () => void
+//     onCancel: () => void
+//     itemName?: string
+// }
 
-    return (
-        <Card className="modal">
-            <div className="modal-content">
-                <h3>Are you sure you want to delete this exam?</h3>
-                <button onClick={onConfirm}>Yes</button>
-                <button onClick={onCancel}>No</button>
-            </div>
-        </Card>
-    )
-}
+// const ConfirmDeleteModal: React.FC<ConfirmDeleteModalProps> = ({
+//     show,
+//     onConfirm,
+//     onCancel,
+//     itemName = 'this item',
+// }) => {
+//     return (
+//         <Modal
+//             title={
+//                 <Space>
+//                     <ExclamationCircleOutlined style={{ color: '#faad14' }} />
+//                     <Text strong>Confirm Deletion</Text>
+//                 </Space>
+//             }
+//             open={show}
+//             okText="Yes, delete"
+//             cancelText="No, keep it"
+//             okButtonProps={{ danger: true }}
+//             onOk={onConfirm}
+//             onCancel={onCancel}
+//         >
+//             <p>Are you sure you want to delete {itemName}?</p>
+//             <Text type="secondary">
+//                 This action cannot be undone. Please confirm that you want to
+//                 permanently delete this item.
+//             </Text>
+//         </Modal>
+//     )
+// }
 
-export default ConfirmDeleteModal
+// export default ConfirmDeleteModal
