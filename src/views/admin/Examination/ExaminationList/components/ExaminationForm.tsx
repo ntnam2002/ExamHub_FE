@@ -2,12 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { Examination } from './types'
 import { Form, Input, Button, DatePicker, Select, Space, message } from 'antd'
 import moment from 'moment'
-import {
-    apiGetExams,
-    apiGetAllClasses,
-    apiCreateExamination,
-    apiUpdateExamination,
-} from '@/services/ExamService'
+import { apiGetExams, apiGetAllClasses } from '@/services/ExamService'
 
 const { Option } = Select
 
@@ -53,7 +48,7 @@ const ExaminationForm: React.FC<ExaminationFormProps> = ({
         }
     }, [examinationToEdit, form])
 
-    const handleSave = async (values: any) => {
+    const handleSubmit = async (values: any) => {
         if (isSubmitting) return
         setIsSubmitting(true)
         try {
@@ -66,18 +61,7 @@ const ExaminationForm: React.FC<ExaminationFormProps> = ({
                     : [],
                 started_at: values.started_at.toDate(),
             }
-            let response
-            if (examinationToEdit) {
-                response = await apiUpdateExamination(
-                    examinationToEdit._id,
-                    examData
-                )
-                message.success('Examination updated successfully')
-            } else {
-                response = await apiCreateExamination(examData)
-                message.success('Examination created successfully')
-            }
-            onSave(response.data)
+            onSave(examData)
         } catch (error) {
             console.error(error)
             message.error('An error occurred while saving the examination')
@@ -94,7 +78,7 @@ const ExaminationForm: React.FC<ExaminationFormProps> = ({
                 form={form}
                 {...formItemLayout}
                 layout="horizontal"
-                onFinish={handleSave}
+                onFinish={handleSubmit}
             >
                 <Form.Item
                     label="Exam ID"

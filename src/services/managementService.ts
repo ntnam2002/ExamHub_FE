@@ -7,13 +7,16 @@ export function apiGetAllBehavior<T, U extends Record<string, unknown>>() {
     })
 }
 
-export function apiGetAllLoginLogs<T, U extends Record<string, unknown>>() {
+export function apiGetAllLoginLogs<T>(params: { page: number; size: number }) {
     return ApiService.fetchData<T>({
         url: '/management/getAllLoginLogs',
         method: 'get',
+        params: {
+            page: params.page,
+            size: params.size,
+        },
     })
 }
-
 export function apiGetAllSubject<T, U extends Record<string, unknown>>() {
     return ApiService.fetchData<T>({
         url: '/management/subject',
@@ -56,6 +59,22 @@ export function apiSearchBehavior<T, U extends Record<string, unknown>>(
 ) {
     return ApiService.fetchData<T>({
         url: `/management/searchBehavior?search=${query}`,
+        method: 'get',
+    })
+}
+
+export function systemStatistic<T, U extends Record<string, unknown>>() {
+    return ApiService.fetchData<T>({
+        url: '/management/statistic',
+        method: 'get',
+    })
+}
+
+export function apiSearchSystemLog<T, U extends Record<string, unknown>>(
+    query: string
+) {
+    return ApiService.fetchData<T>({
+        url: `/management/searchStatistic?search=${query}`,
         method: 'get',
     })
 }

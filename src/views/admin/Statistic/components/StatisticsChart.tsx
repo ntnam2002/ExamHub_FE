@@ -1,202 +1,113 @@
-import { Container } from '@/components/shared'
-import { Card } from '@/components/ui'
-import { Flex, Typography } from 'antd'
-import { ApexOptions } from 'apexcharts'
-import React from 'react'
-import Chart from 'react-apexcharts'
+import React, { useEffect, useState } from 'react'
+import { Card, Input, Row, Col, Typography } from 'antd'
+import {
+    BarChart,
+    Bar,
+    XAxis,
+    YAxis,
+    CartesianGrid,
+    Tooltip,
+    Legend,
+    ResponsiveContainer,
+} from 'recharts'
+import { UserOutlined, BookOutlined, TeamOutlined } from '@ant-design/icons'
+import { systemStatistic } from '@/services/managementService'
 
 const { Title } = Typography
+const mockSubjectScores = [
+    { subject: 'Lập trình C++', averageScore: 7.5 },
+    { subject: 'Mạng máy tính', averageScore: 0.0 },
+    { subject: 'Lập trình web', averageScore: 0.0 },
+    { subject: 'Cơ sở dữ liệu', averageScore: 0.0 },
+    { subject: 'Mạch điện tử', averageScore: 0.0 },
+]
+interface StatCardProps {
+    icon: React.ReactNode
+    title: string
+    value: any
+}
 
-function OnlineExamStatistics() {
-    // Biểu đồ cột: Số lượng bài thi theo môn học CNTT
-    const subjectExamCountOptions: ApexOptions = {
-        chart: {
-            type: 'bar',
-            height: 350,
-            fontFamily: 'Helvetica, Arial, sans-serif',
-        },
-        title: {
-            text: 'Số lượng bài thi theo môn học CNTT',
-        },
-        xaxis: {
-            categories: [
-                'Lập trình',
-                'Mạng',
-                'Cơ sở dữ liệu',
-                'Hệ điều hành',
-                'An ninh mạng',
-                'Trí tuệ nhân tạo',
-            ],
-        },
+const StatCard: React.FC<StatCardProps> = ({ icon, title, value }) => (
+    <Card>
+        <Card.Meta
+            avatar={icon}
+            title={title}
+            description={
+                <span style={{ fontSize: '24px', fontWeight: 'bold' }}>
+                    {value}
+                </span>
+            }
+        />
+    </Card>
+)
 
-        dataLabels: {
-            enabled: true,
-        },
+const EducationStatisticsDashboard: React.FC = () => {
+    const [statistics, setStatistics] = useState<any>(null)
+    const [loading, setLoading] = useState<boolean>(true)
 
-        colors: ['#008FFB'],
+    useEffect(() => {
+        const fetchStatistics = async () => {
+            try {
+                const response = await systemStatistic()
+                setStatistics(response.data)
+            } catch (error) {
+                console.error('Failed to fetch statistics', error)
+            } finally {
+                setLoading(false)
+            }
+        }
+
+        fetchStatistics()
+    }, [])
+
+    if (loading) {
+        return <div>Loading...</div>
     }
-
-    const subjectExamCountSeries = [
-        {
-            name: 'Số lượng bài thi',
-            data: [150, 120, 100, 80, 130, 140],
-        },
-    ]
-
-    // Biểu đồ đường: Điểm trung bình theo thời gian
-    const averageScoreOptions: ApexOptions = {
-        chart: {
-            type: 'line',
-            height: 350,
-        },
-        title: {
-            text: 'Điểm trung bình theo tháng',
-            style: {
-                fontFamily: 'sans-serif',
-            },
-        },
-        xaxis: {
-            categories: ['T1', 'T2', 'T3', 'T4', 'T5', 'T6'],
-        },
-        stroke: {
-            curve: 'smooth',
-        },
-        dataLabels: {
-            enabled: false,
-        },
-        colors: ['#00E396'],
-    }
-
-    const averageScoreSeries = [
-        {
-            name: 'Điểm trung bình',
-            data: [7.5, 7.8, 7.2, 8.0, 7.9, 8.2],
-        },
-    ]
-
-    // Biểu đồ tròn: Phân bố kết quả thi
-    const examResultOptions: ApexOptions = {
-        chart: {
-            type: 'pie',
-            height: 350,
-        },
-        labels: ['Xuất sắc', 'Giỏi', 'Khá', 'Trung bình', 'Yếu'],
-        colors: ['#00E396', '#0090FF', '#FEB019', '#FF4560', '#775DD0'],
-    }
-
-    const examResultSeries = [15, 30, 35, 15, 5]
-
-    // Biểu đồ sparkline: Số lượng thí sinh tham gia
-    const participantCountOptions: ApexOptions = {
-        chart: {
-            type: 'area',
-            height: 160,
-            sparkline: {
-                enabled: true,
-            },
-        },
-        stroke: {
-            curve: 'straight',
-        },
-        fill: {
-            opacity: 0.3,
-        },
-        yaxis: {
-            min: 0,
-        },
-        colors: ['#008FFB'],
-        title: {
-            text: '1,254',
-            offsetX: 0,
-            style: {
-                fontSize: '24px',
-            },
-        },
-        subtitle: {
-            text: 'Tổng số thí sinh',
-            offsetX: 0,
-            style: {
-                fontSize: '14px',
-            },
-        },
-    }
-
-    const participantCountSeries = [
-        {
-            data: [3, 4],
-        },
-    ]
 
     return (
-        <Container style={{ fontFamily: 'sans-serif' }}>
-            <Title
-                level={2}
-                style={{ marginBottom: '24px', textAlign: 'center' }}
-            >
-                Thống kê hệ thống thi trực tuyến
-            </Title>
-            <Flex gap={24} wrap="wrap" justify="space-around">
-                <Card
-                    style={{
-                        width: '48%',
-                        minWidth: '300px',
-                        marginBottom: '24px',
-                        fontFamily: 'sans-serif',
-                    }}
-                >
-                    <Chart
-                        options={subjectExamCountOptions}
-                        series={subjectExamCountSeries}
-                        type="bar"
-                        height={350}
-                        style={{ fontFamily: 'sans-serif' }}
+        <div style={{ padding: '24px' }}>
+            <Row gutter={[16, 16]}>
+                <Col span={8}>
+                    <StatCard
+                        icon={<UserOutlined />}
+                        title="Tổng số tài khoản"
+                        value={statistics?.totalUsers}
                     />
-                </Card>
-                <Card
-                    style={{
-                        width: '48%',
-                        minWidth: '300px',
-                        marginBottom: '24px',
-                    }}
-                >
-                    <Chart
-                        options={averageScoreOptions}
-                        series={averageScoreSeries}
-                        type="line"
-                        height={350}
+                </Col>
+                <Col span={8}>
+                    <StatCard
+                        icon={<BookOutlined />}
+                        title="Tổng số sinh viên"
+                        value={statistics?.totalStudents}
                     />
-                </Card>
-                <Card
-                    style={{
-                        width: '48%',
-                        minWidth: '300px',
-                        marginBottom: '24px',
-                    }}
-                >
-                    <Chart
-                        options={examResultOptions}
-                        series={examResultSeries}
-                        type="pie"
-                        height={350}
+                </Col>
+                <Col span={8}>
+                    <StatCard
+                        icon={<TeamOutlined />}
+                        title="Tổng số giáo viên"
+                        value={statistics?.totalTeachers}
                     />
-                </Card>
-                <Card
-                    style={{
-                        width: '48%',
-                        minWidth: '300px',
-                        marginBottom: '24px',
-                    }}
-                >
-                    <Chart
-                        options={participantCountOptions}
-                        series={participantCountSeries}
-                        type="area"
-                        height={160}
-                    />
-                </Card>
-            </Flex>
-        </Container>
+                </Col>
+            </Row>
+            <Card style={{ marginTop: '24px' }}>
+                <Title level={4}>Thống kê điểm số theo môn</Title>
+                <ResponsiveContainer width="100%" height={300}>
+                    <BarChart data={mockSubjectScores}>
+                        <CartesianGrid strokeDasharray="3 3" />
+                        <XAxis dataKey="subject" />
+                        <YAxis />
+                        <Tooltip />
+                        <Legend />
+                        <Bar
+                            dataKey="averageScore"
+                            fill="#1890ff"
+                            name="Điểm trung bình"
+                        />
+                    </BarChart>
+                </ResponsiveContainer>
+            </Card>
+        </div>
     )
 }
 
-export default OnlineExamStatistics
+export default EducationStatisticsDashboard

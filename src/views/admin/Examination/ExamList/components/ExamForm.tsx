@@ -47,7 +47,6 @@ const ExamForm: React.FC<ExamFormProps> = ({ onSave }) => {
                     `http://localhost:3120/exams/${id}`
                 )
                 form.setFieldsValue(response.data.data)
-                console.log('response.data:', response.data)
                 setSelectedQuestions(
                     response.data.data.questions.map((q) => q._id)
                 )

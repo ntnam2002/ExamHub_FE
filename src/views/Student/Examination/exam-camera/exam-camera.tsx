@@ -144,10 +144,15 @@ const ExamCamera: React.FC<ExamCameraProps> = forwardRef((props, ref) => {
             cameraRef.current?.stop()
         }
     }, [onResult])
-
     useImperativeHandle(ref, () => ({
         stopCamera: () => {
-            cameraRef.current?.stop()
+            if (cameraRef.current) {
+                cameraRef.current.stop()
+            }
+            if (faceDetectionRef.current) {
+                faceDetectionRef.current.close()
+            }
+            realtimeDetection.current = false
         },
     }))
 

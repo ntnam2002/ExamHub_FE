@@ -1,22 +1,19 @@
-// components/ExaminationTableTools.tsx
 import React, { useState } from 'react'
 import { Modal } from 'antd'
 import { HiDownload, HiPlusCircle } from 'react-icons/hi'
 import { Link } from 'react-router-dom'
 import ExaminationForm from './ExaminationForm'
 import { Examination } from './types'
-import {
-    apiCreateExamination,
-    apiUpdateExamination,
-} from '@/services/ExamService'
 import Button from '@/components/ui/Button'
 
 interface ExaminationTableToolsProps {
     onEdit: (examination: Examination) => void
+    onSave: (examination: Examination) => void // Add onSave prop
 }
 
 const ExaminationTableTools: React.FC<ExaminationTableToolsProps> = ({
     onEdit,
+    onSave, // Destructure onSave
 }) => {
     const [isModalVisible, setIsModalVisible] = useState(false)
     const [selectedExamination, setSelectedExamination] =
@@ -67,6 +64,7 @@ const ExaminationTableTools: React.FC<ExaminationTableToolsProps> = ({
                 <ExaminationForm
                     examinationToEdit={selectedExamination || undefined}
                     onCancel={handleCloseModal}
+                    onSave={onSave} // Pass onSave to ExaminationForm
                 />
             </Modal>
         </div>

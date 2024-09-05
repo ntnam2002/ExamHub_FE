@@ -1,7 +1,6 @@
 import React, { useState, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
 import ExamTable from './ExamTable'
-import ConfirmDeleteModal from './ConfirmDeleteModal'
 import axios from 'axios'
 import { Exam } from './types'
 import { message } from 'antd'
@@ -37,7 +36,7 @@ const ExamLists: React.FC = () => {
                 message.success('Exam deleted successfully')
                 setExamToDelete(null)
                 setShowDeleteModal(false)
-                
+
                 // Trigger a refresh of the exam list
                 // You might need to pass a refresh function from a parent component
                 // or use a state management solution like Redux
@@ -60,11 +59,11 @@ const ExamLists: React.FC = () => {
                 onEdit={handleEdit}
                 onDelete={handleDelete}
             />
-            <ConfirmDeleteModal
+            {/* <ConfirmDeleteModal
                 show={showDeleteModal}
                 onConfirm={handleConfirmDelete}
                 onCancel={handleCancelDelete}
-            />
+            /> */}
         </div>
     )
 }

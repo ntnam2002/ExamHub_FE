@@ -87,6 +87,7 @@ export const sendAnswer = createAsyncThunk(
         answers: { questionId: string; selectedOptionId: string }[]
     }) => {
         try {
+            console.log('data', data)
             const response = await apiSendAnswers(data)
             return response.data
         } catch (error) {

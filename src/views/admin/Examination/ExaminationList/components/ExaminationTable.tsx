@@ -3,6 +3,8 @@ import { Examination } from './types'
 import {
     apiGetExaminations,
     apiDeleteExamination,
+    apiCreateExamination,
+    apiUpdateExamination,
 } from '@/services/ExamService'
 import DataTable from '@/components/shared/DataTable'
 import ExaminationForm from './ExaminationForm'
@@ -98,6 +100,7 @@ const ExaminationTable: React.FC = () => {
         ],
         []
     )
+
     const handleEdit = (examination: Examination) => {
         setSelectedExamination(examination)
         setIsModalVisible(true)
@@ -117,10 +120,25 @@ const ExaminationTable: React.FC = () => {
             })
     }
 
-    const handleSave = (updatedExamination: Examination) => {
-        fetchExaminations()
-        setIsModalVisible(false)
-        setSelectedExamination(null)
+    const handleSave = async (examinationData: Examination) => {
+        try {
+            if (selectedExamination) {
+                await apiUpdateExamination(
+                    selectedExamination._id,
+                    examinationData
+                )
+                message.success('Examination updated successfully')
+            } else {
+                await apiCreateExamination(examinationData)
+                message.success('Examination created successfully')
+            }
+            fetchExaminations()
+            setIsModalVisible(false)
+            setSelectedExamination(null)
+        } catch (error) {
+            console.error(error)
+            message.error('An error occurred while saving the examination')
+        }
     }
 
     return (
@@ -130,6 +148,7 @@ const ExaminationTable: React.FC = () => {
                     setSelectedExamination(null)
                     setIsModalVisible(true)
                 }}
+                onSave={handleSave} // Pass handleSave to ExaminationTableTools
             />
             <div>&nbsp;</div>
             <DataTable
