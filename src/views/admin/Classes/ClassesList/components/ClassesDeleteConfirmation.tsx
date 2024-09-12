@@ -30,7 +30,7 @@ const ClassDeleteConfirmation = () => {
             dispatch(getClassess())
             toast.push(
                 <Notification
-                    title={'Successfully Deleted'}
+                    title={'Xóa thành công'}
                     type="success"
                     duration={2500}
                 >

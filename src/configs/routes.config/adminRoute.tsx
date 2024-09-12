@@ -118,9 +118,35 @@ const adminRoutes: Routes = [
         authority: [ADMIN],
     },
     {
+        key: 'ExamHub.admin.department-new',
+        path: `${ADMIN_PREFIX_PATH}/department/new`,
+        component: lazy(() => import('@/views/admin/Department/DepartmentNew')),
+        authority: [ADMIN],
+    },
+    {
+        key: 'ExamHub.admin.department-edit',
+        path: `${ADMIN_PREFIX_PATH}/department/edit/:id`,
+        component: lazy(
+            () => import('@/views/admin/Department/DepartmentEdit')
+        ),
+        authority: [ADMIN],
+    },
+    {
         key: 'ExamHub.admin.class',
         path: `${ADMIN_PREFIX_PATH}/class`,
         component: lazy(() => import('@/views/admin/Classes/ClassesList')),
+        authority: [ADMIN],
+    },
+    {
+        key: 'ExamHub.admin.class-new',
+        path: `${ADMIN_PREFIX_PATH}/class/new`,
+        component: lazy(() => import('@/views/admin/Classes/ClassesNew')),
+        authority: [ADMIN],
+    },
+    {
+        key: 'ExamHub.admin.class-edit',
+        path: `${ADMIN_PREFIX_PATH}/class/edit/:id`,
+        component: lazy(() => import('@/views/admin/Classes/ClassesEdit')),
         authority: [ADMIN],
     },
     {
@@ -129,7 +155,12 @@ const adminRoutes: Routes = [
         component: lazy(() => import('@/views/admin/Subject/SubjectList')),
         authority: [ADMIN],
     },
-
+    {
+        key: 'ExamHub.admin.subject-new',
+        path: `${ADMIN_PREFIX_PATH}/subject/new`,
+        component: lazy(() => import('@/views/admin/Subject/SubjectNew')),
+        authority: [ADMIN],
+    },
     {
         key: 'ExamHub.admin.behavior',
         path: `${ADMIN_PREFIX_PATH}/behavior`,

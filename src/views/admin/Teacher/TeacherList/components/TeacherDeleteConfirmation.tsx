@@ -33,7 +33,7 @@ const TeacherDeleteConfirmation = () => {
             dispatch(getTeachers())
             toast.push(
                 <Notification
-                    title={'Successfully Deleted'}
+                    title={'Xoá thành công'}
                     type="success"
                     duration={2500}
                 >

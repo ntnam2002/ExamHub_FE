@@ -15,6 +15,8 @@ const ExamInterface = () => {
     const [cheatAttempts, setCheatAttempts] = useState(0)
     const [cheatingStatus, setCheatingStatus] = useState('')
     const [currentQuestion, setCurrentQuestion] = useState(0)
+    const [cameraAvailable, setCameraAvailable] = useState<boolean | null>(null)
+    const [mediaStream, setMediaStream] = useState<MediaStream | null>(null)
 
     const dispatch = useAppDispatch()
     const navigate = useNavigate()
@@ -26,9 +28,67 @@ const ExamInterface = () => {
     )
 
     const examCameraRef = useRef<{ stopCamera: () => void } | null>(null)
+
     useEffect(() => {
-        dispatch(getQuestionsByExamId())
-    }, [dispatch])
+        // Check for camera availability
+        const checkCameraAvailability = () => {
+            navigator.mediaDevices
+                .getUserMedia({ video: true })
+                .then((stream) => {
+                    setCameraAvailable(true)
+                    setMediaStream(stream)
+                })
+                .catch(() => {
+                    setCameraAvailable(false)
+                })
+        }
+
+        checkCameraAvailability()
+
+        const handleDeviceChange = () => {
+            checkCameraAvailability()
+        }
+
+        navigator.mediaDevices.addEventListener(
+            'devicechange',
+            handleDeviceChange
+        )
+
+        return () => {
+            navigator.mediaDevices.removeEventListener(
+                'devicechange',
+                handleDeviceChange
+            )
+        }
+    }, [])
+
+    useEffect(() => {
+        if (mediaStream) {
+            const handleCameraEnded = () => {
+                setCameraAvailable(false)
+                setWarning(true)
+                setCheatingStatus(
+                    'Camera has been turned off. Please enable your camera.'
+                )
+            }
+
+            mediaStream
+                .getVideoTracks()[0]
+                .addEventListener('ended', handleCameraEnded)
+
+            return () => {
+                mediaStream
+                    .getVideoTracks()[0]
+                    .removeEventListener('ended', handleCameraEnded)
+            }
+        }
+    }, [mediaStream])
+
+    useEffect(() => {
+        if (cameraAvailable) {
+            dispatch(getQuestionsByExamId())
+        }
+    }, [dispatch, cameraAvailable])
 
     useEffect(() => {
         const handleVisibilityChange = () => {
@@ -48,6 +108,7 @@ const ExamInterface = () => {
             )
         }
     }, [])
+
     useEffect(() => {
         const beforeUnloadEventHandler = (event: BeforeUnloadEvent) => {
             event.preventDefault()
@@ -81,6 +142,9 @@ const ExamInterface = () => {
             alert(
                 'You have been detected cheating multiple times. You will be redirected out of the exam page.'
             )
+            if (examCameraRef.current) {
+                examCameraRef.current.stopCamera()
+            }
             submitAnswers()
         }
     }, [cheatAttempts])
@@ -168,6 +232,34 @@ const ExamInterface = () => {
         setWarning(false)
         setCheatAttempts((prevAttempts) => prevAttempts + 1)
     }, [])
+
+    if (cameraAvailable === null) {
+        return (
+            <div className="min-h-screen w-full bg-gray-100 flex justify-center items-center">
+                <div className="bg-white p-8 rounded-lg shadow-lg text-center max-w-md">
+                    <p className="text-gray-700 mb-4">
+                        Checking camera availability...
+                    </p>
+                </div>
+            </div>
+        )
+    }
+
+    if (!cameraAvailable) {
+        return (
+            <div className="min-h-screen w-full bg-gray-100 flex justify-center items-center">
+                <div className="bg-white p-8 rounded-lg shadow-lg text-center max-w-md">
+                    <p className="text-red-600 font-bold mb-4">
+                        Camera Required
+                    </p>
+                    <p className="text-gray-700 mb-4">
+                        Camera is required to take the exam. Please enable your
+                        camera.
+                    </p>
+                </div>
+            </div>
+        )
+    }
 
     return (
         <div className="min-h-screen w-full bg-gray-100 flex justify-center">
