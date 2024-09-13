@@ -68,7 +68,7 @@ const ExamInterface = () => {
                 setCameraAvailable(false)
                 setWarning(true)
                 setCheatingStatus(
-                    'Camera has been turned off. Please enable your camera.'
+                    'Camera đã bị tắt. Vui lòng bật lại camera của bạn.'
                 )
             }
 
@@ -95,7 +95,7 @@ const ExamInterface = () => {
             if (document.hidden) {
                 setWarning(true)
                 setCheatAttempts((prevAttempts) => prevAttempts + 1)
-                setCheatingStatus('Cheating Detected: You left the exam tab')
+                setCheatingStatus('Phát hiện gian lận: Bạn đã rời khỏi tab thi')
             }
         }
 
@@ -113,7 +113,8 @@ const ExamInterface = () => {
         const beforeUnloadEventHandler = (event: BeforeUnloadEvent) => {
             event.preventDefault()
 
-            const warningMessage = 'Are you sure you want to leave the exam?'
+            const warningMessage =
+                'Bạn có chắc chắn muốn rời khỏi trang thi không?'
 
             if (event) {
                 event.returnValue = warningMessage // Legacy method for cross browser support
@@ -140,7 +141,7 @@ const ExamInterface = () => {
     useEffect(() => {
         if (cheatAttempts > 15) {
             alert(
-                'You have been detected cheating multiple times. You will be redirected out of the exam page.'
+                'Bạn đã bị phát hiện gian lận nhiều lần. Bạn sẽ bị chuyển ra khỏi trang thi.'
             )
             if (examCameraRef.current) {
                 examCameraRef.current.stopCamera()
@@ -196,7 +197,7 @@ const ExamInterface = () => {
     const submitAnswers = useCallback(() => {
         if (timeLeft) {
             const confirmSubmit = confirm(
-                'Are you sure you want to submit the answers early?'
+                'Bạn có chắc chắn muốn nộp bài sớm không?'
             )
             if (!confirmSubmit) {
                 return
@@ -204,7 +205,7 @@ const ExamInterface = () => {
         }
         const answers = JSON.parse(localStorage.getItem('answers') || '[]')
         if (answers.length === 0) {
-            alert('No answers to submit.')
+            alert('Không có câu trả lời nào để nộp.')
             return
         }
 
@@ -214,17 +215,15 @@ const ExamInterface = () => {
         dispatch(sendAnswer({ examId, studentId, answers }))
             .unwrap()
             .then((response) => {
-                alert('Answers submitted successfully.')
+                alert('Nộp bài thành công.')
                 localStorage.removeItem('answers')
-                // Turn off the camera
-                if (examCameraRef.current) {
-                    examCameraRef.current.stopCamera()
-                }
+
+                console.log('Navigating to /student/exams')
                 navigate('/student/exams')
             })
             .catch((error) => {
-                console.error('Error submitting answers:', error)
-                alert('Error submitting answers.')
+                console.error('Lỗi khi nộp bài:', error)
+                alert('Lỗi khi nộp bài.')
             })
     }, [dispatch, examinationList, navigate])
 
@@ -238,7 +237,7 @@ const ExamInterface = () => {
             <div className="min-h-screen w-full bg-gray-100 flex justify-center items-center">
                 <div className="bg-white p-8 rounded-lg shadow-lg text-center max-w-md">
                     <p className="text-gray-700 mb-4">
-                        Checking camera availability...
+                        Đang kiểm tra khả năng sử dụng camera...
                     </p>
                 </div>
             </div>
@@ -250,11 +249,11 @@ const ExamInterface = () => {
             <div className="min-h-screen w-full bg-gray-100 flex justify-center items-center">
                 <div className="bg-white p-8 rounded-lg shadow-lg text-center max-w-md">
                     <p className="text-red-600 font-bold mb-4">
-                        Camera Required
+                        Yêu cầu camera
                     </p>
                     <p className="text-gray-700 mb-4">
-                        Camera is required to take the exam. Please enable your
-                        camera.
+                        Camera là bắt buộc để tham gia thi. Vui lòng bật camera
+                        của bạn.
                     </p>
                 </div>
             </div>

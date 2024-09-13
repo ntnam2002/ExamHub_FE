@@ -165,3 +165,25 @@ export async function apiSendAnswers<T, U extends Record<string, unknown>>(
         data,
     })
 }
+
+export async function apiGetStudentResults<
+    T,
+    U extends {
+        student_id: string
+        examination_name?: string
+        score?: number
+        submitted_at?: string
+    }
+>(data: U) {
+    const { student_id, examination_name, score, submitted_at } = data
+    const params = new URLSearchParams()
+
+    if (examination_name) params.append('examination_name', examination_name)
+    if (score !== undefined) params.append('score', score.toString())
+    if (submitted_at) params.append('submitted_at', submitted_at)
+
+    return ApiService.fetchData<T>({
+        url: `/management/get/${student_id}?${params.toString()}`,
+        method: 'get',
+    })
+}
