@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Card, Input, Row, Col, Typography } from 'antd'
+import { Card, Row, Col, Typography } from 'antd'
 import {
     BarChart,
     Bar,
@@ -9,11 +9,14 @@ import {
     Tooltip,
     Legend,
     ResponsiveContainer,
+    LineChart,
+    Line,
 } from 'recharts'
 import { UserOutlined, BookOutlined, TeamOutlined } from '@ant-design/icons'
 import { systemStatistic } from '@/services/managementService'
 
 const { Title } = Typography
+
 const mockSubjectScores = [
     { subject: 'Lập trình C++', averageScore: 7.5 },
     { subject: 'Mạng máy tính', averageScore: 0.0 },
@@ -21,6 +24,7 @@ const mockSubjectScores = [
     { subject: 'Cơ sở dữ liệu', averageScore: 0.0 },
     { subject: 'Mạch điện tử', averageScore: 0.0 },
 ]
+
 interface StatCardProps {
     icon: React.ReactNode
     title: string
@@ -89,23 +93,47 @@ const EducationStatisticsDashboard: React.FC = () => {
                     />
                 </Col>
             </Row>
-            <Card style={{ marginTop: '24px' }}>
-                <Title level={4}>Thống kê điểm số theo môn</Title>
-                <ResponsiveContainer width="100%" height={300}>
-                    <BarChart data={mockSubjectScores}>
-                        <CartesianGrid strokeDasharray="3 3" />
-                        <XAxis dataKey="subject" />
-                        <YAxis />
-                        <Tooltip />
-                        <Legend />
-                        <Bar
-                            dataKey="averageScore"
-                            fill="#1890ff"
-                            name="Điểm trung bình"
-                        />
-                    </BarChart>
-                </ResponsiveContainer>
-            </Card>
+            <Row gutter={[16, 16]} style={{ marginTop: '24px' }}>
+                <Col span={12}>
+                    <Card>
+                        <Title level={4}>Thống kê điểm số theo môn</Title>
+                        <ResponsiveContainer width="100%" height={300}>
+                            <BarChart data={mockSubjectScores}>
+                                <CartesianGrid strokeDasharray="3 3" />
+                                <XAxis dataKey="subject" />
+                                <YAxis />
+                                <Tooltip />
+                                <Legend />
+                                <Bar
+                                    dataKey="averageScore"
+                                    fill="#1890ff"
+                                    name="Điểm trung bình"
+                                />
+                            </BarChart>
+                        </ResponsiveContainer>
+                    </Card>
+                </Col>
+                <Col span={12}>
+                    <Card>
+                        <Title level={4}>Thống kê đăng nhập</Title>
+                        <ResponsiveContainer width="100%" height={300}>
+                            <LineChart data={statistics?.loginLogs || []}>
+                                <CartesianGrid strokeDasharray="3 3" />
+                                <XAxis dataKey="date" />
+                                <YAxis />
+                                <Tooltip />
+                                <Legend />
+                                <Line
+                                    type="monotone"
+                                    dataKey="count"
+                                    stroke="#8884d8"
+                                    name="Số lượt truy cập hệ thống"
+                                />
+                            </LineChart>
+                        </ResponsiveContainer>
+                    </Card>
+                </Col>
+            </Row>
         </div>
     )
 }

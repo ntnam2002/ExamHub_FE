@@ -1,51 +1,49 @@
-import StudentForm, {
-    FormModel,
-    SetSubmitting,
-} from '@/views/admin/Student/StudentForm'
 import toast from '@/components/ui/toast'
 import Notification from '@/components/ui/Notification'
 import { useNavigate } from 'react-router-dom'
 import { apiCreateUser } from '@/services/AdminService'
+import SubjectForm, { SetSubmitting, SubjectFormModel } from '../SubjectForm'
+import { apiCreateSubject } from '@/services/managementService'
 
-const StudentNew = () => {
+const SubjectNew = () => {
     const navigate = useNavigate()
 
-    const addProduct = async (data: FormModel) => {
-        const response = await apiCreateUser<boolean, FormModel>(data)
+    const addSubject = async (data: SubjectFormModel) => {
+        const response = await apiCreateSubject<boolean, SubjectFormModel>(data)
         return response.data
     }
 
     const handleFormSubmit = async (
-        values: FormModel,
+        values: SubjectFormModel,
         setSubmitting: SetSubmitting
     ) => {
         setSubmitting(true)
-        const success = await addProduct(values)
+        const success = await addSubject(values)
         setSubmitting(false)
         if (success) {
             toast.push(
                 <Notification
-                    title={'Successfuly added'}
+                    title={'Successfully added'}
                     type="success"
                     duration={2500}
                 >
-                    Thêm mới sinh viên thành công
+                    Thêm mới môn học thành công
                 </Notification>,
                 {
                     placement: 'top-center',
                 }
             )
-            navigate('/app/sales/product-list')
+            navigate('/admin/subject')
         }
     }
 
     const handleDiscard = () => {
-        navigate('/app/sales/product-list')
+        navigate('/admin/subject')
     }
 
     return (
         <>
-            <StudentForm
+            <SubjectForm
                 type="new"
                 onFormSubmit={handleFormSubmit}
                 onDiscard={handleDiscard}
@@ -54,4 +52,4 @@ const StudentNew = () => {
     )
 }
 
-export default StudentNew
+export default SubjectNew

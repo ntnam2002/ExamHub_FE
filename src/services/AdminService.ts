@@ -66,7 +66,7 @@ export async function apiCreateClass<T, U extends Record<string, unknown>>(
     data: U
 ) {
     return ApiService.fetchData<T>({
-        url: '/admin/createClass',
+        url: '/admin/addClass',
         method: 'post',
         data,
     })
@@ -137,7 +137,7 @@ export async function apiCreateSubject<T, U extends Record<string, unknown>>(
     data: U
 ) {
     return ApiService.fetchData<T>({
-        url: '/admin/createSubject',
+        url: '/management/subject',
         method: 'post',
         data,
     })

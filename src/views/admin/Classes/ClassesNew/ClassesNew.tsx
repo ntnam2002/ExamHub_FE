@@ -1,51 +1,51 @@
-import StudentForm, {
-    FormModel,
-    SetSubmitting,
-} from '@/views/admin/Student/StudentForm'
 import toast from '@/components/ui/toast'
 import Notification from '@/components/ui/Notification'
 import { useNavigate } from 'react-router-dom'
-import { apiCreateUser } from '@/services/AdminService'
+import { apiCreateClass, apiCreateUser } from '@/services/AdminService'
+import ClassForm, {
+    SetSubmitting,
+    ClassFormModel,
+} from '../ClassesForm/ClassesForm'
 
-const StudentNew = () => {
+const ClassesNew = () => {
     const navigate = useNavigate()
 
-    const addProduct = async (data: FormModel) => {
-        const response = await apiCreateUser<boolean, FormModel>(data)
+    const addClass = async (data: ClassFormModel) => {
+        const response = await apiCreateClass<boolean, ClassFormModel>(data)
         return response.data
     }
 
     const handleFormSubmit = async (
-        values: FormModel,
+        values: ClassFormModel,
         setSubmitting: SetSubmitting
     ) => {
         setSubmitting(true)
-        const success = await addProduct(values)
+        const success = await addClass(values)
         setSubmitting(false)
         if (success) {
             toast.push(
                 <Notification
-                    title={'Successfuly added'}
+                    title={'Successfully added'}
                     type="success"
                     duration={2500}
                 >
-                    Thêm mới sinh viên thành công
+                    Thêm mới lớp học thành công
                 </Notification>,
                 {
                     placement: 'top-center',
                 }
             )
-            navigate('/app/sales/product-list')
+            navigate('/admin/class')
         }
     }
 
     const handleDiscard = () => {
-        navigate('/app/sales/product-list')
+        navigate('/admin/class')
     }
 
     return (
         <>
-            <StudentForm
+            <ClassForm
                 type="new"
                 onFormSubmit={handleFormSubmit}
                 onDiscard={handleDiscard}
@@ -54,4 +54,4 @@ const StudentNew = () => {
     )
 }
 
-export default StudentNew
+export default ClassesNew

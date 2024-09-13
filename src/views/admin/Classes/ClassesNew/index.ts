@@ -1,3 +1,3 @@
-import StudentNew from './DepartmentNew'
+import ClassesNew from './ClassesNew'
 
-export default StudentNew
+export default ClassesNew

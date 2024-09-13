@@ -1,4 +1,4 @@
-import StudentForm from './StudentForm'
+import SubjectForm from './SubjectForm'
 
-export * from './StudentForm'
-export default StudentForm
+export * from './SubjectForm'
+export default SubjectForm

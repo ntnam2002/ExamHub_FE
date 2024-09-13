@@ -1,51 +1,54 @@
-import StudentForm, {
-    FormModel,
-    SetSubmitting,
-} from '@/views/admin/Student/StudentForm'
 import toast from '@/components/ui/toast'
 import Notification from '@/components/ui/Notification'
 import { useNavigate } from 'react-router-dom'
-import { apiCreateUser } from '@/services/AdminService'
+import { apiCreateDepartment } from '@/services/managementService'
+import DepartmentForm, {
+    SetSubmitting,
+    DepartmentFormModel,
+} from '../DepartmentForm'
 
-const StudentNew = () => {
+const DepartmentNew = () => {
     const navigate = useNavigate()
 
-    const addProduct = async (data: FormModel) => {
-        const response = await apiCreateUser<boolean, FormModel>(data)
+    const addDepartment = async (data: DepartmentFormModel) => {
+        const response = await apiCreateDepartment<
+            boolean,
+            DepartmentFormModel
+        >(data)
         return response.data
     }
 
     const handleFormSubmit = async (
-        values: FormModel,
+        values: DepartmentFormModel,
         setSubmitting: SetSubmitting
     ) => {
         setSubmitting(true)
-        const success = await addProduct(values)
+        const success = await addDepartment(values)
         setSubmitting(false)
         if (success) {
             toast.push(
                 <Notification
-                    title={'Successfuly added'}
+                    title={'Successfully added'}
                     type="success"
                     duration={2500}
                 >
-                    Thêm mới sinh viên thành công
+                    Thêm mới phòng ban thành công
                 </Notification>,
                 {
                     placement: 'top-center',
                 }
             )
-            navigate('/app/sales/product-list')
+            navigate('/admin/department')
         }
     }
 
     const handleDiscard = () => {
-        navigate('/app/sales/product-list')
+        navigate('/admin/department')
     }
 
     return (
         <>
-            <StudentForm
+            <DepartmentForm
                 type="new"
                 onFormSubmit={handleFormSubmit}
                 onDiscard={handleDiscard}
@@ -54,4 +57,4 @@ const StudentNew = () => {
     )
 }
 
-export default StudentNew
+export default DepartmentNew

@@ -26,10 +26,8 @@ import {
 } from 'react-icons/hi'
 import { TiHomeOutline } from 'react-icons/ti'
 import { PiStudent, PiExam, PiChalkboardTeacher } from 'react-icons/pi'
-import { FaBook } from 'react-icons/fa'
+import { FaBook, FaChartLine } from 'react-icons/fa'
 import { AiOutlineQuestionCircle } from 'react-icons/ai'
-import { FcStatistics } from 'react-icons/fc'
-import { statistic } from 'antd/es/theme/internal'
 import { TbReportSearch } from 'react-icons/tb'
 import { MdClass, MdDomain, MdSubject } from 'react-icons/md'
 import { RiAlarmWarningLine } from 'react-icons/ri'
@@ -70,7 +68,7 @@ const navigationIcon: NavigationIcons = {
     book: <FaBook />,
     question: <AiOutlineQuestionCircle />,
     examination: <PiExam />,
-    statistics: <FcStatistics />,
+    statistics: <FaChartLine />,
     report: <TbReportSearch />,
     teacher: <PiChalkboardTeacher />,
     class: <MdClass />,

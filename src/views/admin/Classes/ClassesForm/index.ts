@@ -1,4 +1,4 @@
-import StudentForm from './StudentForm'
+import ClassForm from './ClassesForm'
 
-export * from './StudentForm'
-export default StudentForm
+export * from './ClassesForm'
+export default ClassForm
