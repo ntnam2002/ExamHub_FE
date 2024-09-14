@@ -8,6 +8,7 @@ import {
 import { useNavigate } from 'react-router-dom'
 import ExamCamera from '../exam-camera/exam-camera'
 import { getStudentIdFromToken } from '../../StudentExamList/store'
+import { apiPushBehavior } from '@/services/ExamService'
 
 const ExamInterface = () => {
     const [timeLeft, setTimeLeft] = useState(60 * 60)
@@ -139,15 +140,30 @@ const ExamInterface = () => {
     }, [])
 
     useEffect(() => {
-        if (cheatAttempts > 15) {
-            alert(
-                'Bạn đã bị phát hiện gian lận nhiều lần. Bạn sẽ bị chuyển ra khỏi trang thi.'
-            )
-            if (examCameraRef.current) {
-                examCameraRef.current.stopCamera()
+        const handleCheating = async () => {
+            if (cheatAttempts > 15) {
+                alert(
+                    'Bạn đã bị phát hiện gian lận nhiều lần. Bạn sẽ bị chuyển ra khỏi trang thi.'
+                )
+
+                const studentId = getStudentIdFromToken()
+                const data = {
+                    student_id: studentId,
+                    examination_id: examinationList[0]._id,
+                    behavior:
+                        'Bạn đã bị phát hiện gian lận nhiều lần. Bạn sẽ bị chuyển ra khỏi trang thi',
+                }
+                try {
+                    await apiPushBehavior(data)
+                } catch (error) {
+                    console.error('Failed to push behavior', error)
+                }
+                submitAnswers()
             }
-            submitAnswers()
         }
+
+        handleCheating()
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [cheatAttempts])
 
     useEffect(() => {

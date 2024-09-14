@@ -46,7 +46,9 @@ const { useUniqueId } = hooks
 
 const validationSchema = Yup.object().shape({
     text: Yup.string().required('Câu hỏi là bắt buộc'),
-    points: Yup.number().required('Điểm là bắt buộc'),
+    points: Yup.number()
+        .required('Điểm là bắt buộc')
+        .min(1, 'Điểm phải lớn hơn 0'),
     subject_id: Yup.string().required('Mã môn học là bắt buộc'),
     difficulty: Yup.number().required('Độ khó là bắt buộc'),
     options: Yup.array()
@@ -57,7 +59,7 @@ const validationSchema = Yup.object().shape({
             })
         )
         .min(2, 'Ít nhất hai lựa chọn là bắt buộc')
-        .required('Lựa chọn là bắt buộc'),
+        .required('2 Lựa chọn là bắt buộc'),
 })
 
 const DeleteProductButton = ({ onDelete }: { onDelete: OnDelete }) => {

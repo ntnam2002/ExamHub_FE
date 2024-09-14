@@ -98,7 +98,7 @@ export async function apiCreateQuestion<T, U extends Record<string, unknown>>(
 export async function apiUpdateQuestion<T, U extends { id: string }>(data: U) {
     const { id } = data
     return ApiService.fetchData<T>({
-        url: `/exams/questions/updateQuestion/${id}`,
+        url: `/exams/questions/${id}`,
         method: 'put',
         data,
     })
@@ -185,5 +185,16 @@ export async function apiGetStudentResults<
     return ApiService.fetchData<T>({
         url: `/management/get/${student_id}?${params.toString()}`,
         method: 'get',
+    })
+}
+
+export async function apiPushBehavior<T, U extends { student_id: string }>(
+    data: U
+) {
+    console.log('data', data)
+    return ApiService.fetchData<T>({
+        url: '/management/behavior',
+        method: 'post',
+        data,
     })
 }

@@ -35,12 +35,22 @@ const QuestionNew = () => {
                     placement: 'top-center',
                 }
             )
-            navigate('admin/exam/question')
+            navigate('/admin/question')
+        } else {
+            toast.push(
+                <Notification title={'Failed to add'} duration={2500}>
+                    Thêm mới câu hỏi thất bại
+                </Notification>,
+                {
+                    placement: 'top-center',
+                }
+            )
+            navigate('/admin/question/new')
         }
     }
 
     const handleDiscard = () => {
-        navigate('admin/exam/question')
+        navigate('/admin/question')
     }
 
     return (

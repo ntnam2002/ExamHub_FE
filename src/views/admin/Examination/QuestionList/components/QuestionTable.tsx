@@ -19,6 +19,8 @@ import type {
     ColumnDef,
 } from '@/components/shared/DataTable'
 import dayjs from 'dayjs'
+import { apiDeleteQuestion } from '@/services/ExamService'
+import { Notification, toast } from '@/components/ui'
 
 type Option = {
     text: string
@@ -42,12 +44,31 @@ const ActionColumn = ({ row }: { row: Question }) => {
     const navigate = useNavigate()
 
     const onEdit = () => {
-        navigate(`/app/questions/question-edit/${row._id}`)
+        navigate(`/admin/question/edit/${row._id}`)
     }
 
-    const onDelete = () => {
-        dispatch(toggleDeleteConfirmation(true))
-        dispatch(setSelectedQuestion(row._id))
+    const onDelete = async () => {
+        try {
+            const fetchData = () => {
+                dispatch(getQuestions())
+            }
+            await apiDeleteQuestion({ id: row._id })
+            toast.push(
+                <Notification
+                    title="Successfully deleted"
+                    type="success"
+                    duration={2500}
+                >
+                    Xóa câu hỏi thành công
+                </Notification>,
+                {
+                    placement: 'top-center',
+                }
+            )
+            fetchData()
+        } catch (error) {
+            console.error('Failed to delete question', error)
+        }
     }
 
     return (

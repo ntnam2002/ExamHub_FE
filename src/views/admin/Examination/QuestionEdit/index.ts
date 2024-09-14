@@ -1,3 +1,3 @@
-import StudentEdit from './StudentEdit'
+import QuestionEdit from './QuestionEdit'
 
-export default StudentEdit
+export default QuestionEdit

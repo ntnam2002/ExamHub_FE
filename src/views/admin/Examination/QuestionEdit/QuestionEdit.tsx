@@ -1,38 +1,39 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import Loading from '@/components/shared/Loading'
 import DoubleSidedImage from '@/components/shared/DoubleSidedImage'
 import toast from '@/components/ui/toast'
 import Notification from '@/components/ui/Notification'
-import reducer, { useAppSelector, useAppDispatch } from './store'
-import { injectReducer } from '@/store'
 import { useLocation, useNavigate } from 'react-router-dom'
 
-import ProductForm, {
+import isEmpty from 'lodash/isEmpty'
+import QuestionForm, {
     FormModel,
     SetSubmitting,
     OnDeleteCallback,
-    // eslint-disable-next-line import/no-duplicates
-} from '@/views/admin/Student/StudentForm'
-import isEmpty from 'lodash/isEmpty'
-// eslint-disable-next-line import/no-duplicates
-import StudentForm from '@/views/admin/Student/StudentForm'
-import { deleteProduct } from '../ExaminationList/store'
+} from '../QuestionForm/QuestionForm'
+import {
+    apiDeleteQuestion,
+    apiGetQuestionById,
+    apiUpdateQuestion,
+} from '@/services/ExamService'
 
-injectReducer('salesProductEdit', reducer)
-
-const ProductEdit = () => {
-    const dispatch = useAppDispatch()
+const QuestionEdit = () => {
+    const [questionData, setQuestionData] = useState<FormModel | null>(null)
+    const [loading, setLoading] = useState<boolean>(true)
 
     const location = useLocation()
     const navigate = useNavigate()
 
-    const productData = useAppSelector(
-        (state) => state.StudentEdit.data.StudentData
-    )
-    const loading = useAppSelector((state) => state.StudentEdit.data.loading)
-
-    const fetchData = (data: { id: string }) => {
-        dispatch(data)
+    const fetchData = async (id: string) => {
+        setLoading(true)
+        try {
+            const response = await apiGetQuestionById({ id })
+            setQuestionData(response.data)
+        } catch (error) {
+            console.error('Failed to fetch question data', error)
+        } finally {
+            setLoading(false)
+        }
     }
 
     const handleFormSubmit = async (
@@ -40,33 +41,39 @@ const ProductEdit = () => {
         setSubmitting: SetSubmitting
     ) => {
         setSubmitting(true)
-        const success = await updateProduct(values)
-        setSubmitting(false)
-        if (success) {
+        console.log('values', values)
+        try {
+            await apiUpdateQuestion(values)
             popNotification('updated')
+        } catch (error) {
+            console.error('Failed to update question', error)
+        } finally {
+            setSubmitting(false)
         }
     }
 
     const handleDiscard = () => {
-        navigate('/app/sales/product-list')
+        navigate('/admin/question')
     }
 
     const handleDelete = async (setDialogOpen: OnDeleteCallback) => {
         setDialogOpen(false)
-        const success = await deleteProduct({ id: productData.id })
-        if (success) {
+        try {
+            await apiDeleteQuestion(questionData?.id)
             popNotification('deleted')
+        } catch (error) {
+            console.error('Failed to delete question', error)
         }
     }
 
     const popNotification = (keyword: string) => {
         toast.push(
             <Notification
-                title={`Successfuly ${keyword}`}
+                title={`Successfully ${keyword}`}
                 type="success"
                 duration={2500}
             >
-                Product successfuly {keyword}
+                Question successfully {keyword}
             </Notification>,
             {
                 placement: 'top-center',
@@ -79,19 +86,18 @@ const ProductEdit = () => {
         const path = location.pathname.substring(
             location.pathname.lastIndexOf('/') + 1
         )
-        const rquestParam = { id: path }
-        fetchData(rquestParam)
+        fetchData(path)
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [location.pathname])
 
     return (
         <>
             <Loading loading={loading}>
-                {!isEmpty(productData) && (
+                {!isEmpty(questionData) && (
                     <>
-                        <StudentForm
+                        <QuestionForm
                             type="edit"
-                            initialData={productData}
+                            initialData={questionData}
                             onFormSubmit={handleFormSubmit}
                             onDiscard={handleDiscard}
                             onDelete={handleDelete}
@@ -99,21 +105,18 @@ const ProductEdit = () => {
                     </>
                 )}
             </Loading>
-            {!loading && isEmpty(productData) && (
+            {!loading && isEmpty(questionData) && (
                 <div className="h-full flex flex-col items-center justify-center">
                     <DoubleSidedImage
                         src="/img/others/img-2.png"
                         darkModeSrc="/img/others/img-2-dark.png"
-                        alt="Không tìm thấy sinh viên!"
+                        alt="Không tìm thấy câu hỏi!"
                     />
-                    <h3 className="mt-8">Không tìm thấy sinh viên!</h3>
+                    <h3 className="mt-8">Không tìm thấy câu hỏi!</h3>
                 </div>
             )}
         </>
     )
 }
 
-export default ProductEdit
-function updateProduct(values: FormModel) {
-    throw new Error('Function not implemented.')
-}
+export default QuestionEdit
