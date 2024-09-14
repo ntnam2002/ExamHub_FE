@@ -4,6 +4,7 @@ import ExamTable from './ExamTable'
 import axios from 'axios'
 import { Exam } from './types'
 import { message } from 'antd'
+import appConfig from '@/configs/app.config'
 
 const ExamLists: React.FC = () => {
     const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false)
@@ -12,7 +13,6 @@ const ExamLists: React.FC = () => {
 
     const handleEdit = useCallback(
         (exam: Exam) => {
-            console.log('Edit exam:', exam)
             navigate(`/admin/exam/edit/${exam._id}`)
         },
         [navigate]
@@ -31,9 +31,9 @@ const ExamLists: React.FC = () => {
         if (examToDelete) {
             try {
                 await axios.delete(
-                    `http://localhost:3120/exams/${examToDelete}`
+                    `${appConfig.apiPrefix}exams/${examToDelete}`
                 )
-                message.success('Exam deleted successfully')
+                message.success('Xóa đề thi thành công')
                 setExamToDelete(null)
                 setShowDeleteModal(false)
 
@@ -41,8 +41,8 @@ const ExamLists: React.FC = () => {
                 // You might need to pass a refresh function from a parent component
                 // or use a state management solution like Redux
             } catch (error) {
-                console.error('Error deleting exam:', error)
-                message.error('Failed to delete exam')
+                console.error('Lỗi khi xóa đề thi:', error)
+                message.error('Xóa đề thi thất bại')
             }
         }
     }, [examToDelete])

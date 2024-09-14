@@ -32,7 +32,7 @@ const ExaminationTable: React.FC = () => {
             .catch((error) => {
                 console.error(error)
                 setLoading(false)
-                message.error('Failed to fetch examinations')
+                message.error('Không thể lấy danh sách bài thi')
             })
     }
 
@@ -110,13 +110,11 @@ const ExaminationTable: React.FC = () => {
         apiDeleteExamination(id)
             .then(() => {
                 fetchExaminations()
-                message.success('Examination deleted successfully')
+                message.success('Xóa bài thi thành công')
             })
             .catch((error) => {
                 console.error(error)
-                message.error(
-                    'An error occurred while deleting the examination'
-                )
+                message.error('Có lỗi xảy ra khi xóa bài thi')
             })
     }
 
@@ -127,17 +125,17 @@ const ExaminationTable: React.FC = () => {
                     selectedExamination._id,
                     examinationData
                 )
-                message.success('Examination updated successfully')
+                message.success('Cập nhật bài thi thành công')
             } else {
                 await apiCreateExamination(examinationData)
-                message.success('Examination created successfully')
+                message.success('Tạo bài thi thành công')
             }
             fetchExaminations()
             setIsModalVisible(false)
             setSelectedExamination(null)
         } catch (error) {
             console.error(error)
-            message.error('An error occurred while saving the examination')
+            message.error('Có lỗi xảy ra khi lưu bài thi')
         }
     }
 
@@ -148,7 +146,7 @@ const ExaminationTable: React.FC = () => {
                     setSelectedExamination(null)
                     setIsModalVisible(true)
                 }}
-                onSave={handleSave} // Pass handleSave to ExaminationTableTools
+                onSave={handleSave} // Truyền handleSave vào ExaminationTableTools
             />
             <div>&nbsp;</div>
             <DataTable
@@ -167,8 +165,8 @@ const ExaminationTable: React.FC = () => {
             <Modal
                 title={
                     selectedExamination
-                        ? 'Edit Examination'
-                        : 'Create Examination'
+                        ? 'Chỉnh sửa bài thi'
+                        : 'Tạo bài thi mới'
                 }
                 open={isModalVisible}
                 footer={null}

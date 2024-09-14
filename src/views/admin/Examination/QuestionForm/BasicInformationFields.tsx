@@ -8,7 +8,7 @@ import {
 import Button from '@/components/ui/Button'
 import Input from '@/components/ui/Input'
 import { FormItem } from '@/components/ui/Form'
-import { Select } from '@/components/ui' // Ensure Option is imported if it's part of your UI components
+import { Select } from '@/components/ui' // Đảm bảo Option được import nếu nó là một phần của các thành phần UI của bạn
 import AdaptableCard from '@/components/shared/AdaptableCard'
 import { apiGetAllSubject } from '@/services/managementService'
 import { useEffect, useState } from 'react'
@@ -40,7 +40,7 @@ type FormFieldsName = {
 type BasicInformationFieldsProps = {
     touched: FormikTouched<FormFieldsName>
     errors: FormikErrors<FormFieldsName>
-    values: FormFieldsName // Pass values as a prop
+    values: FormFieldsName // Truyền values như một prop
     setFieldValue: (field: string, value: any, shouldValidate?: boolean) => void
 }
 
@@ -54,7 +54,7 @@ const BasicInformationFields = (props: BasicInformationFieldsProps) => {
                 const response = await apiGetAllSubject()
                 setSubjects(response.data)
             } catch (error) {
-                console.error('Failed to fetch subjects', error)
+                console.error('Không thể lấy danh sách môn học', error)
             }
         }
         fetchSubjects()
@@ -74,7 +74,7 @@ const BasicInformationFields = (props: BasicInformationFieldsProps) => {
                     type="text"
                     autoComplete="off"
                     name="text"
-                    placeholder="VD: What is the capital of Japan?"
+                    placeholder="VD: Thủ đô của Nhật Bản là gì?"
                     component={Input}
                 />
             </FormItem>
@@ -152,7 +152,7 @@ const BasicInformationFields = (props: BasicInformationFieldsProps) => {
                                 >
                                     <Field
                                         name={`options.${index}.text`}
-                                        placeholder={`Option ${index + 1}`}
+                                        placeholder={`Lựa chọn ${index + 1}`}
                                         component={Input}
                                     />
                                     <Field
@@ -164,7 +164,7 @@ const BasicInformationFields = (props: BasicInformationFieldsProps) => {
                                         className="text-red-500"
                                         onClick={() => remove(index)}
                                     >
-                                        Remove
+                                        Xóa
                                     </Button>
                                 </div>
                             ))}
@@ -175,7 +175,7 @@ const BasicInformationFields = (props: BasicInformationFieldsProps) => {
                                     push({ text: '', is_correct: false })
                                 }
                             >
-                                Add Option
+                                Thêm lựa chọn
                             </Button>
                         </div>
                     )}

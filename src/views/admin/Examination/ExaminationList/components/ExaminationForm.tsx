@@ -81,7 +81,7 @@ const ExaminationForm: React.FC<ExaminationFormProps> = ({
                 onFinish={handleSubmit}
             >
                 <Form.Item
-                    label="Exam ID"
+                    label="Tên bài thi"
                     name="exam_id"
                     rules={[
                         { required: true, message: 'Please select an exam' },
@@ -96,7 +96,7 @@ const ExaminationForm: React.FC<ExaminationFormProps> = ({
                     </Select>
                 </Form.Item>
                 <Form.Item
-                    label="Class IDs"
+                    label="Tên Lớp"
                     name="class_id"
                     rules={[
                         {
@@ -120,7 +120,7 @@ const ExaminationForm: React.FC<ExaminationFormProps> = ({
                     <Input />
                 </Form.Item>
                 <Form.Item
-                    label="Started At"
+                    label="Bắt đầu lúc"
                     name="started_at"
                     rules={[
                         {

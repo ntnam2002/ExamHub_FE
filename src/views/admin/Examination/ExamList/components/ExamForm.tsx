@@ -26,7 +26,6 @@ interface ExamFormProps {
 
 const ExamForm: React.FC<ExamFormProps> = ({ onSave }) => {
     const { id } = useParams<{ id: string }>()
-    console.log('id:', id)
     const navigate = useNavigate()
     const [form] = Form.useForm()
 
@@ -45,15 +44,15 @@ const ExamForm: React.FC<ExamFormProps> = ({ onSave }) => {
             setIsLoading(true)
             try {
                 const response = await axios.get<Exam>(
-                    `${appConfig.apiPrefix}/exams/${id}`
+                    `${appConfig.apiPrefix}exams/${id}`
                 )
                 form.setFieldsValue(response.data.data)
                 setSelectedQuestions(
                     response.data.data.questions.map((q) => q._id)
                 )
             } catch (err) {
-                setError('Error fetching exam data. Please try again.')
-                console.error('Error fetching exam data:', err)
+                setError('Lỗi khi lấy dữ liệu bài thi. Vui lòng thử lại.')
+                console.error('Lỗi khi lấy dữ liệu bài thi:', err)
             } finally {
                 setIsLoading(false)
             }
@@ -66,13 +65,14 @@ const ExamForm: React.FC<ExamFormProps> = ({ onSave }) => {
         const fetchQuestions = async () => {
             setIsLoading(true)
             try {
+                console.log(appConfig.apiPrefix)
                 const response = await axios.get<{ data: Question[] }>(
-                    'http://localhost:3120/exams/allquestions'
+                    `${appConfig.apiPrefix}exams/allquestions`
                 )
                 setAllQuestions(response.data.data)
             } catch (err) {
-                setError('Error fetching questions. Please try again.')
-                console.error('Error fetching questions:', err)
+                setError('Lỗi khi lấy dữ liệu câu hỏi. Vui lòng thử lại.')
+                console.error('Lỗi khi lấy dữ liệu câu hỏi:', err)
             } finally {
                 setIsLoading(false)
             }
@@ -92,16 +92,16 @@ const ExamForm: React.FC<ExamFormProps> = ({ onSave }) => {
 
         try {
             if (id) {
-                await axios.put(`http://localhost:3120/exams/${id}`, examData)
+                await axios.put(`${appConfig.apiPrefix}exams/${id}`, examData)
             } else {
-                await axios.post('http://localhost:3120/exams', examData)
+                await axios.post(`${appConfig.apiPrefix}exams`, examData)
             }
-            message.success('Exam saved successfully')
+            message.success('Lưu bài thi thành công')
             onSave?.()
             navigate('/admin/exam')
         } catch (err) {
-            setError('Error saving exam. Please try again.')
-            console.error('Error saving exam:', err)
+            setError('Lỗi khi lưu bài thi. Vui lòng thử lại.')
+            console.error('Lỗi khi lưu bài thi:', err)
         } finally {
             setIsLoading(false)
         }
@@ -132,7 +132,7 @@ const ExamForm: React.FC<ExamFormProps> = ({ onSave }) => {
         }
     }
 
-    if (isLoading) return <div className="text-center py-4">Loading...</div>
+    if (isLoading) return <div className="text-center py-4">Đang tải...</div>
 
     return (
         <Card
@@ -157,7 +157,7 @@ const ExamForm: React.FC<ExamFormProps> = ({ onSave }) => {
                     rules={[
                         {
                             required: true,
-                            message: 'Please input the exam name!',
+                            message: 'Vui lòng nhập tên bài kiểm tra!',
                         },
                     ]}
                 >
@@ -172,7 +172,7 @@ const ExamForm: React.FC<ExamFormProps> = ({ onSave }) => {
                     rules={[
                         {
                             required: true,
-                            message: 'Please input the duration!',
+                            message: 'Vui lòng nhập thời gian!',
                         },
                     ]}
                 >

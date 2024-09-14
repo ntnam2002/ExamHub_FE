@@ -218,7 +218,6 @@ const ExamInterface = () => {
                 alert('Nộp bài thành công.')
                 localStorage.removeItem('answers')
 
-                console.log('Navigating to /student/exams')
                 navigate('/student/exams')
             })
             .catch((error) => {

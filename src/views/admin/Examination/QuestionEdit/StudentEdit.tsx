@@ -72,7 +72,7 @@ const ProductEdit = () => {
                 placement: 'top-center',
             }
         )
-        navigate('/app/sales/product-list')
+        navigate('/admin/question')
     }
 
     useEffect(() => {

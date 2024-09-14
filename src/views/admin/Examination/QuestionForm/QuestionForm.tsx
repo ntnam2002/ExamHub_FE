@@ -45,19 +45,19 @@ type QuestionFormProps = {
 const { useUniqueId } = hooks
 
 const validationSchema = Yup.object().shape({
-    text: Yup.string().required('Question Text Required'),
-    points: Yup.number().required('Points Required'),
-    subject_id: Yup.string().required('Subject ID Required'),
-    difficulty: Yup.number().required('Difficulty Required'),
+    text: Yup.string().required('Câu hỏi là bắt buộc'),
+    points: Yup.number().required('Điểm là bắt buộc'),
+    subject_id: Yup.string().required('Mã môn học là bắt buộc'),
+    difficulty: Yup.number().required('Độ khó là bắt buộc'),
     options: Yup.array()
         .of(
             Yup.object().shape({
-                text: Yup.string().required('Option Text Required'),
-                is_correct: Yup.boolean().required('Is Correct Required'),
+                text: Yup.string().required('Nội dung lựa chọn là bắt buộc'),
+                is_correct: Yup.boolean().required('Đúng/Sai là bắt buộc'),
             })
         )
-        .min(2, 'At least two options are required')
-        .required('Options Required'),
+        .min(2, 'Ít nhất hai lựa chọn là bắt buộc')
+        .required('Lựa chọn là bắt buộc'),
 })
 
 const DeleteProductButton = ({ onDelete }: { onDelete: OnDelete }) => {
@@ -90,7 +90,7 @@ const DeleteProductButton = ({ onDelete }: { onDelete: OnDelete }) => {
             <ConfirmDialog
                 isOpen={dialogOpen}
                 type="danger"
-                title="Delete question"
+                title="Xóa câu hỏi"
                 confirmButtonColor="red-600"
                 onClose={onConfirmDialogClose}
                 onRequestClose={onConfirmDialogClose}
