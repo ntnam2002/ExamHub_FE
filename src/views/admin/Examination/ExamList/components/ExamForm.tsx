@@ -15,6 +15,7 @@ import {
     Radio,
 } from 'antd'
 import { Exam, Question } from './types'
+import appConfig from '@/configs/app.config'
 
 const { TextArea } = Input
 const { Title } = Typography
@@ -44,7 +45,7 @@ const ExamForm: React.FC<ExamFormProps> = ({ onSave }) => {
             setIsLoading(true)
             try {
                 const response = await axios.get<Exam>(
-                    `http://localhost:3120/exams/${id}`
+                    `${appConfig.apiPrefix}/exams/${id}`
                 )
                 form.setFieldsValue(response.data.data)
                 setSelectedQuestions(
